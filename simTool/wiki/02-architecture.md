@@ -807,3 +807,43 @@ result field
   ↓
 visualization component
 ```
+
+---
+
+## Implementation Status: Vertical MVP Scaffold
+
+As of 2026-05-15, the repository contains a first vertical static app scaffold.
+
+Implemented:
+
+- npm/Vite/React/TypeScript/Vitest setup under `simTool`.
+- GitHub Pages production base path `/RenntnerHazienda/`.
+- v1 Zod schemas, defaults, validation, and identity migrations for all six input modules.
+- A module registry exposing `kind`, German UI label, schema id, suffix, default template, migration, and validation.
+- Project state, project manifest typing/schema, storage adapter interfaces, and non-mutating adapter stubs.
+- Project snapshot builder and first deterministic calculation pipeline for contributions, cashflow, liquidity, and zero-debt diagnostics.
+- Two-column app shell with input tabs, visualization tabs, diagnostics panel, disclaimer, status badges, and first Recharts charts/tables.
+
+Explicitly not implemented yet:
+
+- Editable production forms.
+- IndexedDB autosave persistence.
+- File picker, direct save, JSON upload/download, ZIP import/export.
+- Dedicated financing/debt input module.
+- User-approved overwrite/conflict workflows.
+
+Local verification commands:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+Next architecture steps:
+
+- Replace read-only input summaries with controlled domain forms.
+- Implement IndexedDB autosave behind the existing storage boundary.
+- Implement Download/Upload fallback before File System Access overwrite behavior.
+- Add a financing module or explicit financing assumptions before modeling real debt service.
