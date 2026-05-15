@@ -56,6 +56,17 @@ Für die Wirtschaftlichkeitsrechnung sollten Fixkosten und variable Kosten getre
 - Nutzung: Vermietung und Eigennutzung
 - Finanzen: operative Planung, Break-even, Liquiditätsplanung
 
+### Quelle
+- Quelle: DeepResearch-Referenz; Aufenthaltsabgaben; Grundsteuer
+- Herausgeber: Projektteam / Land Tirol / Bundesministerium für Finanzen
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: mittel
+
 ### Fixkosten
 - Versicherung
 - Grundsteuer
@@ -89,11 +100,12 @@ Ferienimmobilien benötigen eine laufende Instandhaltungs- und Erneuerungsrückl
 - Nutzung: Ferienhaus, Vermietung, Eigennutzung
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Immobilienverwaltung / Sachverständiger / Versicherer / Bank
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Eigenmittel / Immobilienkredit-Informationen
+- Herausgeber: Raiffeisen / Bank Austria
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: objektabhängig
 - Stabilität: niedrig
 
@@ -157,6 +169,15 @@ Eine Wirtschaftlichkeitsrechnung sollte Cashflow, steuerliches Ergebnis und Liqu
 - Land: Österreich
 - Finanzen: operative Planung, Bankunterlagen, Eigentümerabrechnung
 
+### Quelle
+- Quelle: DeepResearch-Referenz
+- Herausgeber: Projektteam
+- Link: ../references/260515-DeepResearch1
+- Stand/Veröffentlichungsdatum: 2026-05-15
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Wiki-interne Controllinglogik
+- Stabilität: mittel
+
 ### Mindeststruktur
 ```text
 Umsatz brutto
@@ -213,6 +234,16 @@ Der operative Betrieb muss festlegen, wer Buchungen, Gästekommunikation, Reinig
 ### Geltungsbereich
 - Land: Österreich
 - Nutzung: touristische Vermietung, Eigennutzung, Firmenvermietung
+
+### Quelle
+- Quelle: Leitfaden zum Vermieten meiner Wohnung / Gästeverzeichnis
+- Herausgeber: Land Tirol / oesterreich.gv.at
+- Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
+- Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
+- Stand/Veröffentlichungsdatum: Land Tirol laufend zu prüfen; oesterreich.gv.at 01.01.2026
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: niedrig/mittel
 
 ### Organisationsmodelle
 | Modell | Vorteile | Nachteile |
@@ -272,6 +303,17 @@ Saubere Dokumentation ist bei gemischter Nutzung zentral. Sie dient Steuererklä
 ### Kernaussage
 Der Betrieb einer gemeinschaftlichen Ferienimmobilie hat operative, finanzielle, rechtliche und gruppenbezogene Risiken. Diese sollten vorab vertraglich und finanziell abgefedert werden.
 
+### Quelle
+- Quelle: DeepResearch-Referenz; FMA Wohnimmobilienkredite; Tiroler Aufenthaltsabgaben
+- Herausgeber: Projektteam / Finanzmarktaufsicht Österreich / Land Tirol
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: mittel
+
 ### Risikofelder
 - Leerstand
 - Zinserhöhung
@@ -301,3 +343,174 @@ Der Betrieb einer gemeinschaftlichen Ferienimmobilie hat operative, finanzielle,
 - regelmäßige Steuerberaterprüfung
 - jährliches Budget
 - Mehrjahres-Instandhaltungsplan
+
+## 9. Sieben operative Kostenblöcke
+
+### Kernaussage
+Für die operative Rechnung sollten mindestens sieben Kostenblöcke getrennt geführt werden: Finanzierung, Betriebskosten/Utilities, Instandhaltung und Rücklage, Versicherungen und Grundsteuer, Reinigung/Wäsche/Schlüsselmanagement, Steuer-/Buchhaltungs-/Payrollkosten sowie Tourismus- und Meldecompliance. Die Wirtschaftlichkeitsfrage lautet nicht, ob sich das Haus vollständig trägt, sondern welcher Teil der Fixkosten durch Vermietung entlastet wird, ohne die private Zielnutzung zu verlieren.
+
+### Geltungsbereich
+- Land: Österreich
+- Nutzung: Eigennutzung, touristische Vermietung, Firmenvermietung
+- Charakter: Controlling-Modell, keine Steuerberatung
+
+### Quelle
+- Quelle: DeepResearch-Referenz; Nebenkosten; Aufenthaltsabgaben; Grundsteuer
+- Herausgeber: Projektteam / oesterreich.gv.at / Land Tirol / Bundesministerium für Finanzen
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: niedrig/mittel
+
+| Kostenblock | Beispiele |
+|---|---|
+| Finanzierung | Zinsen, Tilgung, Bankspesen, Pfandrecht |
+| Betriebskosten/Utilities | Strom, Heizung, Wasser, Kanal, Müll, Internet |
+| Instandhaltung und Rücklage | Reparaturen, Großsanierung, technische Anlagen, Möbel |
+| Versicherungen und Grundsteuer | Gebäude, Haftpflicht, Inventar, Grundsteuer |
+| Reinigung/Wäsche/Schlüsselmanagement | Reinigung, Wäsche, Verbrauchsmaterial, Check-in |
+| Steuer/Buchhaltung/Payroll | Steuerberatung, Buchhaltung, Lohnverrechnung, USt |
+| Tourismus- und Meldecompliance | Gästemeldung, Aufenthaltsabgabe, Tourismusverband, Reporting |
+
+## 10. Deckungsbeitragslogik
+
+### Kernaussage
+Eine belastbare operative Kennzahl ist der Deckungsbeitrag pro vermieteter Nacht oder Eventtag. Er zeigt, ob eine zusätzliche Vermietung tatsächlich Fixkosten entlastet oder nur Aufwand erzeugt.
+
+### Geltungsbereich
+- Finanzen: operative Planung, Eigentümerabrechnung, Bankunterlagen
+- Keine Rechts- oder Steuerberatung
+
+### Quelle
+- Quelle: DeepResearch-Referenz
+- Herausgeber: Projektteam
+- Link: ../references/260515-DeepResearch1
+- Stand/Veröffentlichungsdatum: 2026-05-15
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Wiki-interne Controllinglogik
+- Stabilität: mittel
+
+```text
+Deckungsbeitrag pro Vermietung = Erlös netto
+- variable Reinigung
+- Wäsche / Verbrauchsmaterial
+- gästebezogene Abgaben
+- Zahlungs- / Distributionskosten
+```
+
+```text
+jährlicher Restbedarf der Eigentümer = fixe Jahreskosten
+- Summe aller Deckungsbeiträge
+```
+
+## 11. Hausmeistermodelle
+
+### Kernaussage
+Der Basismodell-Vorschlag ist ein externer Dienstleister für Reinigung, Winterdienst, Kleinreparaturen und Gästeschlüssel. Das reduziert Arbeitsrecht, Lohnverrechnung, Sachbezüge, Unterkunftsfragen und Interessenkonflikte. Ein internes geringfügiges oder reguläres Arbeitsverhältnis wird erst relevant, wenn das Objekt häufig genutzt wird und echte Präsenz vor Ort benötigt.
+
+### Geltungsbereich
+- Land: Österreich
+- Betrieb: Reinigung, Winterdienst, Kleinreparaturen, Schlüssel, Gästebetreuung
+- Rechtsgebiet: Arbeitsrecht, Sozialversicherung, Steuer, Gewerbe
+
+### Quelle
+- Quelle: Personen mit Gewerbeberechtigung / Geringfügigkeit / Dienstgeber / Sachbezug Unterkunft
+- Herausgeber: Unternehmensserviceportal / Österreichische Gesundheitskasse
+- Link: https://www.usp.gv.at/themen/mitarbeiter-und-gesundheit/einstellung-mitarbeiter-und-arten-der-beschaeftigung/weitere-informationen-einstellen-von-personal/personen-mit-gewerbeberechtigung.html
+- Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904882&portal=oegkdgportal
+- Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904691&portal=oegkdgportal
+- Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.905270&portal=oegkdgportal
+- Stand/Veröffentlichungsdatum: Websites, Stand 01.01.2026 bzw. laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: niedrig/mittel
+
+| Modell | Geeignet wenn | Risiken |
+|---|---|---|
+| externer Dienstleister/Werkunternehmer | klar abgrenzbare Leistungen, eigene Betriebsmittel, Gewerbeberechtigung | Scheinselbständigkeit prüfen, Qualität sichern |
+| geringfügiges Dienstverhältnis | regelmäßige einfache Tätigkeiten unter Geringfügigkeitsgrenze | Anmeldung, Arbeitsrecht, SV-Grenzen, Arbeitszeit |
+| reguläres Dienstverhältnis | häufiger Betrieb, echte Präsenz erforderlich | Lohnverrechnung, Urlaub, Krankenstand, Kündigung, Dienstgeberpflichten |
+| Wohnen gegen Leistung | nur nach Beratung | Sachbezug, Lohnsteuer/SV, arbeitsrechtliche Abhängigkeit |
+
+## 12. Dienstleistungsscheck
+
+### Kernaussage
+Der Dienstleistungsscheck ist für das Projekt meist nicht die passende Lösung. Er dient einfachen haushaltstypischen Dienstleistungen in Privathaushalten, bei befristeten Arbeitsverhältnissen zwischen Arbeitnehmern und natürlichen Personen. Tätigkeiten sowohl im Haushalt als auch im Unternehmen ("Mischverwendungen") und Dreiecksverhältnisse sind ausgeschlossen. Für GmbH/KG/Verein oder Tätigkeiten mit Gäste-/Eventbezug ist der DLS daher regelmäßig ungeeignet.
+
+### Geltungsbereich
+- Land: Österreich
+- Beschäftigung: einfache haushaltstypische Dienstleistungen
+- Nicht geeignet für: Gesellschaft als Arbeitgeber, Unternehmens-/Eventbezug, Mischverwendung
+
+### Quelle
+- Quelle: Informationen für ArbeitgeberInnen zum Dienstleistungsscheck / Dienstleistungen gegen Scheck / Geringfügige Beschäftigung
+- Herausgeber: Dienstleistungsscheck-Online / Österreichische Gesundheitskasse / Unternehmensserviceportal
+- Link: https://www.dienstleistungsscheck-online.at/dienstleistungsscheck-webapp/about/arbeitgeber.jsf
+- Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904693
+- Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/geringfuegige-beschaeftigung.html
+- Stand/Veröffentlichungsdatum: Websites, Stand 01.01.2026 bzw. laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: niedrig/mittel
+
+### Werte 2026
+- Geringfügigkeitsgrenze: 551,10 EUR monatlich.
+- DLS-Verdienstgrenze laut DLS-Online: 755,01 EUR monatlich, weil Urlaubsersatzleistung und anteilige Sonderzahlungen anders berücksichtigt werden.
+- DLS-Arbeitsverhältnisse sind für kurze, auf längstens einen Monat befristete Einsätze vorgesehen.
+
+## 13. Compliance und Reporting
+
+### Kernaussage
+Touristische Vermietung braucht einen wiederkehrenden Compliance-Prozess. In Tirol umfasst dies insbesondere Anzeige beim Tourismusverband, Betriebsnummer, Gästemeldung binnen 24 Stunden, Einhebung und Abführung der Aufenthaltsabgabe sowie Aufbewahrung der Nachweise. Auf Bundesebene ist das Gästeverzeichnis ebenfalls zu führen.
+
+### Geltungsbereich
+- Österreich: Meldewesen / Gästeverzeichnis
+- Tirol: Aufenthaltsabgaben und Tourismusverband
+- Gemeinde/Tourismusverband: konkrete Prozesse und Höhe lokal variabel
+
+### Quelle
+- Quelle: Gästeblattsammlung/Gästeverzeichnis / Aufenthaltsabgaben / Leitfaden zum Vermieten meiner Wohnung
+- Herausgeber: oesterreich.gv.at / Land Tirol
+- Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
+- Stand/Veröffentlichungsdatum: oesterreich.gv.at 01.01.2026; Land Tirol laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: niedrig/mittel
+
+### Prozessliste
+- Unterkunftgeberregistrierung und Betriebsnummer vor Vermietungsstart
+- Gästedaten bei Anreise erfassen
+- Gästeverzeichnis binnen 24 Stunden aktualisieren
+- Aufenthaltsabgabe korrekt einheben und abführen
+- Rechnungen und Zahlungsnachweise speichern
+- Nutzungskalender mit Eigennutzung/Fremdnutzung abstimmen
+- jährliche Abstimmung mit Steuerberater und Tourismusverband
+
+## 14. Unternehmenscompliance
+
+### Kernaussage
+Bei Kapitalgesellschaften und firmenbuchfähigen Personengesellschaften kommen Unternehmenscompliance-Themen hinzu. Das Register der wirtschaftlichen Eigentümer erfasst Gesellschaften und sonstige Rechtsträger; nicht befreite neu gegründete Rechtsträger müssen binnen vier Wochen nach Eintragung in das jeweilige Stammregister melden. Abhängig von Rechtsform und Gesellschafterstruktur können Befreiungen greifen, die im Einzelfall zu prüfen sind.
+
+### Geltungsbereich
+- Land: Österreich
+- Rechtsformen: OG, KG, GmbH, GmbH & Co KG, Verein, weitere Rechtsträger
+- Register: Firmenbuch, Vereinsregister, WiEReG
+
+### Quelle
+- Quelle: Register der wirtschaftlichen Eigentümer
+- Herausgeber: Bundesministerium für Finanzen / Unternehmensserviceportal
+- Link: https://www.bmf.gv.at/services/wiereg/wiereg-register.html
+- Link: https://www.usp.gv.at/laufender-betrieb/register-der-wirtschaftlichen-eigentuemer.html
+- Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Relevanz
+Je mehr Nebenvehikel und Sondervereinbarungen genutzt werden, desto höher wird der laufende Dokumentations- und Meldeaufwand. Für das Projekt spricht organisatorisch vieles für wenige klare Strukturen statt paralleler Hilfskonstruktionen.

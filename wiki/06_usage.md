@@ -180,6 +180,17 @@ Eine Hausordnung reduziert Konflikte und Haftungsrisiken. Sie sollte für Eigent
 - Land: Österreich
 - Nutzung: Eigennutzung und Fremdvermietung
 
+### Quelle
+- Quelle: DeepResearch-Referenz; Gästeblattsammlung/Gästeverzeichnis; Versicherungs-ABC
+- Herausgeber: Projektteam / oesterreich.gv.at / Wirtschaftskammer Österreich
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
+- Link: https://www.wko.at/branchen/information-consulting/versicherungsmakler-berater-versicherungsangelegenheiten/versicherungs-abc-m.html
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
 ### Themen
 - maximale Belegung
 - Haustiere
@@ -209,11 +220,12 @@ Saison- und Preislogik beeinflussen Wirtschaftlichkeit, Eigennutzungskonflikte u
 - Nutzung: touristische Vermietung, Firmenvermietung, Eigennutzung
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Tourismusverband / Plattformdaten / Marktanalyse
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Aufenthaltsabgaben / Leitfaden zum Vermieten meiner Wohnung
+- Herausgeber: Land Tirol
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
+- Stand/Veröffentlichungsdatum: Websites/PDF, laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: konkrete Region
 - Stabilität: niedrig
 
@@ -228,3 +240,162 @@ Saison- und Preislogik beeinflussen Wirtschaftlichkeit, Eigennutzungskonflikte u
 - Plattformprovisionen
 - Reinigungsgebühr
 - Kaution
+
+## 8. Punktesystem: Zweck und Steuergrenze
+
+### Kernaussage
+Ein Punktesystem sollte Nutzung priorisieren und dokumentieren, nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder Mietzahlungen ersetzen. Arbeitspunkte brauchen Genehmigung, Stundenwert, Cap und Verfall. Die Exit-Bewertung sollte unabhängig von subjektiv bewerteter Arbeit erfolgen.
+
+### Geltungsbereich
+- Land: Österreich
+- Nutzung: Eigennutzung, Fremdvermietungsfreigabe, Arbeitseinsatz
+- Rechtsformen: Miteigentum, Personengesellschaften, GmbH-Strukturen
+
+### Quelle
+- Quelle: Kommanditgesellschaft / Besteuerung von Personengesellschaften
+- Herausgeber: Wirtschaftskammer Österreich
+- Link: https://www.wko.at/gruendung/kommanditgesellschaft-kg
+- Link: https://www.wko.at/steuern/besteuerung-personengesellschaften
+- Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Mindestregeln
+- jährlicher genehmigter Arbeitskatalog
+- dokumentierte Leistungserbringung
+- Cap für Arbeitspunkte
+- keine automatische Kapital- oder Arbeitsvergütung ohne steuerliche Prüfung
+- jährliche Abrechnung und Genehmigung
+- Exit-Bewertung ohne Rückgriff auf subjektive Arbeitspunkte
+
+## 9. Drei Varianten für ein Punktesystem
+
+### Kernaussage
+Die drei Varianten sind Arbeitsmodelle für die interne Nutzung. Sie sind vor Umsetzung rechtlich und steuerlich zu prüfen.
+
+### Quelle
+- Quelle: DeepResearch-Referenz; steuerliche Warnhinweise siehe Abschnitt 8
+- Herausgeber: Projektteam
+- Link: ../references/260515-DeepResearch1
+- Stand/Veröffentlichungsdatum: 2026-05-15
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Wiki-interne Modellierung
+- Stabilität: mittel
+
+### Variante Kapital-dominiert
+| Element | Vorschlag |
+|---|---|
+| Basispunkte | 80 % nach eingezahltem Kapital / Darlehensübernahme |
+| Arbeitspunkte | 20 % nach genehmigten Leistungen |
+| Arbeitspunkte-Cap | maximal 25 % der Jahrespunkte eines Eigentümers |
+| Verfall | Arbeitspunkte verfallen jährlich, Kapitalpunkte nicht |
+| Geeignet für | stark privat geprägtes Modell |
+
+### Variante Hybrid mit Jahresbudget
+| Element | Vorschlag |
+|---|---|
+| Basispunkte | fixer Jahresblock je 10.000 EUR eingebrachtem Kapital |
+| Zusatzpunkte | dokumentierte Arbeit, Sonderumlagen, garantierte Vermietungsfreigaben |
+| Sperrzeiten | Ferienzeiten separat quotiert oder gelost |
+| Ausgleich | Überziehung nur gegen Ausgleichszahlung an Gemeinschaft |
+| Geeignet für | sechs bis zehn Eigentümer mit ungleichen Beiträgen |
+
+### Variante Betriebsnahes Credit-Modell
+| Element | Vorschlag |
+|---|---|
+| Eigentümerkonto | Geldkonto und Nutzungskonto je Eigentümer |
+| Credits | entstehen aus Kapital, genehmigten Arbeitsleistungen und Budgetvorfinanzierung |
+| Preise | jede Nacht / Veranstaltung zieht Credits nach Saisonkalender |
+| Vorteil | transparent, bank- und exitfähig |
+| Nachteil | höherer Verwaltungsaufwand |
+
+## 10. Buchungslogik und Sperrzeiten
+
+### Kernaussage
+Bei mehreren Eigentümern muss die Buchungslogik Hochsaison, Nebensaison, private Nutzung, Fremdvermietung und Firmenaufenthalte getrennt regeln. Ohne klare Sperr- und Freigaberegeln entstehen Konflikte zwischen privater Zielnutzung und Kostendeckung durch Vermietung.
+
+### Geltungsbereich
+- Land: Österreich
+- Nutzung: Eigennutzung, Fremdvermietung, Firmenvermietung
+- Region: Saisonen und Marktpreise standortabhängig
+
+### Quelle
+- Quelle: DeepResearch-Referenz; Aufenthaltsabgaben und USt-Quellen für Vermietungsfolgen
+- Herausgeber: Projektteam / Land Tirol / Unternehmensserviceportal
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / regionale Anwendung
+- Stabilität: niedrig/mittel
+
+### Regelungspunkte
+- jährliches Buchungsfenster für Eigentümer
+- separate Quote für Hochsaison, Feiertage und Schulferien
+- rotierendes Prioritäts- oder Losverfahren
+- Mindestfreigabe für Fremdvermietung, falls Finanzierung darauf baut
+- transparente Eigentümerpreise oder Credit-Abzüge
+- Storno- und No-Show-Regeln
+- Sperrung für Wartung, Reinigung und Eigennutzungswechsel
+- Dokumentation jeder Nutzung im Kalender
+
+## 11. Owner-affiliated company usage
+
+### Kernaussage
+Nutzungen durch Unternehmen, die einem Eigentümer nahestehen, sind nicht automatisch normale Fremdvermietung. Sie sollten wie B2B-Nutzungen dokumentiert und fremdüblich bepreist werden. Zusätzlich sind Leistungsinhalt, Umsatzsteuersatz, Gästemeldung, Aufenthaltsabgabe und Versicherung zu prüfen.
+
+### Geltungsbereich
+- Land: Österreich
+- Nutzung: Firmenaufenthalte, Offsites, Workshops, Retreats
+- Steuer: USt und Fremdüblichkeit; konkrete Ertragsteuerfolgen einzelfallabhängig
+
+### Quelle
+- Quelle: Steuersätze und Steuerbefreiungen der Umsatzsteuer / Zimmervermietung und Gewerberecht / Aufenthaltsabgaben
+- Herausgeber: USP / oesterreich.gv.at / Land Tirol
+- Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
+- Link: https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol bei Abgaben
+- Stabilität: mittel
+
+### Mindestdaten
+- buchendes Unternehmen
+- wirtschaftlich berechtigter Eigentümerbezug
+- konkrete Teilnehmer und Nächtigungen
+- Leistungsumfang: Unterkunft, Raum, Verpflegung, Organisation, Technik
+- Preisbasis und Vergleichspreise
+- Rechnung und USt-Satz je Leistung
+- Aufenthaltsabgabe und Gästemeldung, sofern Nächtigung
+- Kaution, Schäden und Versicherungsschutz
+
+## 12. Vermietungsfreigaben
+
+### Kernaussage
+Fremdvermietung darf die private Zielnutzung nicht unkontrolliert verdrängen, muss aber planbar genug sein, wenn sie die Fixkosten entlasten soll. Deshalb sollten Vermietungsfreigaben jährlich beschlossen und im Kalender verbindlich blockiert werden.
+
+### Geltungsbereich
+- Land: Österreich
+- Nutzung: touristische Vermietung, Firmenvermietung, Eigennutzung
+
+### Quelle
+- Quelle: DeepResearch-Referenz; Land Tirol Aufenthaltsabgaben; oesterreich.gv.at Gästeverzeichnis
+- Herausgeber: Projektteam / Land Tirol / oesterreich.gv.at
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
+- Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites 2026/laufend
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: niedrig/mittel
+
+### Modelle
+| Modell | Beschreibung | Risiko |
+|---|---|---|
+| freiwillige Freigabe | Eigentümer geben einzelne Zeiten frei | geringe Planbarkeit |
+| Pflichtkontingent | jeder Eigentümer gibt anteilig Tage frei | Konflikte bei Hochsaison möglich |
+| Budgetdeckungsmodell | Freigaben richten sich nach Deckungsbeitragsziel | höherer Verwaltungsaufwand |
+| Firmenfenster | definierte Zeitfenster für Firmenbuchungen | USt-/Gewerbe-/Versicherungsthemen sauber trennen |

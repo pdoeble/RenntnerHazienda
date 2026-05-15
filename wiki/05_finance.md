@@ -59,11 +59,12 @@ Eigenkapital reduziert Finanzierungsrisiko, Bankrisiko und laufenden Kapitaldien
 - Finanzierung: Eigenmittel, Einlagen, Kapitalkonten
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Bank / Finanzierungsberater / OeNB / FMA
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: KIM-V-Ende / Eigenmittel
+- Herausgeber: Finanzmarktaufsicht Österreich / Raiffeisen
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformation laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel
 
@@ -87,11 +88,12 @@ Fremdfinanzierung erfolgt häufig über einen hypothekarisch besicherten Kredit.
 - Kreditnehmer: natürliche Personen oder Gesellschaft
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Bank / FMA / Verbraucherkreditinformationen
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Wohnimmobilienkredite / KIM-V-Ende
+- Herausgeber: Finanzmarktaufsicht Österreich
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Stand/Veröffentlichungsdatum: FMA Website laufend aktualisiert; Pressemitteilung 26.06.2025
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich / EU
 - Stabilität: niedrig, da Zinsen und Bankpraxis laufend wechseln
 
@@ -147,11 +149,13 @@ Banken bewerten nicht nur Objektwert, sondern auch Verwertbarkeit, Nutzungserlau
 - Finanzierung: Immobilienkredit, Unternehmensfinanzierung, Privatfinanzierung
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: konkrete Bankunterlagen / Finanzierungsleitfaden
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: KIM-V-Ende / Eigenmittel / Immobilienkredit
+- Herausgeber: Finanzmarktaufsicht Österreich / Raiffeisen / Bank Austria
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
+- Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformationen laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich
 - Stabilität: niedrig, da bankabhängig
 
@@ -180,11 +184,13 @@ Bei geplanter Vermietung sollte die Finanzierung mit konservativen Auslastungs-,
 - Nutzung: touristische Vermietung, Firmenvermietung, gemischte Nutzung
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Bank / Steuerberater / Branchenstatistik / Tourismusverband
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Wohnimmobilienkredite / Aufenthaltsabgaben / USt-Sätze
+- Herausgeber: Finanzmarktaufsicht Österreich / Land Tirol / Unternehmensserviceportal
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich / Region
 - Stabilität: niedrig
 
@@ -205,6 +211,17 @@ Für Bankgespräche sollten rechtliche, wirtschaftliche, steuerliche und organis
 ### Geltungsbereich
 - Land: Österreich
 - Finanzierung: Bankanfrage / Kreditprüfung
+
+### Quelle
+- Quelle: Immobilienkredit / Eigenmittel / KIM-V-Ende
+- Herausgeber: Bank Austria / Raiffeisen / Finanzmarktaufsicht Österreich
+- Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen; FMA 26.06.2025
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich, bankabhängig
+- Stabilität: niedrig
 
 ### Typische Unterlagen
 - Grundbuchsauszug
@@ -229,6 +246,16 @@ Für Bankgespräche sollten rechtliche, wirtschaftliche, steuerliche und organis
 ### Kernaussage
 Gemeinschaftliche Ferienimmobilien kombinieren Immobilien-, Zins-, Auslastungs-, Rechtsform-, Steuer- und Gruppenrisiken.
 
+### Quelle
+- Quelle: DeepResearch-Referenz; FMA Wohnimmobilienkredite
+- Herausgeber: Projektteam / Finanzmarktaufsicht Österreich
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Stand/Veröffentlichungsdatum: 2026-05-15 / FMA laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich allgemein
+- Stabilität: mittel
+
 ### Offene Prüfpunkte
 - Was passiert bei Zahlungsunfähigkeit eines Beteiligten?
 - Gibt es Nachschusspflichten?
@@ -238,3 +265,137 @@ Gemeinschaftliche Ferienimmobilien kombinieren Immobilien-, Zins-, Auslastungs-,
 - Wer trägt Sonderumlagen?
 - Gibt es Liquiditätsreserven?
 - Was passiert bei Nutzungsverbot oder geänderter Gemeindepraxis?
+
+## 9. Bankpraxis nach Auslaufen der KIM-V
+
+### Kernaussage
+Seit dem Auslaufen der KIM-V am 30.06.2025 besteht kein starres KIM-V-Regime mehr. Die FMA erwartet aber weiterhin solide Vergabestandards für private Wohnimmobilienkredite. Als Leitplanken nennt sie insbesondere maximal 90 % Beleihungsquote, maximal 40 % Schuldendienstquote und maximal 35 Jahre Laufzeit. Diese Werte sind aufsichtsseitige Orientierung, nicht automatisch eine Zusage für ein gemeinschaftliches Ferienhausprojekt.
+
+### Geltungsbereich
+- Land: Österreich
+- Finanzierung: private Wohnimmobilienkredite; Übertragung auf Ferienhaus-/SPV-Modelle nur als Risikoindikator
+- Bankpraxis: institutsspezifisch
+
+### Quelle
+- Quelle: KIM-V-Ende / Wohnimmobilienkredite
+- Herausgeber: Finanzmarktaufsicht Österreich
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Stand/Veröffentlichungsdatum: 26.06.2025 / laufend aktualisierte Website
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: niedrig/mittel
+
+### Inferenz für das Projekt
+Ein Ferienhaus mit mehreren privaten Eigentümern, grenzüberschreitenden Beteiligten, begrenzter Vermietung, starker Eigennutzung und ggf. kleiner Objektgesellschaft ist aus Bankensicht kein Standard-Wohnkredit. Es ist realistisch, zusätzliche Sicherheiten, persönliche Bürgschaften, strengere Eigenkapitalanforderungen, Exit-Regeln und eine belastbare Governance einzuplanen. Diese Aussage ist eine Marktinferenz aus FMA-Leitplanken und Bankpraxis, keine gesetzliche Pflicht.
+
+## 10. Eigenmittel und Nebenkosten
+
+### Kernaussage
+Österreichische Banken kommunizieren für Immobilienfinanzierungen regelmäßig, dass Eigenmittel und Nebenkosten separat zu betrachten sind. Raiffeisen weist darauf hin, dass Nebenkosten in Summe über 10 % ausmachen können; Bank Austria nennt als Faustregel mindestens 20 % Eigenmittel bzw. bankabhängig 20 bis 35 % des Gesamtprojektvolumens. Für Ferienhaus- und Vermietungsmodelle sollte konservativer gerechnet werden.
+
+### Geltungsbereich
+- Land: Österreich
+- Finanzierung: Bankpraxis, keine verbindliche Kreditentscheidung
+- Stabilität: niedrig, da bank- und marktabhängig
+
+### Quelle
+- Quelle: Eigenmittel / Immobilienkredit
+- Herausgeber: Raiffeisen / Bank Austria
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
+- Link: https://www.bankaustria.at/kredit-finanzierungs-tipps-geldanlage-immobilien.jsp
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich, bankabhängig
+- Stabilität: niedrig
+
+### Relevanz
+Nebenkosten, Einrichtung, Instandsetzung, Reserven, Pfandrecht, USt-Liquidität und Anlaufverluste sollten nicht aus optimistischen Vermietungserlösen finanziert werden. Bei USt-Kauf ohne sicheren Vorsteuerabzug steigt der Eigenkapitalbedarf deutlich.
+
+## 11. Bank-szenario zur Liquidität
+
+### Kernaussage
+Die folgende Tabelle ist eine Arbeitsannahme für das Wiki. Annahmen: 70 % LTV auf den Bruttokaufpreis, Erwerbsnebenkosten typisiert mit 3,5 % GrESt + 1,1 % Eigentumseintragung + 1,8 % Vertrag/Treuhand + 3,6 % Makler = 10,0 % des Bruttokaufpreises; zusätzlich 1,2 % Pfandrechtsgebühr auf den Darlehensbetrag. Das ist weder Mindest- noch Höchstwert, sondern ein konservativer Standardfall.
+
+### Quelle
+- Quelle: Nebenkosten beim Wohnungs- und Grundstückskauf / Bemessungsgrundlage / USt-Sätze / Vorsteuerberichtigung
+- Herausgeber: oesterreich.gv.at / Bundesministerium für Finanzen / Unternehmensserviceportal
+- Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
+- Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grunderwerbsteuer/bemessungsgrundlage.html
+- Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
+- Link: https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/vorsteuerberichtigungszeitraum_bei_Grundst%C3%BCcken.html
+- Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+| Netto-Kaufpreis | Kauf mit USt? | Bruttokaufpreis | Typische Nebenkosten ohne Pfandrecht | Darlehen 70 % | Pfandrecht 1,2 % | Geschätztes benötigtes Eigenkapital |
+|---|---:|---:|---:|---:|---:|---:|
+| 300.000 EUR | nein | 300.000 EUR | 30.000 EUR | 210.000 EUR | 2.520 EUR | 122.520 EUR |
+| 300.000 EUR | ja, 20 % | 360.000 EUR | 36.000 EUR | 252.000 EUR | 3.024 EUR | 147.024 EUR |
+| 500.000 EUR | nein | 500.000 EUR | 50.000 EUR | 350.000 EUR | 4.200 EUR | 204.200 EUR |
+| 500.000 EUR | ja, 20 % | 600.000 EUR | 60.000 EUR | 420.000 EUR | 5.040 EUR | 245.040 EUR |
+| 700.000 EUR | nein | 700.000 EUR | 70.000 EUR | 490.000 EUR | 5.880 EUR | 285.880 EUR |
+| 700.000 EUR | ja, 20 % | 840.000 EUR | 84.000 EUR | 588.000 EUR | 7.056 EUR | 343.056 EUR |
+
+### Hinweis
+Maklerfreie Transaktionen, günstigere Vertragserrichtung oder andere Bankvorgaben können die Werte verändern. Ein Kauf mit 20 % USt erhöht den Liquiditätsbedarf massiv, wenn die USt nicht oder nicht zeitnah als Vorsteuer geltend gemacht werden kann.
+
+## 12. Bankenpaket
+
+### Kernaussage
+Für Bankgespräche sollte die Eigentümergruppe ein einheitliches Paket vorbereiten, das Recht, Struktur, Bonität, Nutzung und konservative Wirtschaftlichkeit zusammenführt. Vermietungserlöse sollten nicht aggressiv angesetzt werden; der Business Case muss auch bei moderater Auslastung tragfähig bleiben.
+
+### Geltungsbereich
+- Land: Österreich
+- Finanzierung: Bankanfrage, Vorprüfung, interne Strukturentscheidung
+
+### Quelle
+- Quelle: KIM-V-Ende / Immobilienkredit / Eigenmittel
+- Herausgeber: Finanzmarktaufsicht Österreich / Bank Austria / Raiffeisen
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
+- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformationen laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich, bankabhängig
+- Stabilität: niedrig
+
+### Mindestunterlagen
+- Einkommensnachweise und Steuerbescheide der Beteiligten
+- Vermögensstatus und Eigenmittelnachweise
+- Eigentümerliste mit Beteiligungsquoten
+- Entwurf Gesellschafts-, Syndikats- oder Miteigentümervertrag
+- Nutzungsregelwerk und Punktesystem
+- Exit- und Aufgriffsregeln
+- Nachschussmechanismus
+- Budget- und Liquiditätsplanung
+- Nachweis der rechtlich zulässigen Nutzung
+- Grundbuchsauszug, Pläne, Energieausweis und Objektunterlagen
+- konservativer Business Case ohne aggressive Auslastungsannahmen
+- Versicherungs- und Betreiberkonzept
+
+## 13. Stressszenarien
+
+### Kernaussage
+Die Finanzierungsprüfung sollte mindestens drei Stressachsen simulieren: Zinsanstieg, geringere Vermietung und Sonderkosten. Bei Gruppeneigentum kommt zusätzlich der Ausfall eines Beteiligten als eigener Stresstest hinzu.
+
+### Quelle
+- Quelle: DeepResearch-Referenz; FMA Wohnimmobilienkredite
+- Herausgeber: Projektteam / FMA
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
+- Stand/Veröffentlichungsdatum: 2026-05-15 / FMA laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich allgemein
+- Stabilität: mittel
+
+| Szenario | Zu prüfen |
+|---|---|
+| Zins +2 Prozentpunkte | Kapitaldienst, Schuldendienstquote, Nachschüsse |
+| 50 % weniger Vermietungsnächte | Fixkostendeckung, Eigentümerrestbedarf |
+| größere Reparatur | Rücklage, Sonderumlage, Kreditspielraum |
+| USt-Vorsteuer nicht verfügbar | Eigenkapitalbedarf, Liquiditätslücke |
+| Nutzungsbeschränkung durch Gemeinde | Vermietungsausfall, Exit, Werthaltigkeit |
+| Ausfall eines Eigentümers | Nachschüsse, Stimmrechte, Aufgriff, Bankzustimmung |

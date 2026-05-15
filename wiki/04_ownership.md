@@ -132,11 +132,12 @@ Die OG ist eine Personengesellschaft mit Firmenbucheintragung. Alle Gesellschaft
 - Nutzung: unternehmerische Tätigkeit mit mehreren Gesellschaftern
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: WKO / RIS
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Offene Gesellschaft
+- Herausgeber: Wirtschaftskammer Österreich / Unternehmensserviceportal
+- Link: https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og-
+- Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/offene-gesellschaft-og.html
+- Stand/Veröffentlichungsdatum: WKO Stand 24.10.2025; USP 01.01.2025
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -293,11 +294,12 @@ Ein Verein dient grundsätzlich einem ideellen Zweck. Für ein Ferienhaus mit Ei
 - Nutzung: ideelle Zwecke; wirtschaftliche Tätigkeit nur im Rahmen der vereinsrechtlichen Grenzen
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: BMI / Vereinsrecht / Steuerberater
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Vereinswesen / Gewerbeanmeldung
+- Herausgeber: Bundesministerium für Inneres / Unternehmensserviceportal
+- Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
+- Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
+- Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -321,6 +323,16 @@ Ein Verein dient grundsätzlich einem ideellen Zweck. Für ein Ferienhaus mit Ei
 
 ## 9. Vergleichsmatrix
 
+### Quelle
+- Quelle: Gesellschaftsformen-Informationen / DeepResearch-Referenz
+- Herausgeber: WKO / Projektteam
+- Link: https://www.wko.at/wirtschaftsrecht/uebersicht-gesellschaftsformen
+- Link: ../references/260515-DeepResearch1
+- Stand/Veröffentlichungsdatum: WKO Stand 08.05.2026; DeepResearch 2026-05-15
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
 | Kriterium | Miteigentum | GesbR | KG | GmbH | GmbH & Co KG | Verein |
 |---|---|---|---|---|---|---|
 | Gründungskomplexität | niedrig | niedrig | mittel | mittel/hoch | hoch | niedrig/mittel |
@@ -331,3 +343,133 @@ Ein Verein dient grundsätzlich einem ideellen Zweck. Für ein Ferienhaus mit Ei
 | Eigennutzung | gut regelbar, aber konfliktträchtig | vertraglich regelbar | regelbar | steuerlich sensibel | regelbar, aber komplex | kritisch |
 | Fremdvermietung | möglich | möglich | gut strukturierbar | gut strukturierbar | gut strukturierbar | kritisch |
 | Exit-Regelung | vertraglich nötig | vertraglich nötig | gut regelbar | gut regelbar | gut regelbar | satzungsabhängig |
+
+## 10. ownership_matrix aus DeepResearch
+
+### Kernaussage
+Für ein privat geprägtes Ferienhaus mit ungleichen Beiträgen, begrenzter Vermietung und gewünschter Governance sind vor allem zwei Grundrichtungen realistisch: direktes Miteigentum mit sehr detaillierter schuldrechtlicher Vereinbarung oder eine strukturierte Gesellschaftslösung, insbesondere KG, GmbH oder GmbH & Co KG. Der Verein ist in dieser Konstellation vor allem als Negativvergleich zu dokumentieren.
+
+### Geltungsbereich
+- Land: Österreich
+- Strukturen: Miteigentum, GesbR, OG, KG, GmbH, GmbH & Co KG, Verein
+- Charakter: Strukturvergleich; keine Rechtsformempfehlung für einen konkreten Kauf
+
+### Quelle
+- Quelle: Gesellschaft bürgerlichen Rechts / Offene Gesellschaft / Kommanditgesellschaft / GmbH / GmbH & Co KG / Vereinswesen
+- Herausgeber: WKO / BMI / oesterreich.gv.at
+- Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr
+- Link: https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og-
+- Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
+- Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
+- Link: https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg
+- Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
+- Stand/Veröffentlichungsdatum: WKO/BMI Websites, Stand 2025/2026 bzw. laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+| Struktur | Haftung | Bankability | Form-/Laufkosten | Steuerlogik | Exit/Eintritt | Hausmeister anstellen | Punktesystem | Geeignetheit |
+|---|---|---|---|---|---|---|---|---|
+| Direktes Miteigentum | keine Haftungshülle; persönliche Vertragshaftung | mittel bis schwach | niedrig | Einkünfte direkt bei Eigentümern | schwierig, weil Grundbuch- und Zustimmungsthemen | möglich, aber administrativ sperrig | sehr flexibel | gut bei stark privatem Modell |
+| GesbR | persönlich; keine Rechtspersönlichkeit | schwach bis mittel | niedrig | transparent; Gesellschafter bleiben Rechtsträger | schwierig bis mittel | möglich, aber unpraktisch | sehr flexibel | nur für sehr vertrauensbasierte Gruppen |
+| OG | persönlich, solidarisch, unbeschränkt | mittel | mittel | transparent; Gesellschaft für USt/Lohnabgaben relevant | mittel | gut möglich | flexibel | rechtlich sauberer als GesbR, aber Haftung hart |
+| KG | Komplementär unbeschränkt, Kommanditisten grundsätzlich beschränkt | mittel bis gut | mittel | transparent; Gesellschaft für USt/Lohnabgaben relevant | mittel bis gut | gut möglich | flexibel | oft guter Kompromiss |
+| GmbH | Gesellschaft haftet; Gesellschafter grundsätzlich mit Einlage | gut | hoch | Körperschaftsteuer auf Gesellschaftsebene | gut über Geschäftsanteile | gut möglich | möglich, aber gesellschaftsvertraglich komplex | gut bei Professionalisierung |
+| GmbH & Co KG | wirtschaftlich gute Haftungsabschirmung, Strukturkosten hoch | gut | sehr hoch | KG-Logik mit GmbH-Komplementärin | gut | sehr gut | flexibel, aber sauber zu normieren | häufig starke Langfriststruktur für gemischtes Modell |
+| Verein | Verein haftet primär mit Vermögen; Mitgliedergewinnverteilung unzulässig | schwach | mittel | bei erwerbswirtschaftlicher Prägung steuerlich und gewerberechtlich kritisch | schlecht | möglich, aber nur mit Vereins- und Gewerbelogik | für eigentumsnahe Nutzung unpassend | meist ungeeignet |
+
+## 11. Rechtliche Eckdaten der Rechtsformen
+
+### Kernaussage
+Die GesbR hat keine eigene Rechtspersönlichkeit und kann nicht selbst ins Grundbuch eingetragen werden. OG und KG sind firmenbuchfähige Personengesellschaften. Die GmbH ist juristische Person; das Mindeststammkapital beträgt 10.000 EUR. Die GmbH & Co KG kombiniert die KG-Struktur mit einer GmbH als Komplementärin. Ein Verein verfolgt einen ideellen Zweck und darf nicht auf Gewinnverteilung an Mitglieder ausgerichtet sein.
+
+### Geltungsbereich
+- Land: Österreich
+- Rechtsgebiet: Gesellschafts- und Vereinsrecht
+
+### Quelle
+- Quelle: WKO-Rechtsforminformationen / Vereinswesen
+- Herausgeber: WKO / Bundesministerium für Inneres
+- Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr
+- Link: https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og-
+- Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
+- Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
+- Link: https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg
+- Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
+- Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026 bzw. laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Steuerliche Grundlogik
+Personengesellschaften sind für die Ertragsteuer grundsätzlich transparent; der Gewinn wird auf Gesellschaftsebene ermittelt bzw. festgestellt und den Gesellschaftern zugerechnet. Für betriebliche Steuern wie Umsatzsteuer und Lohnabgaben kann die Gesellschaft selbst relevant sein. Kapitalgesellschaften wie die GmbH unterliegen der Körperschaftsteuer.
+
+### Quelle
+- Quelle: Besteuerung von Personengesellschaften / Kommanditgesellschaft / Körperschaftsteuer
+- Herausgeber: Wirtschaftskammer Österreich / Unternehmensserviceportal
+- Link: https://www.wko.at/steuern/besteuerung-personengesellschaften
+- Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
+- Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/koerperschaftsteuer.html
+- Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+## 12. Strukturfolgerung für das Projektprofil
+
+### Kernaussage
+Wenn Privatnutzung dominiert, persönliche Haftung gruppentauglich ist und maximale Flexibilität gewünscht wird, ist Miteigentum mit strenger Benützungs-, Kosten-, Nachschuss- und Exit-Vereinbarung die einfachste Grundrichtung. Wenn Haftungsabschirmung, Eintritt/Austritt, Arbeits- oder Hausmeisterverhältnisse, Mietverträge und Bankansprache wichtiger werden, gewinnen KG oder GmbH & Co KG. Diese Aussage ist eine Gestaltungsinferenz aus den offiziellen Rechtsformmerkmalen, keine gesetzliche Vorgabe.
+
+### Quelle
+- Quelle: DeepResearch-Referenz; WKO-Rechtsforminformationen; FMA Wohnimmobilienkredite
+- Herausgeber: Projektteam / WKO / FMA
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.wko.at/wirtschaftsrecht/uebersicht-gesellschaftsformen
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Stand/Veröffentlichungsdatum: 2026-05-15; WKO/FMA Stand 2025/2026
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Mindestinhalte einer Beteiligungs- oder Syndikatsvereinbarung
+- Eigentums- und Beteiligungsquoten
+- Kapital- und Darlehenskonten
+- laufende Kostenverteilung
+- Nachschusspflichten und Ausfallfolgen
+- Nutzungskalender und Prioritäten
+- Fremdvermietungsfreigaben
+- Regeln für Firmen der Eigentümer oder nahestehende Nutzer
+- Arbeitsleistungen und Punktesystem mit Cap
+- Vertretung gegenüber Bank, Behörden, Gästen und Dienstleistern
+- Beschlussmehrheiten und Vetorechte
+- Budget, Rücklage und Sonderumlagen
+- Exit, Aufgriff, Bewertung, Zahlungsfristen
+- Tod, Scheidung, Insolvenz, Pfändung und Veräußerung
+- Streitbeilegung
+
+## 13. Verein als Negativvergleich
+
+### Kernaussage
+Der Verein ist für eine eigentumsnahe Ferienhausstruktur mit privaten Nutzungsvorteilen, ungleichen Beiträgen, Exit-Regeln, möglicher Vermietung und wirtschaftlicher Kosten-/Erlösverteilung regelmäßig nicht die passende Primärstruktur. Ein Verein kann wirtschaftlich tätig sein, seine Einnahmen müssen aber dem ideellen Vereinszweck dienen; die Konstruktion darf nicht auf Gewinnerzielung und Verteilung an Mitglieder ausgerichtet sein. Bei gewerblicher Tätigkeit kann zusätzlich eine Gewerbeberechtigung erforderlich sein.
+
+### Geltungsbereich
+- Land: Österreich
+- Rechtsgebiet: Vereinsrecht, Gewerberecht, Steuer
+- Charakter: allgemeiner Negativvergleich, keine Einzelfallprüfung eines konkreten Vereinszwecks
+
+### Quelle
+- Quelle: Vereinswesen / Gewerbeanmeldung
+- Herausgeber: Bundesministerium für Inneres / Unternehmensserviceportal
+- Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
+- Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
+- Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Prüffragen
+- Gibt es einen echten ideellen Zweck jenseits der privaten Nutzungsvorteile?
+- Dienen Einnahmen ausschließlich dem Vereinszweck?
+- Werden Gewinne oder Nutzungsvorteile vereinszweckwidrig an Mitglieder verteilt?
+- Liegt eine selbständige, regelmäßige Tätigkeit mit Gewinnabsicht vor, die eine Gewerbeberechtigung erfordert?
+- Ist eine Bankfinanzierung eines Vereinsvehikels realistisch?

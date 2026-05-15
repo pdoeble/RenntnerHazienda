@@ -193,13 +193,14 @@ Bei Eigennutzung und Fremdvermietung sind Gebäudeversicherung, Haus- und Grundb
 - Rechtsgebiete: Zivilrecht, Versicherungsrecht, Haftungsrecht
 
 ### Quelle
-- Quelle: noch zu ergänzen
-- Herausgeber: Versicherer / Rechtsanwalt / WKO / Behördenquelle
-- Link: offen
-- Stand/Veröffentlichungsdatum: offen
-- Abrufdatum: offen
+- Quelle: Versicherungs-ABC Mietsachschäden / Leitsätze Haftpflichtversicherung
+- Herausgeber: Wirtschaftskammer Österreich
+- Link: https://www.wko.at/branchen/information-consulting/versicherungsmakler-berater-versicherungsangelegenheiten/versicherungs-abc-m.html
+- Link: https://www.wko.at/stmk/information-consulting/versicherungsmakler-schlichtungsstellen/leitsaetze-zu-haftpflichtversicherung
+- Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
+- Abrufdatum: 2026-05-15
 - Geltungsbereich: Österreich
-- Stabilität: mittel
+- Stabilität: niedrig/mittel, da konkreter Deckungsumfang vom Versicherungsvertrag abhängt
 
 ### Offene Prüfpunkte
 - Deckt die Versicherung touristische Vermietung?
@@ -207,3 +208,166 @@ Bei Eigennutzung und Fremdvermietung sind Gebäudeversicherung, Haus- und Grundb
 - Sind Schlüsselverlust, Brand, Wasser, Elementarereignisse gedeckt?
 - Sind Firmenveranstaltungen gedeckt?
 - Gibt es Betreiberpflichten bei Sauna, Pool, Kamin, Parkplatz, Treppen, Dachlawinen?
+
+## 8. Priorität: Nutzungszulässigkeit vor Steuerstruktur
+
+### Kernaussage
+Vor Kauf, Steuerplanung oder Rechtsformwahl ist zu klären, ob die konkrete Liegenschaft in der konkreten Gemeinde für die gewünschte Kombination aus Wohnnutzung, Freizeitwohnsitz, touristischer Vermietung und Firmen-/Tagungsnutzung verwendet werden darf. Österreich kennt keinen einheitlichen bundesweiten Ferienhausstatus. Flächenwidmung, Bebauungsplan, Baubescheide, Benützungsbewilligung, landesrechtliche Freizeitwohnsitzregeln und gemeindliche Vollzugspraxis sind getrennt zu prüfen.
+
+### Geltungsbereich
+- Land: Österreich
+- Bundesland/Gemeinde: stark relevant
+- Objektbezug: zwingend im Einzelfall zu prüfen
+
+### Quelle
+- Quelle: Flächenwidmungs- und Bebauungspläne / Freizeitwohnsitzverzeichnis / Tiroler Raumordnungsgesetz
+- Herausgeber: oesterreich.gv.at / Land Tirol / RIS
+- Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/grundstueckskauf_und_grundbuch/grundstueckskauf/Seite.200030
+- Link: https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/
+- Link: https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=LrT&Gesetzesnummer=20000910
+- Stand/Veröffentlichungsdatum: oesterreich.gv.at laufend aktualisiert; Freizeitwohnsitzverzeichnis 03.04.2026; RIS konsolidiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich allgemein; Tirol als Landesbeispiel
+- Stabilität: niedrig/mittel
+
+### Prüflogik
+1. Flächenwidmungsplan und Bebauungsplan bei Gemeinde oder Landesportal prüfen.
+2. Baurechtliche Bewilligungen und zulässige Benützung anhand Bescheiden und Bestandsplänen prüfen.
+3. Freizeitwohnsitzstatus separat prüfen; touristische Vermietbarkeit ersetzt keine private Freizeitwohnsitzzulässigkeit.
+4. Geplante Firmenaufenthalte und Tagungen als eigene Nutzungsart prüfen.
+5. Ergebnis schriftlich von Gemeinde/Baubehörde bzw. zuständiger Stelle bestätigen lassen.
+
+## 9. Freizeitwohnsitz, touristische Unterkunft und Tagungsnutzung trennen
+
+### Kernaussage
+Ein Objekt kann touristisch vermietbar sein, ohne dass private Zweitwohnsitz- oder Freizeitwohnsitznutzung frei zulässig ist. In Tirol sind Freizeitwohnsitze besonders streng geregelt: Freizeitwohnsitze sind nur in den gesetzlich vorgesehenen Fällen zulässig; das Land führt ein Freizeitwohnsitzverzeichnis. Die unzulässige Verwendung oder Überlassung als Freizeitwohnsitz kann verwaltungsstrafrechtliche Folgen haben.
+
+### Geltungsbereich
+- Bundesland: insbesondere Tirol
+- Nutzung: private Freizeitnutzung, touristische Beherbergung, entgeltliche Überlassung
+- Gemeinde: konkrete Zulässigkeit bleibt lokal/objektbezogen
+
+### Quelle
+- Quelle: Tiroler Raumordnungsgesetz / Freizeitwohnsitzverzeichnis / Leitfaden TFLAG 2025
+- Herausgeber: RIS / Land Tirol
+- Link: https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=LrT&Gesetzesnummer=20000910
+- Link: https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/
+- Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf
+- Stand/Veröffentlichungsdatum: RIS konsolidiert; Freizeitwohnsitzverzeichnis 03.04.2026; Leitfaden 2025
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Tirol
+- Stabilität: niedrig/mittel
+
+### Relevanz
+Für ein gemischt genutztes Ferienhaus ist die Begriffsabgrenzung kaufentscheidend. Eine Freizeitwohnsitzabgabe oder Tourismusregistrierung legalisiert nicht automatisch eine raumordnungsrechtlich unzulässige Freizeitwohnsitznutzung. Bei Tirol-Szenarien ist daher immer schriftlich zu klären, ob private Eigentümernutzung, touristische Vermietung und ggf. Firmen-/Tagungsnutzung parallel erlaubt sind.
+
+## 10. Gewerberechtliche Einordnung der Vermietung
+
+### Kernaussage
+Die Abgrenzung zwischen bloßer Raumvermietung und gewerblicher Beherbergung hängt vom Einzelfall ab. Reine Überlassung von Wohnraum ohne Dienstleistungen ist günstiger zu beurteilen als ein touristisch beworbener Betrieb mit kurzen Aufenthalten und Zusatzleistungen. Für gewerbliche Beherbergung sprechen insbesondere kurze Mietdauer, Werbung auf einschlägigen Plattformen, Wäsche, Internet, Endreinigung oder sonstige hotelartige Elemente. Die klassische Privatzimmervermietung als häusliche Nebenbeschäftigung ist nur unter engen Voraussetzungen privilegiert, unter anderem bei maximal zehn Fremdenbetten.
+
+### Geltungsbereich
+- Land: Österreich
+- Rechtsgebiet: Gewerberecht, Tourismusrecht
+- Einzelfall: konkrete Leistung und Außenauftritt entscheidend
+
+### Quelle
+- Quelle: Zimmervermietung und Gewerberecht / Vermietung und Beherbergung
+- Herausgeber: oesterreich.gv.at / Wirtschaftskammer Österreich
+- Link: https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406
+- Link: https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf
+- Stand/Veröffentlichungsdatum: Websites/PDF, laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Inferenz für das Projekt
+Begrenzte Vermietung an Freunde und bekannte Firmen sowie minimaler Service reduziert den gewerberechtlichen Druck, ist aber kein Freibrief. Sobald Reinigung, Bettwäsche, Aufenthaltsorganisation, Frühstück, Catering oder regelmäßige Zusatzservices Teil des Angebots werden, steigt das Risiko einer gewerberechtlich relevanten Beherbergungs- oder Gastgewerbeeinstufung.
+
+## 11. Firmenaufenthalte und Tagungsnutzung
+
+### Kernaussage
+Firmenaufenthalte sind rechtlich nur dann unkritisch, wenn sie sich im Rahmen der baurechtlich und raumordnungsrechtlich zulässigen Nutzung halten. Nimmt die Nutzung eine betriebliche Prägung als Veranstaltungslocation, Seminarhaus oder gastgewerblicher Betrieb an, sind Gewerberecht, Betriebsanlagenrecht, Versicherung, Nachbarschaftsschutz und Umsatzsteuer gesondert zu prüfen.
+
+### Geltungsbereich
+- Land: Österreich
+- Bundesland/Gemeinde: baurechtlich und raumordnungsrechtlich variabel
+- Nutzung: Firmenunterkunft, Seminar, Workshop, Event
+
+### Quelle
+- Quelle: Zimmervermietung und Gewerberecht / Gewerbeanmeldung / USt-Sätze
+- Herausgeber: oesterreich.gv.at / Unternehmensserviceportal
+- Link: https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406
+- Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
+- Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
+- Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich
+- Stabilität: mittel
+
+### Stufenmodell
+| Stufe | Beschreibung | Prüfrisiko |
+|---|---|---|
+| 1 | reine Raum- oder Unterkunftsüberlassung | Widmung, Beherbergung, Gästemeldung, Abgaben |
+| 2 | Raumüberlassung plus Beherbergung | zusätzlich Gewerbe- und USt-Abgrenzung |
+| 3 | Raumüberlassung plus Beherbergung plus Catering/Organisation/Services | tagungsbetriebsnah; Gewerbe, Betriebsanlage, Versicherung und USt separat prüfen |
+
+Die Einordnung ist eine strukturierende Inferenz aus Gewerbe-, Bau- und Umsatzsteuerlogik, keine gesetzliche Pauschalregel.
+
+## 12. Registrierung, Gästemeldung und lokale Abgabenprozesse
+
+### Kernaussage
+Wer touristisch vermietet, muss Registrierung, Gästemeldung und Abgaben als eigenen Compliance-Prozess behandeln. Auf Bundesebene ist ein Gast unverzüglich, jedenfalls binnen 24 Stunden nach Eintreffen, in das Gästeverzeichnis einzutragen. In Tirol ist die Gewährung von Unterkünften vor Entstehung des Abgabenanspruchs beim zuständigen Tourismusverband anzuzeigen; der Tourismusverband weist eine Betriebsnummer zu.
+
+### Geltungsbereich
+- Österreich: Gästeverzeichnis und Meldepflicht
+- Tirol: Aufenthaltsabgabe, Tourismusverband, Betriebsnummer
+- Gemeinde/Tourismusverband: lokal variable Prozesse und Abgabenhöhe
+
+### Quelle
+- Quelle: Gästeblattsammlung/Gästeverzeichnis / Aufenthaltsabgaben / Leitfaden zum Vermieten meiner Wohnung
+- Herausgeber: oesterreich.gv.at / Land Tirol
+- Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
+- Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
+- Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
+- Stand/Veröffentlichungsdatum: oesterreich.gv.at 01.01.2026; Land Tirol laufend zu prüfen
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich / Tirol
+- Stabilität: niedrig/mittel
+
+### Mindestprozess
+- vor Vermietungsbeginn: Zuständigkeit Gemeinde/Tourismusverband klären
+- vor Entstehen des Abgabenanspruchs: Unterkunftgebermeldung und Betriebsnummer, sofern erforderlich
+- bei Anreise: Gästeverzeichnis binnen 24 Stunden
+- laufend: Aufenthaltsabgabe einheben und abführen
+- jährlich/periodisch: Abgabenerklärungen und Nachweise archivieren
+
+## 13. Verkäufer- und Gemeindeunterlagen
+
+### Kernaussage
+Die Unterlagenanforderung ist nach Nutzungsrisiken zu priorisieren, nicht nach Exposé-Logik. Ohne schriftlich belastbare Nutzungsinformationen bleiben Steuer- und Finanzierungsmodelle vorläufig.
+
+### Quelle
+- Quelle: DeepResearch-Referenz; Flächenwidmungs- und Bebauungspläne; Grundstückskaufinformationen
+- Herausgeber: Projektteam / oesterreich.gv.at / Land Tirol
+- Link: ../references/260515-DeepResearch1
+- Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/grundstueckskauf_und_grundbuch/grundstueckskauf/Seite.200030
+- Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
+- Stand/Veröffentlichungsdatum: 2026-05-15 / Websites laufend aktualisiert
+- Abrufdatum: 2026-05-15
+- Geltungsbereich: Österreich allgemein; Tirol als Beispiel
+- Stabilität: mittel
+
+| Priorität | Dokument / Nachweis | Zweck |
+|---|---|---|
+| sehr hoch | aktueller Grundbuchsauszug samt Lastenblatt | Eigentum, Pfandrechte, Dienstbarkeiten, Belastungen |
+| sehr hoch | Flächenwidmungsplan, Bebauungsplan, Widmungsbestätigung | zulässige Nutzung und Beschränkungen |
+| sehr hoch | Baubewilligung, Fertigstellungsanzeige / Benützungsbewilligung, Bestandspläne | legaler baulicher Bestand und zulässige Benützung |
+| sehr hoch | schriftliche Gemeinde-/Baubehördenauskunft zur Zulässigkeit von Freizeitwohnsitz, touristischer Vermietung und Firmen-/Tagungsnutzung | Kern-Go/No-Go |
+| hoch | Nachweis einer Freizeitwohnsitz-Zulassung oder Registereintragung, sofern einschlägig | Abgrenzung private Zweitnutzung vs. nur touristische Nutzung |
+| hoch | Nachweis bisheriger touristischer Registrierung / Betriebsnummer / Tourismusverband | Indiz für bisherige Vollzugspraxis |
+| hoch | Nachweise über Gästemeldungen und Aufenthaltsabgaben der letzten Jahre, sofern Vermietung bisher lief | Compliance-Prüfung |
+| hoch | Wohnungseigentumsvertrag, Zustimmungen der Eigentümergemeinschaft, Hausordnung, sofern Wohnungseigentum | touristische Nutzung kann zustimmungspflichtig sein |
+| mittel | Energieausweis, Versicherungen, Schadenshistorie, Wartungsnachweise | Betriebs- und Finanzierungsprüfung |
+| mittel | bestehende Miet-, Nutzungs- oder Eventverträge | Übernahme- und Haftungsthemen |
+| mittel | laufende Kosten der letzten drei Jahre | Wirtschaftlichkeitsmodell |
