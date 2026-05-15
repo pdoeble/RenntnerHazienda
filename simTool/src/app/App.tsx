@@ -41,7 +41,7 @@ export function App() {
   >([]);
   const [selectedInput, setSelectedInput] = useState<TemplateKind>("ownership");
   const [selectedVisualization, setSelectedVisualization] =
-    useState<VisualizationTab>("liquidity");
+    useState<VisualizationTab>("dashboard");
   const snapshot = useMemo(() => buildProjectSnapshot(projectState), [projectState]);
   const result = useMemo(() => calculateAll(snapshot), [snapshot]);
   const diagnostics = useMemo(
@@ -200,7 +200,8 @@ function templateSuffix(kind: TemplateKind): string {
     property: ".property.json",
     closingCosts: ".closing-costs.json",
     opex: ".opex.json",
-    financing: ".financing.json"
+    financing: ".financing.json",
+    strategy: ".strategy.json"
   };
   return suffixes[kind];
 }

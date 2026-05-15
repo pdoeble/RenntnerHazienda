@@ -8,7 +8,12 @@ import type {
 } from "../../modules/legal-form/types";
 import { visibleInputModules } from "../../modules/registry";
 import type { OpexAnnualCostMode } from "../../modules/opex/types";
-import type { PropertyRenovationItem } from "../../modules/property/types";
+import type {
+  AustrianFederalState,
+  PropertyRenovationItem,
+  PropertyUseType
+} from "../../modules/property/types";
+import type { GoNoGoStatus } from "../../modules/strategy/types";
 import type { ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
@@ -98,9 +103,6 @@ export function InputTabs({
         kind={selectedKind}
         projectState={projectState}
         onTemplateChange={onTemplateChange}
-        onLoadTemplate={onLoadTemplate}
-        onSaveTemplate={onSaveTemplate}
-        onExportTemplate={onExportTemplate}
       />
     </div>
   );
@@ -109,10 +111,7 @@ export function InputTabs({
 function InputTabBody({
   kind,
   projectState,
-  onTemplateChange,
-  onLoadTemplate,
-  onSaveTemplate,
-  onExportTemplate
+  onTemplateChange
 }: {
   kind: TemplateKind;
   projectState: ProjectState;
@@ -120,9 +119,6 @@ function InputTabBody({
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
   ) => void;
-  onLoadTemplate: (kind: TemplateKind) => void;
-  onSaveTemplate: (kind: TemplateKind) => void;
-  onExportTemplate: (kind: TemplateKind) => void;
 }) {
   switch (kind) {
     case "ownership":
@@ -144,9 +140,20 @@ function InputTabBody({
         <PropertyEditor
           projectState={projectState}
           onTemplateChange={onTemplateChange}
-          onLoadTemplate={onLoadTemplate}
-          onSaveTemplate={onSaveTemplate}
-          onExportTemplate={onExportTemplate}
+        />
+      );
+    case "financing":
+      return (
+        <FinancingEditor
+          projectState={projectState}
+          onTemplateChange={onTemplateChange}
+        />
+      );
+    case "strategy":
+      return (
+        <StrategyEditor
+          projectState={projectState}
+          onTemplateChange={onTemplateChange}
         />
       );
     case "opex":
@@ -158,7 +165,6 @@ function InputTabBody({
       );
     case "capex":
     case "closingCosts":
-    case "financing":
       return null;
   }
 }
@@ -395,19 +401,13 @@ function LegalFormEditor({
 
 function PropertyEditor({
   projectState,
-  onTemplateChange,
-  onLoadTemplate,
-  onSaveTemplate,
-  onExportTemplate
+  onTemplateChange
 }: {
   projectState: ProjectState;
   onTemplateChange: (
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
   ) => void;
-  onLoadTemplate: (kind: TemplateKind) => void;
-  onSaveTemplate: (kind: TemplateKind) => void;
-  onExportTemplate: (kind: TemplateKind) => void;
 }) {
   function updatePropertyData(data: ProjectState["property"]["data"]) {
     onTemplateChange("property", {
@@ -416,17 +416,66 @@ function PropertyEditor({
     });
   }
 
-  function updateFinancingData(data: ProjectState["financing"]["data"]) {
-    onTemplateChange("financing", {
-      ...projectState.financing,
-      data
-    });
-  }
-
   return (
     <div className="form-grid">
       <div className="form-section">
         <h3>Immobilie</h3>
+        <SummaryLine label="Land" value="Oesterreich" />
+        <label className="text-field">
+          <span>Bundesland</span>
+          <select
+            aria-label="Bundesland"
+            value={projectState.property.data.federalState ?? ""}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                federalState:
+                  event.currentTarget.value === ""
+                    ? undefined
+                    : (event.currentTarget.value as AustrianFederalState)
+              })
+            }
+          >
+            <option value="">Offen</option>
+            {AUSTRIAN_STATE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="text-field">
+          <span>Gemeinde</span>
+          <input
+            aria-label="Gemeinde"
+            value={projectState.property.data.municipality ?? ""}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                municipality: event.currentTarget.value
+              })
+            }
+          />
+        </label>
+        <label className="text-field">
+          <span>Nutzung</span>
+          <select
+            aria-label="Nutzung"
+            value={projectState.property.data.useType}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                useType: event.currentTarget.value as PropertyUseType
+              })
+            }
+          >
+            {PROPERTY_USE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
         <NumberSliderField
           label="Kaufpreis"
           value={projectState.property.data.purchasePrice}
@@ -486,14 +535,67 @@ function PropertyEditor({
           }
         />
         <NumberSliderField
-          label="Reserve"
-          value={projectState.property.data.reserveMonths}
+          label="Aufenthaltsabgaben"
+          value={projectState.property.data.tourismFeeAnnualAmount}
           min={0}
-          max={24}
+          max={25000}
+          step={100}
+          unit="EUR/Jahr"
+          onChange={(tourismFeeAnnualAmount) =>
+            updatePropertyData({
+              ...projectState.property.data,
+              tourismFeeAnnualAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="USt"
+          value={projectState.property.data.vatRatePct}
+          min={0}
+          max={20}
           step={1}
-          unit="Monate"
-          onChange={(reserveMonths) =>
-            updatePropertyData({ ...projectState.property.data, reserveMonths })
+          unit="%"
+          onChange={(vatRatePct) =>
+            updatePropertyData({ ...projectState.property.data, vatRatePct })
+          }
+        />
+        <NumberSliderField
+          label="Vorsteuer-Erstattung"
+          value={projectState.property.data.vatRecoverablePct}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(vatRecoverablePct) =>
+            updatePropertyData({
+              ...projectState.property.data,
+              vatRecoverablePct
+            })
+          }
+        />
+        <NumberSliderField
+          label="Erstattungsmonat"
+          value={projectState.property.data.vatRefundMonth}
+          min={0}
+          max={120}
+          step={1}
+          unit="Monat"
+          onChange={(vatRefundMonth) =>
+            updatePropertyData({ ...projectState.property.data, vatRefundMonth })
+          }
+        />
+        <NumberSliderField
+          label="Pfandrecht"
+          value={projectState.property.data.mortgageRegistrationFeePct}
+          min={0}
+          max={5}
+          step={0.05}
+          unit="%"
+          onChange={(mortgageRegistrationFeePct) =>
+            updatePropertyData({
+              ...projectState.property.data,
+              mortgageRegistrationFeePct
+            })
           }
         />
       </div>
@@ -506,92 +608,6 @@ function PropertyEditor({
         projectState={projectState}
         updatePropertyData={updatePropertyData}
       />
-
-      <div className="form-section">
-        <div className="subsection-header">
-          <h3>Finanzierung</h3>
-          <div className="button-row">
-            <FileActionButton
-              label="Laden"
-              icon={FolderOpen}
-              onClick={() => onLoadTemplate("financing")}
-            />
-            <FileActionButton
-              label="Speichern"
-              icon={Save}
-              onClick={() => onSaveTemplate("financing")}
-            />
-            <FileActionButton
-              label="Export"
-              icon={Download}
-              onClick={() => onExportTemplate("financing")}
-            />
-          </div>
-        </div>
-        <label className="text-field">
-          <span>Darlehensname</span>
-          <input
-            aria-label="Darlehensname"
-            value={projectState.financing.data.loanName}
-            onChange={(event) =>
-              updateFinancingData({
-                ...projectState.financing.data,
-                loanName: event.currentTarget.value
-              })
-            }
-          />
-        </label>
-        <NumberSliderField
-          label="Sollzins"
-          value={projectState.financing.data.annualInterestRatePct}
-          min={0}
-          max={10}
-          step={0.05}
-          unit="%"
-          onChange={(annualInterestRatePct) =>
-            updateFinancingData({
-              ...projectState.financing.data,
-              annualInterestRatePct
-            })
-          }
-        />
-        <NumberSliderField
-          label="Laufzeit"
-          value={projectState.financing.data.termYears}
-          min={1}
-          max={40}
-          step={1}
-          unit="Jahre"
-          onChange={(termYears) =>
-            updateFinancingData({ ...projectState.financing.data, termYears })
-          }
-        />
-        <NumberSliderField
-          label="Startmonat"
-          value={projectState.financing.data.startMonth}
-          min={0}
-          max={120}
-          step={1}
-          unit="Monat"
-          onChange={(startMonth) =>
-            updateFinancingData({ ...projectState.financing.data, startMonth })
-          }
-        />
-        <NumberSliderField
-          label="Sondertilgung monatlich"
-          value={projectState.financing.data.additionalMonthlyRepayment}
-          min={0}
-          max={5000}
-          step={50}
-          unit="EUR"
-          onChange={(additionalMonthlyRepayment) =>
-            updateFinancingData({
-              ...projectState.financing.data,
-              additionalMonthlyRepayment
-            })
-          }
-        />
-      </div>
     </div>
   );
 }
@@ -664,6 +680,220 @@ function ClosingCostsEditor({
           })
         }
       />
+    </div>
+  );
+}
+
+function FinancingEditor({
+  projectState,
+  onTemplateChange
+}: {
+  projectState: ProjectState;
+  onTemplateChange: (
+    kind: TemplateKind,
+    template: TemplateEnvelope<unknown>
+  ) => void;
+}) {
+  function updateFinancingData(data: ProjectState["financing"]["data"]) {
+    onTemplateChange("financing", {
+      ...projectState.financing,
+      data
+    });
+  }
+
+  return (
+    <div className="form-grid">
+      <div className="form-section">
+        <h3>Finanzierung</h3>
+        <label className="text-field">
+          <span>Darlehensname</span>
+          <input
+            aria-label="Darlehensname"
+            value={projectState.financing.data.loanName}
+            onChange={(event) =>
+              updateFinancingData({
+                ...projectState.financing.data,
+                loanName: event.currentTarget.value
+              })
+            }
+          />
+        </label>
+        <NumberSliderField
+          label="Sollzins"
+          value={projectState.financing.data.annualInterestRatePct}
+          min={0}
+          max={10}
+          step={0.05}
+          unit="%"
+          onChange={(annualInterestRatePct) =>
+            updateFinancingData({
+              ...projectState.financing.data,
+              annualInterestRatePct
+            })
+          }
+        />
+        <NumberSliderField
+          label="Laufzeit"
+          value={projectState.financing.data.termYears}
+          min={1}
+          max={40}
+          step={1}
+          unit="Jahre"
+          onChange={(termYears) =>
+            updateFinancingData({ ...projectState.financing.data, termYears })
+          }
+        />
+        <NumberSliderField
+          label="Startmonat"
+          value={projectState.financing.data.startMonth}
+          min={0}
+          max={120}
+          step={1}
+          unit="Monat"
+          onChange={(startMonth) =>
+            updateFinancingData({ ...projectState.financing.data, startMonth })
+          }
+        />
+        <NumberSliderField
+          label="Sondertilgung monatlich"
+          value={projectState.financing.data.additionalMonthlyRepayment}
+          min={0}
+          max={5000}
+          step={50}
+          unit="EUR"
+          onChange={(additionalMonthlyRepayment) =>
+            updateFinancingData({
+              ...projectState.financing.data,
+              additionalMonthlyRepayment
+            })
+          }
+        />
+      </div>
+    </div>
+  );
+}
+
+function StrategyEditor({
+  projectState,
+  onTemplateChange
+}: {
+  projectState: ProjectState;
+  onTemplateChange: (
+    kind: TemplateKind,
+    template: TemplateEnvelope<unknown>
+  ) => void;
+}) {
+  function updateStrategyData(data: ProjectState["strategy"]["data"]) {
+    onTemplateChange("strategy", {
+      ...projectState.strategy,
+      data
+    });
+  }
+
+  return (
+    <div className="form-grid">
+      <div className="form-section">
+        <h3>Liquiditaetsziele</h3>
+        <NumberSliderField
+          label="Reserve-Monate"
+          value={projectState.strategy.data.reserveMonths}
+          min={0}
+          max={24}
+          step={1}
+          unit="Monate"
+          onChange={(reserveMonths) =>
+            updateStrategyData({ ...projectState.strategy.data, reserveMonths })
+          }
+        />
+        <NumberSliderField
+          label="Mindestliquiditaet"
+          value={projectState.strategy.data.minimumLiquidityAmount}
+          min={0}
+          max={250000}
+          step={1000}
+          unit="EUR"
+          onChange={(minimumLiquidityAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              minimumLiquidityAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="Zielliquiditaet"
+          value={projectState.strategy.data.targetLiquidityAmount}
+          min={0}
+          max={500000}
+          step={1000}
+          unit="EUR"
+          onChange={(targetLiquidityAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              targetLiquidityAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="Ziel-EK-Quote"
+          value={projectState.strategy.data.targetEquityRatioPct}
+          min={0}
+          max={100}
+          step={1}
+          unit="%"
+          onChange={(targetEquityRatioPct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              targetEquityRatioPct
+            })
+          }
+        />
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            checked={projectState.strategy.data.rentOffsetsOwnerContributions}
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                rentOffsetsOwnerContributions: event.currentTarget.checked
+              })
+            }
+          />
+          <span>Mieteinnahmen reduzieren Eignerbeitraege</span>
+        </label>
+      </div>
+      <div className="form-section">
+        <h3>Go/No-Go-Pruefpunkte</h3>
+        {projectState.strategy.data.goNoGoChecks.map((check) => (
+          <div className="nested-item" key={check.id}>
+            <label className="text-field">
+              <span>{check.label}</span>
+              <select
+                aria-label={`${check.label} Status`}
+                value={check.status}
+                onChange={(event) =>
+                  updateStrategyData({
+                    ...projectState.strategy.data,
+                    goNoGoChecks: projectState.strategy.data.goNoGoChecks.map(
+                      (candidate) =>
+                        candidate.id === check.id
+                          ? {
+                              ...candidate,
+                              status: event.currentTarget.value as GoNoGoStatus
+                            }
+                          : candidate
+                    )
+                  })
+                }
+              >
+                <option value="open">Offen</option>
+                <option value="clarified">Schriftlich geklaert</option>
+                <option value="notApplicable">Nicht anwendbar</option>
+                <option value="critical">Kritisch</option>
+              </select>
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -969,12 +1199,11 @@ function opexUnit(mode: OpexAnnualCostMode | undefined): string {
 }
 
 const LEGAL_FORM_OPTIONS: { value: LegalFormValue; label: string }[] = [
-  { value: "gbr", label: "GbR" },
-  { value: "gmbh", label: "GmbH" },
-  { value: "ug", label: "UG" },
-  { value: "verein", label: "Verein" },
-  { value: "eg", label: "eG" },
+  { value: "coOwnership", label: "Miteigentum" },
   { value: "kg", label: "KG" },
+  { value: "gmbh", label: "GmbH" },
+  { value: "gmbhCoKg", label: "GmbH & Co KG" },
+  { value: "verein", label: "Verein" },
   { value: "other", label: "Andere" }
 ];
 
@@ -997,6 +1226,30 @@ const VOTING_OPTIONS: { value: VotingModel; label: string }[] = [
   { value: "equalPerOwner", label: "Gleich je Eigner" },
   { value: "custom", label: "Individuell" },
   { value: "unknown", label: "Unklar" }
+];
+
+const AUSTRIAN_STATE_OPTIONS: {
+  value: AustrianFederalState;
+  label: string;
+}[] = [
+  { value: "BGLD", label: "Burgenland" },
+  { value: "KTN", label: "Kaernten" },
+  { value: "NOE", label: "Niederoesterreich" },
+  { value: "OOE", label: "Oberoesterreich" },
+  { value: "SBG", label: "Salzburg" },
+  { value: "STMK", label: "Steiermark" },
+  { value: "T", label: "Tirol" },
+  { value: "VBG", label: "Vorarlberg" },
+  { value: "W", label: "Wien" }
+];
+
+const PROPERTY_USE_OPTIONS: { value: PropertyUseType; label: string }[] = [
+  { value: "holidayHome", label: "Ferienhaus / Eigennutzung" },
+  { value: "touristicRental", label: "Touristische Vermietung" },
+  { value: "mixedUse", label: "Gemischte Nutzung" },
+  { value: "companyUse", label: "Firmennutzung" },
+  { value: "privateUse", label: "Private Nutzung" },
+  { value: "unknown", label: "Nutzung offen" }
 ];
 
 function SummaryLine({ label, value }: { label: string; value: string }) {

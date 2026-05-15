@@ -17,6 +17,11 @@ export type OwnerContribution = {
   amount: number;
   basis: "ownershipShare" | "equalSplit" | "custom";
   sharePct: number;
+  initialEquity?: number;
+  baseMonthlyObligation?: number;
+  reserveTopUp?: number;
+  specialAssessment?: number;
+  totalMonthlyContribution?: number;
 };
 
 export type OwnerContributionSchedule = {
@@ -70,6 +75,29 @@ export type DebtResult = {
   diagnostics: DiagnosticMessage[];
 };
 
+export type CapitalNeedItem = {
+  id: string;
+  label: string;
+  amount: number;
+};
+
+export type CapitalNeedResult = {
+  items: CapitalNeedItem[];
+  purchasePrice: number;
+  vatAtPurchase: number;
+  vatRefund: number;
+  closingCosts: number;
+  mortgageRegistrationFee: number;
+  renovations: number;
+  initialReserve: number;
+  totalProjectNeed: number;
+  ownerEquity: number;
+  debtPrincipal: number;
+  actualEquityRatioPct: number;
+  targetEquityRatioPct: number;
+  diagnostics: DiagnosticMessage[];
+};
+
 export type CashflowMonth = {
   month: number;
   rentalIncome: number;
@@ -77,7 +105,10 @@ export type CashflowMonth = {
   effectiveIncome: number;
   recoverableOpex: number;
   nonRecoverableOpex: number;
+  operatingResult: number;
   debtService: number;
+  interest: number;
+  principalRepayment: number;
   netCashflowBeforeContributions: number;
   netCashflowAfterDebtService: number;
 };
@@ -110,7 +141,23 @@ export type LiquidityResult = {
   diagnostics: DiagnosticMessage[];
 };
 
+export type TimelineEvent = {
+  month: number;
+  label: string;
+  amount: number;
+  kind:
+    | "acquisition"
+    | "tax"
+    | "refund"
+    | "renovation"
+    | "financing"
+    | "liquidity"
+    | "debt";
+};
+
 export type CalculationResult = {
+  capitalNeed: CapitalNeedResult;
+  timeline: TimelineEvent[];
   liquidity: LiquidityResult;
   contributions: ContributionResult;
   cashflow: CashflowResult;

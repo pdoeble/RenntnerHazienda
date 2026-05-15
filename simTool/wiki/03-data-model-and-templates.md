@@ -997,5 +997,21 @@ Current visible tabs:
 |---|---|
 | Eignerschaft | `ownership` |
 | Gesellschaftsform | `legalForm` |
-| Immobilie | `property` plus integrated `financing` controls |
+| Immobilie | `property` |
+| Finanzierung | `financing` |
+| Strategie | `strategy` |
 | Opex | `opex` |
+
+---
+
+## Implementation Status: Strategy And Austria Property Model
+
+As of 2026-05-15:
+
+- `strategy` uses schema `immo-finance.strategy` and file suffix `.strategy.json`.
+- Strategy data stores reserve months, minimum liquidity, target liquidity, target equity ratio, contribution policy, rent-offset policy, and Go/No-Go check statuses.
+- Old project JSON without `strategy` loads with the default strategy template and an informational diagnostic.
+- `property` is now Austria-oriented: `country: "AT"`, optional Austrian federal state, municipality, use type, tourism fee assumption, USt fields, and mortgage registration fee assumption.
+- Legacy German federal-state values are removed during property migration and surfaced through an informational diagnostic on project load.
+- USt is modeled as one editable scenario: purchase-time USt outflow plus optional recoverable percentage in a later refund month.
+- Legal-form assumptions include Austria-relevant choices such as co-ownership and GmbH & Co KG while retaining older values for compatibility.

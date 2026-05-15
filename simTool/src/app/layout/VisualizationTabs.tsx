@@ -60,6 +60,10 @@ function VisualizationBody({
   selectedTab: VisualizationTab;
 }) {
   switch (selectedTab) {
+    case "dashboard":
+      return <DashboardView result={result} />;
+    case "capitalNeed":
+      return <CapitalNeedView result={result} />;
     case "liquidity":
       return <LiquidityView result={result} />;
     case "contributions":
@@ -68,7 +72,92 @@ function VisualizationBody({
       return <CashflowView result={result} />;
     case "debt":
       return <DebtView result={result} />;
+    case "timeline":
+      return <TimelineView result={result} />;
   }
+}
+
+function DashboardView({ result }: { result: CalculationResult }) {
+  const criticalChecks = result.diagnostics.filter(
+    (diagnostic) => diagnostic.severity === "error"
+  ).length;
+  const monthlyNeed = result.contributions.requiredMonthlyContribution;
+  const equityOk =
+    result.capitalNeed.actualEquityRatioPct >=
+    result.capitalNeed.targetEquityRatioPct;
+  const ltv =
+    result.capitalNeed.totalProjectNeed > 0
+      ? (result.capitalNeed.debtPrincipal /
+          result.capitalNeed.totalProjectNeed) *
+        100
+      : 0;
+
+  return (
+    <div className="visualization-view">
+      <MetricGrid
+        metrics={[
+          ["EK-Ziel erreicht", equityOk ? "ja" : "offen"],
+          ["EK-Quote", `${result.capitalNeed.actualEquityRatioPct.toFixed(1)}%`],
+          ["LTV", `${ltv.toFixed(1)}%`],
+          ["Monatlicher Restbedarf", formatMoney(monthlyNeed)],
+          ["Kritische Diagnosen", criticalChecks.toString()]
+        ]}
+      />
+      <DataTable
+        headers={["Pruefpunkt", "Status"]}
+        rows={[
+          ["Nutzung zulaessig", criticalChecks > 0 ? "kritisch/offen" : "offen"],
+          ["Eigenkapital reicht plausibel", equityOk ? "schriftlich pruefen" : "offen"],
+          [
+            "Bankfaehigkeit plausibel",
+            ltv <= 85 ? "vorbereitbar" : "kritisch/offen"
+          ],
+          [
+            "Groesste Risiken",
+            result.diagnostics[0]?.message ?? "Keine kritischen Diagnosen"
+          ]
+        ]}
+      />
+    </div>
+  );
+}
+
+function CapitalNeedView({ result }: { result: CalculationResult }) {
+  const chartData = result.capitalNeed.items.map((item) => ({
+    label: item.label,
+    betrag: item.amount
+  }));
+
+  return (
+    <div className="visualization-view">
+      <MetricGrid
+        metrics={[
+          ["Gesamtbedarf", formatMoney(result.capitalNeed.totalProjectNeed)],
+          ["Eigner-EK", formatMoney(result.capitalNeed.ownerEquity)],
+          ["Darlehen", formatMoney(result.capitalNeed.debtPrincipal)],
+          ["USt-Erstattung", formatMoney(result.capitalNeed.vatRefund)]
+        ]}
+      />
+      <ChartFrame>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="label" />
+            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <Tooltip formatter={(value) => formatMoney(Number(value))} />
+            <Bar dataKey="betrag" fill="#0f766e" />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+      <DataTable
+        headers={["Baustein", "Betrag"]}
+        rows={result.capitalNeed.items.map((item) => [
+          item.label,
+          formatMoney(item.amount)
+        ])}
+      />
+    </div>
+  );
 }
 
 function LiquidityView({ result }: { result: CalculationResult }) {
@@ -167,16 +256,38 @@ function ContributionsView({ result }: { result: CalculationResult }) {
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Eigner", "Basis", "Anteil", "EK", "Monatlich"]}
+        headers={[
+          "Eigner",
+          "Anteil",
+          "Initiale Einlage",
+          "Basis mtl.",
+          "Reserve mtl.",
+          "Sonderumlage",
+          "Monatlich gesamt"
+        ]}
         rows={result.contributions.initialContributions.map((contribution) => [
           contribution.ownerName,
-          contribution.basis,
           `${contribution.sharePct.toFixed(2)}%`,
           formatMoney(contribution.amount),
           formatMoney(
             result.contributions.recurringContributions[0]?.contributions.find(
               (candidate) => candidate.ownerId === contribution.ownerId
-            )?.amount ?? 0
+            )?.baseMonthlyObligation ?? 0
+          ),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.reserveTopUp ?? 0
+          ),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.specialAssessment ?? 0
+          ),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.totalMonthlyContribution ?? 0
           )
         ])}
       />
@@ -196,18 +307,23 @@ function ContributionsView({ result }: { result: CalculationResult }) {
 function CashflowView({ result }: { result: CalculationResult }) {
   const chartData = clampItems(result.cashflow.yearly, 10).map((year) => ({
     year: year.year,
-    cashflow: year.netCashflowAfterDebtService,
-    einnahmen: year.effectiveIncome,
-    opex: year.recoverableOpex + year.nonRecoverableOpex
+    operativ: year.operatingResult,
+    zinsen: year.interest,
+    tilgung: year.principalRepayment,
+    liquiditaet: year.netCashflowAfterDebtService
   }));
 
   return (
     <div className="visualization-view">
       <MetricGrid
         metrics={[
-          ["Kumuliert", formatMoney(result.cashflow.cumulativeCashflow)],
+          ["Liquiditaets-Cashflow kumuliert", formatMoney(result.cashflow.cumulativeCashflow)],
           [
-            "Jahr 1 Cashflow",
+            "Jahr 1 operativ",
+            formatMoney(result.cashflow.yearly[0]?.operatingResult ?? 0)
+          ],
+          [
+            "Jahr 1 nach Kapitaldienst",
             formatMoney(result.cashflow.yearly[0]?.netCashflowAfterDebtService ?? 0)
           ]
         ]}
@@ -220,18 +336,20 @@ function CashflowView({ result }: { result: CalculationResult }) {
             <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="einnahmen" fill="#15803d" />
-            <Bar dataKey="opex" fill="#b45309" />
-            <Bar dataKey="cashflow" fill="#2563eb" />
+            <Bar dataKey="operativ" fill="#15803d" />
+            <Bar dataKey="zinsen" fill="#b45309" />
+            <Bar dataKey="tilgung" fill="#7c3aed" />
+            <Bar dataKey="liquiditaet" fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Jahr", "Einnahmen", "Opex", "Cashflow"]}
+        headers={["Jahr", "Operativ", "Zinsen", "Tilgung", "Liquiditaet"]}
         rows={clampItems(result.cashflow.yearly, 5).map((year) => [
           year.year.toString(),
-          formatMoney(year.effectiveIncome),
-          formatMoney(year.recoverableOpex + year.nonRecoverableOpex),
+          formatMoney(year.operatingResult),
+          formatMoney(year.interest),
+          formatMoney(year.principalRepayment),
           formatMoney(year.netCashflowAfterDebtService)
         ])}
       />
@@ -284,6 +402,39 @@ function DebtView({ result }: { result: CalculationResult }) {
           formatMoney(year.zins),
           formatMoney(year.tilgung)
         ])}
+      />
+    </div>
+  );
+}
+
+function TimelineView({ result }: { result: CalculationResult }) {
+  const rows = result.timeline.map((event) => [
+    `Monat ${event.month}`,
+    event.label,
+    event.kind,
+    formatMoney(event.amount)
+  ]);
+
+  return (
+    <div className="visualization-view">
+      <MetricGrid
+        metrics={[
+          ["Ereignisse", result.timeline.length.toString()],
+          [
+            "Erstes Ereignis",
+            result.timeline[0] ? `Monat ${result.timeline[0].month}` : "kein Wert"
+          ],
+          [
+            "Letztes Ereignis",
+            result.timeline.at(-1)
+              ? `Monat ${result.timeline.at(-1)?.month}`
+              : "kein Wert"
+          ]
+        ]}
+      />
+      <DataTable
+        headers={["Monat", "Ereignis", "Typ", "Betrag"]}
+        rows={rows}
       />
     </div>
   );

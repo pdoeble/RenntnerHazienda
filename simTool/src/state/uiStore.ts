@@ -6,21 +6,36 @@ export const INPUT_TAB_ORDER: TemplateKind[] = [
   "capex",
   "property",
   "closingCosts",
+  "financing",
+  "strategy",
   "opex"
 ];
 
-export type VisualizationTab = "liquidity" | "contributions" | "cashflow" | "debt";
+export type VisualizationTab =
+  | "dashboard"
+  | "capitalNeed"
+  | "liquidity"
+  | "contributions"
+  | "cashflow"
+  | "debt"
+  | "timeline";
 
 export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
+  "dashboard",
+  "capitalNeed",
   "liquidity",
   "contributions",
   "cashflow",
-  "debt"
+  "debt",
+  "timeline"
 ];
 
 export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
+  dashboard: "Dashboard",
+  capitalNeed: "Kapitalbedarf",
   liquidity: "Liquiditaet",
   contributions: "Beitraege",
   cashflow: "Cashflow",
-  debt: "Schulden"
+  debt: "Schulden",
+  timeline: "Zeitachse"
 };

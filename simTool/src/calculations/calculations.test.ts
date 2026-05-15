@@ -108,15 +108,16 @@ describe("calculation pipeline", () => {
         rentalIncome: 4500,
         vacancyLoss: 135,
         effectiveIncome: 4365,
-        nonRecoverableOpex: 550,
-        netCashflowBeforeContributions: 3815
+        nonRecoverableOpex: 650,
+        operatingResult: 3715,
+        netCashflowBeforeContributions: 3715
       })
     );
     expect(cashflow.monthly[0]?.netCashflowAfterDebtService).toBeCloseTo(
-      216.34,
+      -833.77,
       1
     );
-    expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeGreaterThan(0);
+    expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeLessThan(0);
   });
 
   it("calculates a 25-year annuity debt schedule", () => {
@@ -125,10 +126,52 @@ describe("calculation pipeline", () => {
     });
     const debt = calculateDebt(snapshot, calculateInitialContributions(snapshot));
 
-    expect(debt.totalInitialDebt).toBe(681775);
-    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(3598.66, 1);
-    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(2272.58, 1);
+    expect(debt.totalInitialDebt).toBe(861775);
+    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(4548.77, 1);
+    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(2872.58, 1);
     expect(debt.totalRemainingDebt).toBe(0);
+  });
+
+  it("calculates capital need with VAT, closing costs, renovations, reserve, and debt", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+
+    expect(result.capitalNeed.vatAtPurchase).toBe(150000);
+    expect(result.capitalNeed.closingCosts).toBe(81775);
+    expect(result.capitalNeed.renovations).toBe(50000);
+    expect(result.capitalNeed.initialReserve).toBe(30000);
+    expect(result.capitalNeed.totalProjectNeed).toBe(1061775);
+    expect(result.capitalNeed.debtPrincipal).toBe(861775);
+  });
+
+  it("creates non-zero owner obligations from the strategy rule", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+    const firstOwner =
+      result.contributions.recurringContributions[0]?.contributions[0];
+
+    expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
+      5208.84,
+      1
+    );
+    expect(firstOwner?.baseMonthlyObligation).toBeGreaterThan(0);
+    expect(firstOwner?.totalMonthlyContribution).toBeGreaterThan(0);
+  });
+
+  it("can offset owner obligations with rental income when strategy allows it", () => {
+    const project = projectFixture();
+    project.strategy.data.rentOffsetsOwnerContributions = true;
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+
+    expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
+      843.84,
+      1
+    );
   });
 
   it("calculates annual recurring contributions so liquidity stays above reserve", () => {

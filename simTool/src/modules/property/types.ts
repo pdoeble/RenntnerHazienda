@@ -1,14 +1,16 @@
 import type { z } from "zod";
 import type {
-  germanFederalStateSchema,
+  austrianFederalStateSchema,
   propertyClosingCostItemSchema,
   propertyClosingCostsSchema,
   propertyDataSchema,
   propertyRenovationItemSchema,
+  propertyUseTypeSchema,
   propertyTemplateSchema
 } from "./schema";
 
-export type GermanFederalState = z.infer<typeof germanFederalStateSchema>;
+export type AustrianFederalState = z.infer<typeof austrianFederalStateSchema>;
+export type PropertyUseType = z.infer<typeof propertyUseTypeSchema>;
 export type PropertyClosingCostItem = z.infer<
   typeof propertyClosingCostItemSchema
 >;

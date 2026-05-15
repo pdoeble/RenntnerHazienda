@@ -615,6 +615,8 @@ As of 2026-05-15:
 - Project load/save/export and visible template load/save/export use browser JSON upload/download fallback.
 - Failed JSON parsing, wrong template kind, and validation errors keep the current in-memory state unchanged and surface diagnostics.
 - Project files without `financing` are loaded with the default financing template and an informational diagnostic.
+- Project files without `strategy` are loaded with the default strategy template and an informational diagnostic.
+- Legacy property snapshots without Austria fields are normalized to `country: "AT"`; old German federal-state codes are cleared and reported for review.
 - Legacy project files that still store closing costs in `closingCosts` are migrated into `property.closingCosts` if the property snapshot has no embedded closing costs.
 - Legacy project files that still store renovation capex in `capex.items` are migrated into `property.renovationItems` if the property snapshot has no embedded renovation items.
-- `capex`, `closingCosts`, and `financing` remain embedded in project JSON for compatibility, even when not shown as separate UI tabs.
+- `capex` and `closingCosts` remain embedded in project JSON for compatibility, even when not shown as separate UI tabs.

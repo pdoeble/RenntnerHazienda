@@ -9,14 +9,21 @@ describe("App shell", () => {
     expect(
       screen.queryByRole("tab", { name: "Nebenkosten" })
     ).not.toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Finanzierung" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Strategie" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
     expect(screen.getByText("Nebenkosten")).toBeInTheDocument();
-    expect(screen.getByText("Finanzierung")).toBeInTheDocument();
+
+    expect(screen.getByRole("tab", { name: "Dashboard" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
 
     fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
-    expect(screen.getByText("Initialbedarf")).toBeInTheDocument();
+    expect(screen.getByText("Monatsbeitrag")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 
   it("updates calculations when direct numeric inputs change", () => {
@@ -29,6 +36,22 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
 
     expect(screen.getAllByText(/250\.000/)).toHaveLength(2);
+    expect(screen.getByText("Monatlich gesamt")).toBeInTheDocument();
+  });
+
+  it("updates strategy targets and shows the capital bridge", () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("tab", { name: "Strategie" }));
+    fireEvent.change(screen.getByLabelText("Zielliquiditaet"), {
+      target: { value: "60000" }
+    });
+
+    fireEvent.click(screen.getByRole("tab", { name: "Kapitalbedarf" }));
+
+    expect(screen.getByText("Gesamtbedarf")).toBeInTheDocument();
+    expect(screen.getByText("USt bei Kauf")).toBeInTheDocument();
+    expect(screen.getByText("Pfandrecht / Eintragung")).toBeInTheDocument();
   });
 
   it("adds and deletes owners, renovations, and opex blocks", () => {

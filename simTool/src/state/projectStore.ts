@@ -12,6 +12,8 @@ import { defaultOwnershipTemplate } from "../modules/ownership/defaults";
 import type { OwnershipTemplate } from "../modules/ownership/types";
 import { defaultPropertyTemplate } from "../modules/property/defaults";
 import type { PropertyTemplate } from "../modules/property/types";
+import { defaultStrategyTemplate } from "../modules/strategy/defaults";
+import type { StrategyTemplate } from "../modules/strategy/types";
 
 export type ProjectState = {
   ownership: OwnershipTemplate;
@@ -21,6 +23,7 @@ export type ProjectState = {
   closingCosts: ClosingCostsTemplate;
   opex: OpexTemplate;
   financing: FinancingTemplate;
+  strategy: StrategyTemplate;
 };
 
 export const defaultProjectState: ProjectState = {
@@ -30,7 +33,8 @@ export const defaultProjectState: ProjectState = {
   property: defaultPropertyTemplate,
   closingCosts: defaultClosingCostsTemplate,
   opex: defaultOpexTemplate,
-  financing: defaultFinancingTemplate
+  financing: defaultFinancingTemplate,
+  strategy: defaultStrategyTemplate
 };
 
 export type DirtyState = Record<keyof ProjectState | "project", boolean>;
@@ -43,5 +47,6 @@ export const initialDirtyState: DirtyState = {
   closingCosts: false,
   opex: false,
   financing: false,
+  strategy: false,
   project: false
 };

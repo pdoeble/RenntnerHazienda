@@ -1,0 +1,48 @@
+import { z } from "zod";
+import { TEMPLATE_SCHEMA_IDS } from "../../domain/templates";
+import {
+  idSchema,
+  nonEmptyStringSchema,
+  nonNegativeNumberSchema,
+  percentSchema,
+  templateEnvelopeSchema
+} from "../../validation/commonSchemas";
+
+export const contributionPolicySchema = z.enum([
+  "minimumObligationPlusReserveTopUp"
+]);
+
+export const goNoGoStatusSchema = z.enum([
+  "open",
+  "clarified",
+  "notApplicable",
+  "critical"
+]);
+
+export const goNoGoCheckSchema = z
+  .object({
+    id: idSchema,
+    label: nonEmptyStringSchema,
+    status: goNoGoStatusSchema,
+    notes: z.string().optional()
+  })
+  .strict();
+
+export const strategyDataSchema = z
+  .object({
+    reserveMonths: nonNegativeNumberSchema.default(3),
+    minimumLiquidityAmount: nonNegativeNumberSchema.default(15000),
+    targetLiquidityAmount: nonNegativeNumberSchema.default(30000),
+    contributionPolicy: contributionPolicySchema.default(
+      "minimumObligationPlusReserveTopUp"
+    ),
+    rentOffsetsOwnerContributions: z.boolean().default(false),
+    targetEquityRatioPct: percentSchema.default(20),
+    goNoGoChecks: z.array(goNoGoCheckSchema).default([])
+  })
+  .strict();
+
+export const strategyTemplateSchema = templateEnvelopeSchema(
+  TEMPLATE_SCHEMA_IDS.strategy,
+  strategyDataSchema
+);

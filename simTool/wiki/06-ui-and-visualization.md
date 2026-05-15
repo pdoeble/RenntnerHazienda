@@ -783,3 +783,25 @@ Next UI steps:
 - Add inline totals for closing costs, renovation totals, and annual opex equivalents directly inside the input tabs.
 - Add richer empty states for blocked calculations.
 - Add optional editing for fixed other closing-cost items.
+
+---
+
+## Implementation Status: Decision Dashboard MVP
+
+As of 2026-05-15:
+
+- Visible input tabs are `Eignerschaft`, `Gesellschaftsform`, `Immobilie`, `Finanzierung`, `Strategie`, and `Opex`.
+- `Finanzierung` is a dedicated tab again; `Strategie` is a dedicated tab for liquidity goals, equity ratio target, contribution policy, rent-offset behavior, and Go/No-Go statuses.
+- `Immobilie` now uses Austria-oriented labels and fields: Austrian federal state, municipality, use type, tourism fees, USt, USt refund month, and mortgage registration fee.
+- Visualization starts with `Dashboard` before detailed tabs.
+- `Kapitalbedarf` shows a purchase bridge from purchase price through USt, closing costs, mortgage registration, renovations, reserve, owner equity, and debt.
+- `Beitraege` shows owner burden with initial equity, base monthly obligation, reserve top-up, special assessment, and total monthly contribution.
+- `Cashflow` separates operating result, interest, principal repayment, and liquidity cashflow.
+- `Zeitachse` lists critical events with month, type, and amount.
+
+Next visualization steps:
+
+- Add full stress-test scenarios.
+- Add use-mix calendar/night model and break-even nights.
+- Add bank package readiness and assumption risk contribution views.
+- Add source/check status directly next to sensitive legal, tax, and financing inputs.

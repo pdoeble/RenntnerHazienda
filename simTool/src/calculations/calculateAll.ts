@@ -6,7 +6,9 @@ import {
 } from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
 import { calculateLiquidity } from "./calculateLiquidity";
+import { calculateTimeline } from "./calculateTimeline";
 import { collectInputDiagnostics } from "./diagnostics";
+import { calculateCapitalNeed } from "./financialInputs";
 import type { CalculationResult, ProjectSnapshot } from "./types";
 
 export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
@@ -26,8 +28,12 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     initialContributions
   );
   const liquidity = calculateLiquidity(snapshot, contributions, cashflow, debt);
+  const capitalNeed = calculateCapitalNeed(snapshot);
+  const timeline = calculateTimeline(snapshot, debt, liquidity);
 
   return {
+    capitalNeed,
+    timeline,
     liquidity,
     contributions,
     cashflow,
@@ -55,6 +61,23 @@ function emptyCalculationResult(
       requiredMonthlyContribution: 0,
       diagnostics: []
     },
+    capitalNeed: {
+      items: [],
+      purchasePrice: 0,
+      vatAtPurchase: 0,
+      vatRefund: 0,
+      closingCosts: 0,
+      mortgageRegistrationFee: 0,
+      renovations: 0,
+      initialReserve: 0,
+      totalProjectNeed: 0,
+      ownerEquity: 0,
+      debtPrincipal: 0,
+      actualEquityRatioPct: 0,
+      targetEquityRatioPct: 0,
+      diagnostics: []
+    },
+    timeline: [],
     debt: {
       loans: [],
       totalInitialDebt: 0,

@@ -47,9 +47,12 @@ export function calculateCashflow(
           .reduce(
             (total, item) => total + monthlyOpexAmount(item, month, snapshot),
             0
-          )
+          ) + snapshot.property.data.tourismFeeAnnualAmount / 12
       );
       const debtService = debt.monthlyDebtService[month]?.totalPayment ?? 0;
+      const interest = debt.monthlyDebtService[month]?.interest ?? 0;
+      const principalRepayment =
+        debt.monthlyDebtService[month]?.principalRepayment ?? 0;
       const netCashflowBeforeContributions = roundMoney(
         effectiveIncome - recoverableOpex - nonRecoverableOpex
       );
@@ -61,7 +64,10 @@ export function calculateCashflow(
         effectiveIncome,
         recoverableOpex,
         nonRecoverableOpex,
+        operatingResult: netCashflowBeforeContributions,
         debtService,
+        interest,
+        principalRepayment,
         netCashflowBeforeContributions,
         netCashflowAfterDebtService: roundMoney(
           netCashflowBeforeContributions - debtService
@@ -135,7 +141,10 @@ function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear
         effectiveIncome: 0,
         recoverableOpex: 0,
         nonRecoverableOpex: 0,
+        operatingResult: 0,
         debtService: 0,
+        interest: 0,
+        principalRepayment: 0,
         netCashflowBeforeContributions: 0,
         netCashflowAfterDebtService: 0
       } satisfies CashflowYear);
@@ -145,7 +154,10 @@ function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear
     existing.effectiveIncome += month.effectiveIncome;
     existing.recoverableOpex += month.recoverableOpex;
     existing.nonRecoverableOpex += month.nonRecoverableOpex;
+    existing.operatingResult += month.operatingResult;
     existing.debtService += month.debtService;
+    existing.interest += month.interest;
+    existing.principalRepayment += month.principalRepayment;
     existing.netCashflowBeforeContributions +=
       month.netCashflowBeforeContributions;
     existing.netCashflowAfterDebtService += month.netCashflowAfterDebtService;
@@ -159,7 +171,10 @@ function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear
     effectiveIncome: roundMoney(year.effectiveIncome),
     recoverableOpex: roundMoney(year.recoverableOpex),
     nonRecoverableOpex: roundMoney(year.nonRecoverableOpex),
+    operatingResult: roundMoney(year.operatingResult),
     debtService: roundMoney(year.debtService),
+    interest: roundMoney(year.interest),
+    principalRepayment: roundMoney(year.principalRepayment),
     netCashflowBeforeContributions: roundMoney(
       year.netCashflowBeforeContributions
     ),

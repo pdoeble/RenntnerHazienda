@@ -13,8 +13,8 @@ export const defaultLegalFormTemplate: LegalFormTemplate = {
   createdAt: DEFAULT_TEMPLATE_TIMESTAMP,
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,
   data: {
-    legalForm: "gbr",
-    liabilityModel: "unlimited",
+    legalForm: "coOwnership",
+    liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "ownershipShare",
     notes:

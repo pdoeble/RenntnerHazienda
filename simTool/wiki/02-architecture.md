@@ -851,3 +851,16 @@ Next architecture steps:
 - Implement IndexedDB autosave behind the existing storage boundary.
 - Add direct-save support as an adapter on top of the current JSON fallback.
 - Add richer import/export conflict workflows and optional direct file overwrite support.
+
+---
+
+## Implementation Status: Strategy And Decision Views
+
+As of 2026-05-15:
+
+- `strategy` is a first-class template module with schema, defaults, validation, JSON suffix, project state, project manifest support, and old-project fallback.
+- Visible input modules are now `ownership`, `legalForm`, `property`, `financing`, `strategy`, and `opex`.
+- Financing is again a dedicated tab; property keeps closing costs, renovation items, Austrian location/use assumptions, USt, tourism fees, and mortgage registration assumptions.
+- The calculation pipeline now emits capital-need and timeline results in addition to liquidity, contributions, cashflow, and debt.
+- Visualization tabs start with `Dashboard`, followed by `Kapitalbedarf`, `Liquiditaet`, `Beitraege`, `Cashflow`, `Schulden`, and `Zeitachse`.
+- Owner recurring contributions follow the strategy rule instead of only filling acute liquidity gaps.

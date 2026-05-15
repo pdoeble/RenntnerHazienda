@@ -3,8 +3,10 @@ import { TEMPLATE_SCHEMA_IDS } from "../../domain/templates";
 import { templateEnvelopeSchema } from "../../validation/commonSchemas";
 
 export const legalFormValueSchema = z.enum([
+  "coOwnership",
   "gbr",
   "gmbh",
+  "gmbhCoKg",
   "ug",
   "verein",
   "eg",

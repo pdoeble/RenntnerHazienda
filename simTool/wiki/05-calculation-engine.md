@@ -811,3 +811,18 @@ Current calculation checks cover:
 - opex cost modes
 - reserve-preserving yearly recurring contributions
 - blocked calculations when owner equity is missing
+
+---
+
+## Implementation Status: Strategy Contributions And Capital Need
+
+As of 2026-05-15:
+
+- Capital need is now a separate calculation result: purchase price, USt at purchase, closing costs, mortgage registration, renovation items, initial reserve, owner equity, and debt.
+- Debt principal is based on total capital need minus owner equity, so USt and initial liquidity reserves can be financed if owner equity is insufficient.
+- Recoverable USt is modeled as a liquidity inflow in `property.vatRefundMonth`.
+- Recurring owner contributions are no longer allowed to remain zero just because current liquidity stays positive.
+- Default contribution policy is `minimumObligationPlusReserveTopUp`: owners cover debt service and opex as a monthly base obligation, and reserve top-ups are added when needed.
+- Default strategy keeps rental income in the company; if `rentOffsetsOwnerContributions` is enabled, effective rent offsets the monthly owner obligation.
+- Cashflow results expose operating result, interest, principal repayment, and liquidity cashflow separately.
+- Timeline results include acquisition, USt, closing costs, mortgage registration, renovations, financing start, USt refund, first negative liquidity if any, and loan maturity.

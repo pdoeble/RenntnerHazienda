@@ -14,7 +14,10 @@ export const defaultPropertyTemplate: PropertyTemplate = {
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,
   data: {
     purchasePrice: 750000,
-    federalState: "BW",
+    country: "AT",
+    federalState: "T",
+    municipality: "Gemeinde offen",
+    useType: "holidayHome",
     rentableAreaSqm: 300,
     plotAreaSqm: 850,
     units: 4,
@@ -22,6 +25,11 @@ export const defaultPropertyTemplate: PropertyTemplate = {
     vacancyRatePct: 3,
     purchaseMonth: 0,
     reserveMonths: 3,
+    tourismFeeAnnualAmount: 1200,
+    vatRatePct: 20,
+    vatRecoverablePct: 0,
+    vatRefundMonth: 12,
+    mortgageRegistrationFeePct: 0,
     closingCosts: {
       realEstateTransferTaxPct: 5,
       notaryPct: 1.5,

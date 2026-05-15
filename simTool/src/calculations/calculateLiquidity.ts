@@ -1,6 +1,9 @@
 import { diagnostic } from "../validation/diagnostics";
 import {
-  calculateClosingCostsTotal
+  calculateClosingCostsTotal,
+  calculateMortgageRegistrationFee,
+  calculateVatAtPurchase,
+  calculateVatRefund
 } from "./financialInputs";
 import { roundMoney } from "./rounding";
 import type {
@@ -32,7 +35,10 @@ export function calculateLiquidity(
     const openingBalance = balance;
     const acquisitionOutflow =
       month === purchaseMonth
-        ? snapshot.property.data.purchasePrice + calculateClosingCostsTotal(snapshot)
+        ? snapshot.property.data.purchasePrice +
+          calculateVatAtPurchase(snapshot) +
+          calculateClosingCostsTotal(snapshot) +
+          calculateMortgageRegistrationFee(snapshot)
         : 0;
     const renovationOutflow = snapshot.property.data.renovationItems
       .filter((item) => item.timingMonth === month)
@@ -46,10 +52,15 @@ export function calculateLiquidity(
     );
     const loanInflow =
       month === snapshot.financing.data.startMonth ? debt.totalInitialDebt : 0;
+    const vatRefundInflow =
+      month === snapshot.property.data.vatRefundMonth
+        ? calculateVatRefund(snapshot)
+        : 0;
     const inflows =
       contributionInflow +
       recurringContributionInflow +
       loanInflow +
+      vatRefundInflow +
       (monthlyCashflow > 0 ? monthlyCashflow : 0);
     const outflows =
       acquisitionOutflow +

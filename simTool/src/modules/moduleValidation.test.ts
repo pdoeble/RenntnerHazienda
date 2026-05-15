@@ -4,6 +4,8 @@ import { ownershipTemplateSchema } from "./ownership/schema";
 import { defaultOpexTemplate } from "./opex/defaults";
 import { defaultFinancingTemplate } from "./financing/defaults";
 import { financingTemplateSchema } from "./financing/schema";
+import { defaultStrategyTemplate } from "./strategy/defaults";
+import { strategyTemplateSchema } from "./strategy/schema";
 import {
   loadProjectFromJson,
   loadTemplateFromJson,
@@ -32,6 +34,16 @@ describe("module validation contracts", () => {
     expect(parsed.schema).toBe("immo-finance.financing");
     expect(parsed.data.equitySharePct).toBe(20);
     expect(parsed.data.termYears).toBe(25);
+  });
+
+  it("validates the strategy template envelope", () => {
+    const parsed = strategyTemplateSchema.parse(defaultStrategyTemplate);
+
+    expect(parsed.schema).toBe("immo-finance.strategy");
+    expect(parsed.data.contributionPolicy).toBe(
+      "minimumObligationPlusReserveTopUp"
+    );
+    expect(parsed.data.targetEquityRatioPct).toBe(20);
   });
 
   it("rejects loading the wrong template kind", () => {
@@ -68,15 +80,18 @@ describe("module validation contracts", () => {
     expect(parsed.schema).toBe("immo-finance.project");
     expect(parsed.templateRefs.ownership.kind).toBe("ownership");
     expect(parsed.templateRefs.financing?.kind).toBe("financing");
+    expect(parsed.templateRefs.strategy?.kind).toBe("strategy");
   });
 
-  it("loads old embedded project manifests without financing by adding defaults", () => {
+  it("loads old embedded project manifests without financing and strategy by adding defaults", () => {
     const manifest = createProjectManifest(defaultProjectState);
     const legacyProperty = structuredClone(
       manifest.embeddedSnapshots?.property
     ) as { data: Record<string, unknown> };
     delete legacyProperty.data.closingCosts;
     delete legacyProperty.data.renovationItems;
+    delete legacyProperty.data.country;
+    legacyProperty.data.federalState = "BW";
 
     const oldManifest = {
       ...manifest,
@@ -103,6 +118,9 @@ describe("module validation contracts", () => {
     expect(loaded.ok).toBe(true);
     if (loaded.ok) {
       expect(loaded.value.financing.data.equitySharePct).toBe(20);
+      expect(loaded.value.strategy.data.targetEquityRatioPct).toBe(20);
+      expect(loaded.value.property.data.country).toBe("AT");
+      expect(loaded.value.property.data.federalState).toBeUndefined();
       expect(loaded.value.property.data.closingCosts.realEstateTransferTaxPct).toBe(
         5
       );
@@ -111,6 +129,16 @@ describe("module validation contracts", () => {
     expect(
       loaded.diagnostics.some(
         (diagnostic) => diagnostic.id === "persistence.default-financing-added"
+      )
+    ).toBe(true);
+    expect(
+      loaded.diagnostics.some(
+        (diagnostic) => diagnostic.id === "persistence.default-strategy-added"
+      )
+    ).toBe(true);
+    expect(
+      loaded.diagnostics.some(
+        (diagnostic) => diagnostic.id === "persistence.property-at-migration"
       )
     ).toBe(true);
     expect(

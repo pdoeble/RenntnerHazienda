@@ -10,6 +10,7 @@ import { legalFormModule } from "./legal-form";
 import { opexModule } from "./opex";
 import { ownershipModule } from "./ownership";
 import { propertyModule } from "./property";
+import { strategyModule } from "./strategy";
 
 export const inputModules = [
   registerInputModule(ownershipModule),
@@ -17,8 +18,9 @@ export const inputModules = [
   registerInputModule(capexModule),
   registerInputModule(propertyModule),
   registerInputModule(closingCostsModule),
-  registerInputModule(opexModule),
-  registerInputModule(financingModule)
+  registerInputModule(financingModule),
+  registerInputModule(strategyModule),
+  registerInputModule(opexModule)
 ] satisfies readonly RegisteredInputModule[];
 
 export const visibleInputModules = inputModules.filter((module) =>

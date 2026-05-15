@@ -110,7 +110,11 @@ export function loadProjectFromJson(raw: string): LoadResult<ProjectState> {
   for (const kind of TEMPLATE_KINDS) {
     const embeddedSnapshot = manifest.embeddedSnapshots?.[kind];
     const fallbackSnapshot =
-      kind === "financing" ? defaultProjectState.financing : undefined;
+      kind === "financing"
+        ? defaultProjectState.financing
+        : kind === "strategy"
+          ? defaultProjectState.strategy
+          : undefined;
     const input = embeddedSnapshot ?? fallbackSnapshot;
 
     if (!input) {
@@ -138,6 +142,17 @@ export function loadProjectFromJson(raw: string): LoadResult<ProjectState> {
       );
     }
 
+    if (!embeddedSnapshot && kind === "strategy") {
+      diagnostics.push(
+        diagnostic(
+          "persistence.default-strategy-added",
+          "info",
+          "persistence",
+          "Project file had no strategy template; default strategy was added."
+        )
+      );
+    }
+
     try {
       const module = getInputModule(kind);
       const template = module.migrate(input);
@@ -159,6 +174,21 @@ export function loadProjectFromJson(raw: string): LoadResult<ProjectState> {
   }
 
   const rawPropertyData = readEmbeddedTemplateData(manifest, "property");
+  if (
+    rawPropertyData &&
+    typeof rawPropertyData === "object" &&
+    (!("country" in rawPropertyData) ||
+      hasLegacyGermanFederalState(rawPropertyData))
+  ) {
+    diagnostics.push(
+      diagnostic(
+        "persistence.property-at-migration",
+        "info",
+        "persistence",
+        "Legacy property location data was migrated to the Austria-oriented property model; federal state may need review."
+      )
+    );
+  }
   if (
     rawPropertyData &&
     typeof rawPropertyData === "object" &&
@@ -240,4 +270,29 @@ function readSchemaIdentifier(value: unknown): string | undefined {
 
   const schema = (value as { schema?: unknown }).schema;
   return typeof schema === "string" ? schema : undefined;
+}
+
+function hasLegacyGermanFederalState(value: object): boolean {
+  const federalState = (value as { federalState?: unknown }).federalState;
+  return (
+    typeof federalState === "string" &&
+    [
+      "BW",
+      "BY",
+      "BE",
+      "BB",
+      "HB",
+      "HH",
+      "HE",
+      "MV",
+      "NI",
+      "NW",
+      "RP",
+      "SL",
+      "SN",
+      "ST",
+      "SH",
+      "TH"
+    ].includes(federalState)
+  );
 }

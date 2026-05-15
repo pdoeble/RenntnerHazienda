@@ -9,23 +9,25 @@ import {
   templateEnvelopeSchema
 } from "../../validation/commonSchemas";
 
-export const germanFederalStateSchema = z.enum([
-  "BW",
-  "BY",
-  "BE",
-  "BB",
-  "HB",
-  "HH",
-  "HE",
-  "MV",
-  "NI",
-  "NW",
-  "RP",
-  "SL",
-  "SN",
-  "ST",
-  "SH",
-  "TH"
+export const austrianFederalStateSchema = z.enum([
+  "BGLD",
+  "KTN",
+  "NOE",
+  "OOE",
+  "SBG",
+  "STMK",
+  "T",
+  "VBG",
+  "W"
+]);
+
+export const propertyUseTypeSchema = z.enum([
+  "holidayHome",
+  "touristicRental",
+  "mixedUse",
+  "companyUse",
+  "privateUse",
+  "unknown"
 ]);
 
 export const propertyClosingCostItemSchema = z
@@ -81,7 +83,10 @@ export const propertyRenovationItemSchema = z
 export const propertyDataSchema = z
   .object({
     purchasePrice: nonNegativeNumberSchema,
-    federalState: germanFederalStateSchema.optional(),
+    country: z.literal("AT").default("AT"),
+    federalState: austrianFederalStateSchema.optional(),
+    municipality: z.string().optional(),
+    useType: propertyUseTypeSchema.default("holidayHome"),
     address: z.string().optional(),
     rentableAreaSqm: nonNegativeNumberSchema.optional(),
     plotAreaSqm: nonNegativeNumberSchema.optional(),
@@ -90,6 +95,11 @@ export const propertyDataSchema = z
     vacancyRatePct: percentSchema.optional(),
     purchaseMonth: monthIndexSchema.optional(),
     reserveMonths: nonNegativeNumberSchema.default(3),
+    tourismFeeAnnualAmount: nonNegativeNumberSchema.default(0),
+    vatRatePct: percentSchema.default(20),
+    vatRecoverablePct: percentSchema.default(0),
+    vatRefundMonth: monthIndexSchema.default(12),
+    mortgageRegistrationFeePct: nonNegativeNumberSchema.default(0),
     closingCosts: propertyClosingCostsSchema,
     renovationItems: z.array(propertyRenovationItemSchema).default([]),
     notes: z.string().optional()

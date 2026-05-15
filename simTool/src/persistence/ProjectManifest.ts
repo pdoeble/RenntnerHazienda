@@ -65,6 +65,9 @@ export const projectManifestSchema = z
       opex: templateRefSchema.extend({ kind: z.literal("opex") }),
       financing: templateRefSchema
         .extend({ kind: z.literal("financing") })
+        .optional(),
+      strategy: templateRefSchema
+        .extend({ kind: z.literal("strategy") })
         .optional()
     }),
     templateHashes: z.record(z.enum(TEMPLATE_KINDS), z.string()).optional(),
