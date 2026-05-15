@@ -750,6 +750,35 @@ Do not rely on:
 
 Runtime code runs in the browser only.
 
+## GitHub Pages Deployment Workflow
+
+As of 2026-05-15, deployment is prepared through the repository workflow
+`.github/workflows/deploy-simtool-pages.yml`.
+
+The workflow:
+
+- runs on pushes to `main` that touch `simTool/**` or the workflow file
+- can also be started manually through `workflow_dispatch`
+- installs dependencies with `npm ci` in `simTool`
+- runs `npm run lint`, `npm run typecheck`, `npm test`, and `npm run build`
+- uploads `simTool/dist` through `actions/upload-pages-artifact`
+- deploys through `actions/deploy-pages`
+
+GitHub repository settings still need to select:
+
+```text
+Settings -> Pages -> Build and deployment -> Source -> GitHub Actions
+```
+
+The expected project page URL is:
+
+```text
+https://pdoeble.github.io/RenntnerHazienda/
+```
+
+The Vite production base path remains `/RenntnerHazienda/`, matching the
+repository Pages URL.
+
 ---
 
 ## Responsive Behavior
@@ -818,10 +847,12 @@ Implemented:
 
 - npm/Vite/React/TypeScript/Vitest setup under `simTool`.
 - GitHub Pages production base path `/RenntnerHazienda/`.
+- GitHub Actions deployment workflow for publishing `simTool/dist` to GitHub Pages.
 - v1 Zod schemas, defaults, validation, and identity migrations for all template modules.
-- Visible input modules are `ownership`, `legalForm`, `property`, and `opex`.
-- Internal compatibility modules `capex`, `closingCosts`, and `financing` remain part of project state and JSON persistence.
-- Financing is shown in the `Immobilie` tab but remains a separate project-state/template module.
+- Visible input modules are `ownership`, `legalForm`, `property`, `financing`, `strategy`, and `opex`.
+- Internal compatibility modules `capex` and `closingCosts` remain part of project state and JSON persistence for legacy imports.
+- Persisted modules `financing` and `strategy` are visible input tabs.
+- Financing is shown in its own tab and remains a separate project-state/template module.
 - Closing costs and renovation items are edited through the `property` module.
 - Interactive slider plus number inputs update React project state; snapshots, calculations, tables, and charts recalculate automatically.
 - JSON upload/download fallback for project load/save/export and visible template load/save/export.
