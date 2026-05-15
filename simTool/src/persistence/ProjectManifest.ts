@@ -62,7 +62,10 @@ export const projectManifestSchema = z
       closingCosts: templateRefSchema.extend({
         kind: z.literal("closingCosts")
       }),
-      opex: templateRefSchema.extend({ kind: z.literal("opex") })
+      opex: templateRefSchema.extend({ kind: z.literal("opex") }),
+      financing: templateRefSchema
+        .extend({ kind: z.literal("financing") })
+        .optional()
     }),
     templateHashes: z.record(z.enum(TEMPLATE_KINDS), z.string()).optional(),
     embeddedSnapshots: z.record(z.enum(TEMPLATE_KINDS), z.unknown()).optional(),

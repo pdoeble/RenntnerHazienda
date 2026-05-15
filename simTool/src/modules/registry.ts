@@ -1,10 +1,11 @@
-import type { TemplateKind } from "../domain/templates";
+import { VISIBLE_INPUT_KINDS, type TemplateKind } from "../domain/templates";
 import {
   registerInputModule,
   type RegisteredInputModule
 } from "./common";
 import { capexModule } from "./capex";
 import { closingCostsModule } from "./closing-costs";
+import { financingModule } from "./financing";
 import { legalFormModule } from "./legal-form";
 import { opexModule } from "./opex";
 import { ownershipModule } from "./ownership";
@@ -16,8 +17,13 @@ export const inputModules = [
   registerInputModule(capexModule),
   registerInputModule(propertyModule),
   registerInputModule(closingCostsModule),
-  registerInputModule(opexModule)
+  registerInputModule(opexModule),
+  registerInputModule(financingModule)
 ] satisfies readonly RegisteredInputModule[];
+
+export const visibleInputModules = inputModules.filter((module) =>
+  VISIBLE_INPUT_KINDS.includes(module.kind as (typeof VISIBLE_INPUT_KINDS)[number])
+);
 
 export const modulesByKind = Object.fromEntries(
   inputModules.map((module) => [module.kind, module])

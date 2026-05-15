@@ -4,6 +4,8 @@ import { defaultClosingCostsTemplate } from "../modules/closing-costs/defaults";
 import type { ClosingCostsTemplate } from "../modules/closing-costs/types";
 import { defaultLegalFormTemplate } from "../modules/legal-form/defaults";
 import type { LegalFormTemplate } from "../modules/legal-form/types";
+import { defaultFinancingTemplate } from "../modules/financing/defaults";
+import type { FinancingTemplate } from "../modules/financing/types";
 import { defaultOpexTemplate } from "../modules/opex/defaults";
 import type { OpexTemplate } from "../modules/opex/types";
 import { defaultOwnershipTemplate } from "../modules/ownership/defaults";
@@ -18,6 +20,7 @@ export type ProjectState = {
   property: PropertyTemplate;
   closingCosts: ClosingCostsTemplate;
   opex: OpexTemplate;
+  financing: FinancingTemplate;
 };
 
 export const defaultProjectState: ProjectState = {
@@ -26,7 +29,8 @@ export const defaultProjectState: ProjectState = {
   capex: defaultCapexTemplate,
   property: defaultPropertyTemplate,
   closingCosts: defaultClosingCostsTemplate,
-  opex: defaultOpexTemplate
+  opex: defaultOpexTemplate,
+  financing: defaultFinancingTemplate
 };
 
 export type DirtyState = Record<keyof ProjectState | "project", boolean>;
@@ -38,5 +42,6 @@ export const initialDirtyState: DirtyState = {
   property: false,
   closingCosts: false,
   opex: false,
+  financing: false,
   project: false
 };

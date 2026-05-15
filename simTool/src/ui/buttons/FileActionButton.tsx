@@ -4,19 +4,22 @@ type FileActionButtonProps = {
   label: string;
   icon: LucideIcon;
   disabled?: boolean;
+  onClick?: () => void;
 };
 
 export function FileActionButton({
   label,
   icon: Icon,
-  disabled = true
+  disabled = false,
+  onClick
 }: FileActionButtonProps) {
   return (
     <button
       className="icon-button"
       type="button"
       disabled={disabled}
-      title={disabled ? `${label} ist im Scaffold vorbereitet.` : label}
+      onClick={onClick}
+      title={label}
     >
       <Icon aria-hidden="true" size={16} />
       <span>{label}</span>

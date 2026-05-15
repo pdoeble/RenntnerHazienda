@@ -1,12 +1,19 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { defaultOwnershipTemplate } from "./ownership/defaults";
 import { ownershipTemplateSchema } from "./ownership/schema";
 import { defaultOpexTemplate } from "./opex/defaults";
-import { loadTemplateFromJson, serializeJsonFile } from "../persistence/jsonFiles";
+import { defaultFinancingTemplate } from "./financing/defaults";
+import { financingTemplateSchema } from "./financing/schema";
+import {
+  loadProjectFromJson,
+  loadTemplateFromJson,
+  serializeJsonFile
+} from "../persistence/jsonFiles";
 import { migrateVersionedEnvelope } from "../validation/migrationRunner";
 import { createDownloadUploadAdapter } from "../persistence/adapterStubs";
 import { createProjectManifest, projectManifestSchema } from "../persistence/ProjectManifest";
 import { defaultProjectState } from "../state/projectStore";
+import { downloadJsonFile } from "../persistence/browserFiles";
 
 describe("module validation contracts", () => {
   it("validates a template envelope with schema, version, id, name, and data", () => {
@@ -16,7 +23,15 @@ describe("module validation contracts", () => {
     expect(parsed.version).toBe(1);
     expect(parsed.id).toBeTruthy();
     expect(parsed.name).toBeTruthy();
-    expect(parsed.data.owners).toHaveLength(2);
+    expect(parsed.data.owners).toHaveLength(6);
+  });
+
+  it("validates the financing template envelope", () => {
+    const parsed = financingTemplateSchema.parse(defaultFinancingTemplate);
+
+    expect(parsed.schema).toBe("immo-finance.financing");
+    expect(parsed.data.equitySharePct).toBe(20);
+    expect(parsed.data.termYears).toBe(25);
   });
 
   it("rejects loading the wrong template kind", () => {
@@ -52,6 +67,42 @@ describe("module validation contracts", () => {
 
     expect(parsed.schema).toBe("immo-finance.project");
     expect(parsed.templateRefs.ownership.kind).toBe("ownership");
+    expect(parsed.templateRefs.financing?.kind).toBe("financing");
+  });
+
+  it("loads old embedded project manifests without financing by adding defaults", () => {
+    const manifest = createProjectManifest(defaultProjectState);
+    const oldManifest = {
+      ...manifest,
+      templateRefs: {
+        ownership: manifest.templateRefs.ownership,
+        legalForm: manifest.templateRefs.legalForm,
+        capex: manifest.templateRefs.capex,
+        property: manifest.templateRefs.property,
+        closingCosts: manifest.templateRefs.closingCosts,
+        opex: manifest.templateRefs.opex
+      },
+      embeddedSnapshots: {
+        ownership: manifest.embeddedSnapshots?.ownership,
+        legalForm: manifest.embeddedSnapshots?.legalForm,
+        capex: manifest.embeddedSnapshots?.capex,
+        property: manifest.embeddedSnapshots?.property,
+        closingCosts: manifest.embeddedSnapshots?.closingCosts,
+        opex: manifest.embeddedSnapshots?.opex
+      }
+    };
+
+    const loaded = loadProjectFromJson(serializeJsonFile(oldManifest));
+
+    expect(loaded.ok).toBe(true);
+    if (loaded.ok) {
+      expect(loaded.value.financing.data.equitySharePct).toBe(20);
+    }
+    expect(
+      loaded.diagnostics.some(
+        (diagnostic) => diagnostic.id === "persistence.default-financing-added"
+      )
+    ).toBe(true);
   });
 
   it("marks download/upload storage as save fallback", () => {
@@ -59,5 +110,36 @@ describe("module validation contracts", () => {
 
     expect(adapter.capabilities.directSave).toBe(false);
     expect(adapter.capabilities.remoteSync).toBe(false);
+  });
+
+  it("downloads serialized JSON files", () => {
+    const createObjectUrl = vi
+      .spyOn(URL, "createObjectURL")
+      .mockReturnValue("blob:mock");
+    const revokeObjectUrl = vi
+      .spyOn(URL, "revokeObjectURL")
+      .mockImplementation(() => undefined);
+    const click = vi.fn();
+    const createElement = vi
+      .spyOn(document, "createElement")
+      .mockReturnValue({
+        click,
+        set href(_value: string) {
+          return;
+        },
+        set download(_value: string) {
+          return;
+        }
+      } as unknown as HTMLAnchorElement);
+
+    downloadJsonFile("project.immo-project.json", "{}");
+
+    expect(createObjectUrl).toHaveBeenCalled();
+    expect(click).toHaveBeenCalled();
+    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:mock");
+
+    createObjectUrl.mockRestore();
+    revokeObjectUrl.mockRestore();
+    createElement.mockRestore();
   });
 });

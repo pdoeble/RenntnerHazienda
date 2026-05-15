@@ -29,6 +29,7 @@ export type ContributionResult = {
   recurringContributions: OwnerContributionSchedule[];
   totalByOwner: Record<string, number>;
   requiredInitialContribution: number;
+  requiredMonthlyContribution: number;
   diagnostics: DiagnosticMessage[];
 };
 

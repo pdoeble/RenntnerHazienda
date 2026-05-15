@@ -115,7 +115,11 @@ function ContributionsView({ result }: { result: CalculationResult }) {
   const chartData = result.contributions.initialContributions.map(
     (contribution) => ({
       owner: contribution.ownerName,
-      beitrag: contribution.amount
+      eigenkapital: contribution.amount,
+      monatlich:
+        result.contributions.recurringContributions[0]?.contributions.find(
+          (candidate) => candidate.ownerId === contribution.ownerId
+        )?.amount ?? 0
     })
   );
 
@@ -126,6 +130,10 @@ function ContributionsView({ result }: { result: CalculationResult }) {
           [
             "Initialbedarf",
             formatMoney(result.contributions.requiredInitialContribution)
+          ],
+          [
+            "Monatsbeitrag",
+            formatMoney(result.contributions.requiredMonthlyContribution)
           ],
           [
             "Eigner",
@@ -141,17 +149,23 @@ function ContributionsView({ result }: { result: CalculationResult }) {
             <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="beitrag" fill="#0f766e" />
+            <Bar dataKey="eigenkapital" fill="#0f766e" />
+            <Bar dataKey="monatlich" fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Eigner", "Basis", "Anteil", "Betrag"]}
+        headers={["Eigner", "Basis", "Anteil", "EK", "Monatlich"]}
         rows={result.contributions.initialContributions.map((contribution) => [
           contribution.ownerName,
           contribution.basis,
           `${contribution.sharePct.toFixed(2)}%`,
-          formatMoney(contribution.amount)
+          formatMoney(contribution.amount),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.amount ?? 0
+          )
         ])}
       />
     </div>
@@ -205,6 +219,15 @@ function CashflowView({ result }: { result: CalculationResult }) {
 }
 
 function DebtView({ result }: { result: CalculationResult }) {
+  const chartData = clampItems(result.debt.monthlyDebtService, 300)
+    .filter((month) => month.month % 12 === 0)
+    .map((month) => ({
+      year: Math.floor(month.month / 12) + 1,
+      restschuld: month.remainingDebt,
+      zins: month.interest,
+      tilgung: month.principalRepayment
+    }));
+
   return (
     <div className="visualization-view">
       <MetricGrid
@@ -214,10 +237,33 @@ function DebtView({ result }: { result: CalculationResult }) {
           ["Gezahlte Zinsen", formatMoney(result.debt.totalInterestPaid)]
         ]}
       />
-      <p className="empty-state">
-        Das Schuldenmodell ist in diesem vertikalen Kern als Null-Schulden-Modell
-        vorbereitet, bis ein Finanzierungsmodul eingefuehrt wird.
-      </p>
+      <ChartFrame>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <Tooltip formatter={(value) => formatMoney(Number(value))} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="restschuld"
+              stroke="#7c3aed"
+              strokeWidth={2}
+              dot={false}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+      <DataTable
+        headers={["Jahr", "Restschuld", "Zins mtl.", "Tilgung mtl."]}
+        rows={clampItems(chartData, 8).map((year) => [
+          year.year.toString(),
+          formatMoney(year.restschuld),
+          formatMoney(year.zins),
+          formatMoney(year.tilgung)
+        ])}
+      />
     </div>
   );
 }

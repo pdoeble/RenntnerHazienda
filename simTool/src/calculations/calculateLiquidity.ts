@@ -16,7 +16,7 @@ export function calculateLiquidity(
   snapshot: ProjectSnapshot,
   contributions: ContributionResult,
   cashflow: CashflowResult,
-  _debt: DebtResult
+  debt: DebtResult
 ): LiquidityResult {
   const diagnostics = [];
   const monthly: LiquidityMonth[] = [];
@@ -40,8 +40,18 @@ export function calculateLiquidity(
     const monthlyCashflow =
       cashflow.monthly[month]?.netCashflowAfterDebtService ?? 0;
     const contributionInflow = month === 0 ? initialContributionTotal : 0;
+    const recurringContributionInflow =
+      month >= snapshot.financing.data.startMonth &&
+      month < snapshot.financing.data.startMonth + snapshot.financing.data.termYears * 12
+        ? contributions.requiredMonthlyContribution
+        : 0;
+    const loanInflow =
+      month === snapshot.financing.data.startMonth ? debt.totalInitialDebt : 0;
     const inflows =
-      contributionInflow + (monthlyCashflow > 0 ? monthlyCashflow : 0);
+      contributionInflow +
+      recurringContributionInflow +
+      loanInflow +
+      (monthlyCashflow > 0 ? monthlyCashflow : 0);
     const outflows =
       acquisitionOutflow +
       capexOutflow +

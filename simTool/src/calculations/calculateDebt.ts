@@ -1,35 +1,83 @@
-import { diagnostic } from "../validation/diagnostics";
+import { calculateDebtPrincipal } from "./financialInputs";
+import { calculateAnnuityMonthlyPayment } from "./loanMath";
+import { roundMoney } from "./rounding";
 import type { ContributionResult, DebtResult, ProjectSnapshot } from "./types";
 
 export function calculateDebt(
   snapshot: ProjectSnapshot,
   _contributions: ContributionResult
 ): DebtResult {
-  const monthlyDebtService = Array.from(
-    { length: snapshot.metadata.timeHorizonMonths },
-    (_value, month) => ({
+  const principal = roundMoney(calculateDebtPrincipal(snapshot));
+  const termMonths = snapshot.financing.data.termYears * 12;
+  const startMonth = snapshot.financing.data.startMonth;
+  const monthlyPayment = roundMoney(calculateAnnuityMonthlyPayment(snapshot));
+  const monthlyInterestRate =
+    snapshot.financing.data.annualInterestRatePct / 100 / 12;
+  const loanMonthly = [];
+  const monthlyDebtService = [];
+  let balance = principal;
+  let totalInterestPaid = 0;
+  let totalPrincipalPaid = 0;
+
+  for (let month = 0; month < snapshot.metadata.timeHorizonMonths; month += 1) {
+    const inLoanWindow =
+      principal > 0 &&
+      month >= startMonth &&
+      month < startMonth + termMonths &&
+      balance > 0;
+    const openingBalance = balance;
+    const interest = inLoanWindow
+      ? roundMoney(openingBalance * monthlyInterestRate)
+      : 0;
+    const plannedPrincipalRepayment = inLoanWindow
+      ? Math.max(0, monthlyPayment - interest)
+      : 0;
+    const principalRepayment = roundMoney(
+      Math.min(openingBalance, plannedPrincipalRepayment)
+    );
+    const payment = roundMoney(interest + principalRepayment);
+    balance = roundMoney(Math.max(0, openingBalance - principalRepayment));
+    totalInterestPaid = roundMoney(totalInterestPaid + interest);
+    totalPrincipalPaid = roundMoney(totalPrincipalPaid + principalRepayment);
+
+    loanMonthly.push({
       month,
-      interest: 0,
-      principalRepayment: 0,
-      totalPayment: 0,
-      remainingDebt: 0
-    })
-  );
+      openingBalance: roundMoney(openingBalance),
+      interest,
+      principalRepayment,
+      payment,
+      closingBalance: balance
+    });
+
+    monthlyDebtService.push({
+      month,
+      interest,
+      principalRepayment,
+      totalPayment: payment,
+      remainingDebt: balance
+    });
+  }
 
   return {
-    loans: [],
-    totalInitialDebt: 0,
-    totalRemainingDebt: 0,
-    totalInterestPaid: 0,
-    totalPrincipalPaid: 0,
+    loans:
+      principal > 0
+        ? [
+            {
+              id: "loan-primary",
+              name: snapshot.financing.data.loanName,
+              principal,
+              annualInterestRatePct:
+                snapshot.financing.data.annualInterestRatePct,
+              fixedMonthlyPayment: monthlyPayment,
+              monthly: loanMonthly
+            }
+          ]
+        : [],
+    totalInitialDebt: principal,
+    totalRemainingDebt: balance,
+    totalInterestPaid,
+    totalPrincipalPaid,
     monthlyDebtService,
-    diagnostics: [
-      diagnostic(
-        "debt.no-financing-module",
-        "warning",
-        "debt",
-        "No dedicated financing module exists yet; debt is modeled as zero in this scaffold."
-      )
-    ]
+    diagnostics: []
   };
 }

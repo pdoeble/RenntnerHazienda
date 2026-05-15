@@ -444,16 +444,17 @@ Purpose:
 
 Show debt structure and debt development.
 
-The current input tab list has no dedicated financing tab.
+The visible input tab list has no dedicated financing tab.
 
-Therefore the MVP may derive required debt from:
+Financing assumptions are persisted in an internal `financing` template and rendered inside the `Capex` tab.
+
+The current MVP derives required debt from:
 
 ```text
 purchase price
 + closing costs
 + capex
-- owner equity contributions
-- grants, if modeled
+- owner equity contribution percentage
 ```
 
 The data model must not assume only one loan forever.
@@ -508,15 +509,16 @@ Required behavior:
 - expose total interest paid
 - expose total principal repaid
 
-If no explicit debt assumptions exist, emit a warning and use a simple derived default only if defined by product scope.
+Old project files without financing assumptions are loaded with the default 20% equity / 80% loan financing template and an informational diagnostic.
 
 ## Simple Loan Formula
 
-For a basic annuity-style loan:
+For the current annuity-style loan:
 
 ```text
-annualPayment = principal * (annualInterestRate + initialRepaymentRate)
-monthlyPayment = annualPayment / 12
+monthlyRate = annualInterestRate / 12
+termMonths = termYears * 12
+monthlyPayment = principal * monthlyRate * (1 + monthlyRate)^termMonths / ((1 + monthlyRate)^termMonths - 1)
 ```
 
 Monthly calculation:

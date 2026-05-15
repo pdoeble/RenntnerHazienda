@@ -810,26 +810,27 @@ visualization component
 
 ---
 
-## Implementation Status: Vertical MVP Scaffold
+## Implementation Status: Interactive Financing Scaffold
 
-As of 2026-05-15, the repository contains a first vertical static app scaffold.
+As of 2026-05-15, the repository contains an interactive static app scaffold.
 
 Implemented:
 
 - npm/Vite/React/TypeScript/Vitest setup under `simTool`.
 - GitHub Pages production base path `/RenntnerHazienda/`.
-- v1 Zod schemas, defaults, validation, and identity migrations for all six input modules.
-- A module registry exposing `kind`, German UI label, schema id, suffix, default template, migration, and validation.
-- Project state, project manifest typing/schema, storage adapter interfaces, and non-mutating adapter stubs.
-- Project snapshot builder and first deterministic calculation pipeline for contributions, cashflow, liquidity, and zero-debt diagnostics.
-- Two-column app shell with input tabs, visualization tabs, diagnostics panel, disclaimer, status badges, and first Recharts charts/tables.
+- v1 Zod schemas, defaults, validation, and identity migrations for the six visible input modules plus internal `financing`.
+- Financing is shown in the `Capex` tab but remains a separate project-state/template module.
+- Interactive slider plus number inputs update React project state; snapshots, calculations, tables, and charts recalculate automatically.
+- JSON upload/download fallback for project load/save/export and visible template load/save/export.
+- Contribution, cashflow, liquidity, and annuity debt calculations for a 20% equity / 80% loan default case.
+- Six default owners with different ownership shares: 25%, 20%, 18%, 15%, 12%, and 10%.
+- Two-column app shell with input tabs, visualization tabs, diagnostics panel, status badges, and Recharts charts/tables.
 
 Explicitly not implemented yet:
 
-- Editable production forms.
 - IndexedDB autosave persistence.
-- File picker, direct save, JSON upload/download, ZIP import/export.
-- Dedicated financing/debt input module.
+- Direct file overwrite through File System Access API.
+- ZIP import/export.
 - User-approved overwrite/conflict workflows.
 
 Local verification commands:
@@ -843,7 +844,6 @@ npm run build
 
 Next architecture steps:
 
-- Replace read-only input summaries with controlled domain forms.
 - Implement IndexedDB autosave behind the existing storage boundary.
-- Implement Download/Upload fallback before File System Access overwrite behavior.
-- Add a financing module or explicit financing assumptions before modeling real debt service.
+- Add direct-save support as an adapter on top of the current JSON fallback.
+- Add editable labels/categories and add/remove item workflows after the numeric model stabilizes.

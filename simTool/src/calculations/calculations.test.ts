@@ -26,11 +26,15 @@ describe("calculation pipeline", () => {
     });
     const contributions = calculateContributions(snapshot);
 
-    expect(contributions.requiredInitialContribution).toBe(881775);
-    expect(contributions.initialContributions).toEqual([
-      expect.objectContaining({ ownerId: "owner-a", amount: 440887.5 }),
-      expect.objectContaining({ ownerId: "owner-b", amount: 440887.5 })
-    ]);
+    expect(contributions.requiredInitialContribution).toBe(176355);
+    expect(contributions.requiredMonthlyContribution).toBeCloseTo(3723.47, 1);
+    expect(contributions.initialContributions).toHaveLength(6);
+    expect(contributions.initialContributions[0]).toEqual(
+      expect.objectContaining({ ownerId: "owner-a", amount: 44088.75 })
+    );
+    expect(
+      contributions.recurringContributions[0]?.contributions[0]?.amount
+    ).toBeCloseTo(930.87, 1);
   });
 
   it("allocates initial contributions by equal split", () => {
@@ -42,25 +46,11 @@ describe("calculation pipeline", () => {
         basis: "equalSplit"
       }
     ];
-    project.ownership.data.owners.push(
-      {
-        id: "owner-c",
-        displayName: "Eigner C",
-        type: "person",
-        ownershipSharePct: 0
-      },
-      {
-        id: "owner-d",
-        displayName: "Eigner D",
-        type: "person",
-        ownershipSharePct: 0
-      }
-    );
 
     const contributions = calculateContributions(buildProjectSnapshot(project));
 
-    expect(contributions.initialContributions).toHaveLength(4);
-    expect(contributions.initialContributions[0]?.amount).toBe(220443.75);
+    expect(contributions.initialContributions).toHaveLength(6);
+    expect(contributions.initialContributions[0]?.amount).toBe(29392.5);
   });
 
   it("allocates initial contributions by custom split", () => {
@@ -71,16 +61,20 @@ describe("calculation pipeline", () => {
         name: "Custom",
         basis: "custom",
         customShares: {
-          "owner-a": 70,
-          "owner-b": 30
+          "owner-a": 40,
+          "owner-b": 20,
+          "owner-c": 15,
+          "owner-d": 10,
+          "owner-e": 10,
+          "owner-f": 5
         }
       }
     ];
 
     const contributions = calculateContributions(buildProjectSnapshot(project));
 
-    expect(contributions.initialContributions[0]?.amount).toBe(617242.5);
-    expect(contributions.initialContributions[1]?.amount).toBe(264532.5);
+    expect(contributions.initialContributions[0]?.amount).toBe(70542);
+    expect(contributions.initialContributions[1]?.amount).toBe(35271);
   });
 
   it("converts yearly opex to monthly values", () => {
@@ -89,7 +83,7 @@ describe("calculation pipeline", () => {
     expect(insurance ? monthlyOpexAmount(insurance, 0) : undefined).toBe(100);
   });
 
-  it("calculates vacancy and cashflow from rent, opex, and zero debt service", () => {
+  it("calculates vacancy and cashflow from rent, opex, and debt service", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
     });
@@ -102,20 +96,22 @@ describe("calculation pipeline", () => {
         vacancyLoss: 135,
         effectiveIncome: 4365,
         nonRecoverableOpex: 600,
-        netCashflowAfterDebtService: 3765
+        netCashflowAfterDebtService: 41.53
       })
     );
     expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeGreaterThan(0);
   });
 
-  it("returns a zero-debt result with an explicit diagnostic", () => {
+  it("calculates a 25-year annuity debt schedule", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
-      timeHorizonMonths: 12
+      timeHorizonMonths: 300
     });
     const debt = calculateDebt(snapshot, calculateContributions(snapshot));
 
-    expect(debt.totalInitialDebt).toBe(0);
-    expect(debt.diagnostics[0]?.id).toBe("debt.no-financing-module");
+    expect(debt.totalInitialDebt).toBe(705420);
+    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(3723.47, 1);
+    expect(debt.monthlyDebtService[0]?.interest).toBe(2351.4);
+    expect(debt.totalRemainingDebt).toBe(0);
   });
 
   it("detects negative liquidity", () => {

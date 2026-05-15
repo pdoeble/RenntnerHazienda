@@ -43,6 +43,7 @@ Use JSON files.
 .property.json
 .closing-costs.json
 .opex.json
+.financing.json
 ```
 
 ### Required project file type
@@ -101,6 +102,7 @@ Use these schema identifiers:
 | Immobilie | `immo-finance.property` |
 | Nebenkosten | `immo-finance.closing-costs` |
 | Opex | `immo-finance.opex` |
+| Finanzierung | `immo-finance.financing` |
 | Project | `immo-finance.project` |
 
 Schema identifiers are stable public contracts.
@@ -118,7 +120,8 @@ type TemplateKind =
   | "capex"
   | "property"
   | "closingCosts"
-  | "opex";
+  | "opex"
+  | "financing";
 ```
 
 Use German labels in the UI and English identifiers in code.
@@ -136,6 +139,7 @@ renovation-base.capex.json
 property-house-a.property.json
 bw-standard.closing-costs.json
 opex-standard.opex.json
+annuity-80-20.financing.json
 project-house-a.immo-project.json
 ```
 
@@ -733,38 +737,50 @@ type OpexItem = {
 }
 ```
 
-## Debt Extension
+## Financing Template
 
-The original input tab list does not include a separate financing or debt tab.
+The financing module is implemented as an internal template module.
 
-However, the visualization includes Schulden.
+The current UI shows financing controls inside the `Capex` tab, but persisted financing assumptions remain separate from capex assumptions.
 
-Therefore the data model must not block future debt modeling.
+| Property | Value |
+|---|---|
+| Schema | `immo-finance.financing` |
+| File suffix | `.financing.json` |
 
-For MVP, debt may initially be derived from:
+### Type
 
-```text
-purchase price
-+ closing costs
-+ capex
-- equity contributions
+```ts
+type FinancingTemplate = TemplateEnvelope<FinancingData>;
+
+type FinancingData = {
+  loanName: string;
+  equitySharePct: number;
+  annualInterestRatePct: number;
+  termYears: number;
+  startMonth: number;
+  additionalMonthlyRepayment: number;
+};
 ```
 
-Later, introduce a dedicated financing module if required.
+### Current calculation behavior
 
-Potential future file suffix:
-
-```text
-.financing.json
-```
-
-Potential future schema:
+The default model derives one annuity loan:
 
 ```text
-immo-finance.financing
+loan principal = total acquisition and investment cost * (100 - equitySharePct) / 100
 ```
 
-Do not hard-code assumptions that only one loan exists.
+The default case is:
+
+```text
+20% equity
+80% loan
+4.0% annual interest
+25-year term
+```
+
+The data structures still use arrays for debt results, so the app should not hard-code assumptions that only one loan exists forever.
 
 ## Numeric Conventions
 

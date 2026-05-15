@@ -43,6 +43,7 @@ function emptyCalculationResult(
       recurringContributions: [],
       totalByOwner: {},
       requiredInitialContribution: 0,
+      requiredMonthlyContribution: 0,
       diagnostics: []
     },
     debt: {

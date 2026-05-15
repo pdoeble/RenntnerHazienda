@@ -760,3 +760,15 @@ A user should be able to answer:
 3. Which project combines them?
 4. Which warning affects the result?
 5. Where does each visualized number come from?
+
+---
+
+## Implementation Status: Interactive Inputs
+
+As of 2026-05-15:
+
+- Numeric assumptions are editable through a slider plus direct number input.
+- Changes update React state immediately and recalculate visualizations from the current project snapshot.
+- Financing is displayed inside the `Capex` tab as a separate section.
+- Project and template load/save/export use browser JSON upload/download fallback.
+- The visible disclaimer panel was removed from the app shell; legal and product boundaries remain documented in the wiki.

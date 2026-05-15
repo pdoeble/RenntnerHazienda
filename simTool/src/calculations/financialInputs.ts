@@ -26,9 +26,30 @@ export function calculateEquityFundedCapexTotal(
 }
 
 export function calculateInitialFundingNeed(snapshot: ProjectSnapshot): number {
+  return calculateTotalProjectCost(snapshot);
+}
+
+export function calculateTotalProjectCost(snapshot: ProjectSnapshot): number {
   return (
     snapshot.property.data.purchasePrice +
     calculateClosingCostsTotal(snapshot) +
-    calculateEquityFundedCapexTotal(snapshot)
+    snapshot.capex.data.items.reduce((total, item) => total + item.amount, 0)
+  );
+}
+
+export function calculateEquityContributionNeed(
+  snapshot: ProjectSnapshot
+): number {
+  return (
+    (calculateTotalProjectCost(snapshot) *
+      snapshot.financing.data.equitySharePct) /
+    100
+  );
+}
+
+export function calculateDebtPrincipal(snapshot: ProjectSnapshot): number {
+  return Math.max(
+    0,
+    calculateTotalProjectCost(snapshot) - calculateEquityContributionNeed(snapshot)
   );
 }

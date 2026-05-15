@@ -1,6 +1,7 @@
 import { diagnostic } from "../validation/diagnostics";
 import { isApproximately, sum } from "../validation/commonSchemas";
-import { calculateInitialFundingNeed } from "./financialInputs";
+import { calculateEquityContributionNeed } from "./financialInputs";
+import { calculateAnnuityMonthlyPayment } from "./loanMath";
 import { roundMoney, roundPct } from "./rounding";
 import type {
   ContributionResult,
@@ -14,7 +15,10 @@ export function calculateContributions(
   const diagnostics = [];
   const owners = snapshot.ownership.data.owners;
   const requiredInitialContribution = roundMoney(
-    calculateInitialFundingNeed(snapshot)
+    calculateEquityContributionNeed(snapshot)
+  );
+  const requiredMonthlyContribution = roundMoney(
+    calculateAnnuityMonthlyPayment(snapshot)
   );
 
   if (owners.length === 0) {
@@ -23,6 +27,7 @@ export function calculateContributions(
       recurringContributions: [],
       totalByOwner: {},
       requiredInitialContribution,
+      requiredMonthlyContribution,
       diagnostics: [
         diagnostic(
           "contributions.no-owners",
@@ -53,6 +58,16 @@ export function calculateContributions(
       ownerId: owner.id,
       ownerName: owner.displayName,
       amount: roundMoney((requiredInitialContribution * sharePct) / 100),
+      basis,
+      sharePct: roundPct(sharePct)
+    } satisfies OwnerContribution;
+  });
+  const monthlyContributions = owners.map((owner) => {
+    const sharePct = resolveOwnerSharePct(snapshot, owner.id, basis);
+    return {
+      ownerId: owner.id,
+      ownerName: owner.displayName,
+      amount: roundMoney((requiredMonthlyContribution * sharePct) / 100),
       basis,
       sharePct: roundPct(sharePct)
     } satisfies OwnerContribution;
@@ -88,14 +103,29 @@ export function calculateContributions(
 
   return {
     initialContributions,
-    recurringContributions: [],
+    recurringContributions: [
+      {
+        month: snapshot.financing.data.startMonth,
+        contributions: monthlyContributions
+      }
+    ],
     totalByOwner: Object.fromEntries(
-      initialContributions.map((contribution) => [
-        contribution.ownerId,
-        contribution.amount
-      ])
+      initialContributions.map((contribution) => {
+        const monthlyContribution =
+          monthlyContributions.find(
+            (candidate) => candidate.ownerId === contribution.ownerId
+          )?.amount ?? 0;
+        return [
+          contribution.ownerId,
+          roundMoney(
+            contribution.amount +
+              monthlyContribution * snapshot.financing.data.termYears * 12
+          )
+        ];
+      })
     ),
     requiredInitialContribution,
+    requiredMonthlyContribution,
     diagnostics
   };
 }

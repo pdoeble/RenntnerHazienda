@@ -4,7 +4,8 @@ export const TEMPLATE_SCHEMA_IDS = {
   capex: "immo-finance.capex",
   property: "immo-finance.property",
   closingCosts: "immo-finance.closing-costs",
-  opex: "immo-finance.opex"
+  opex: "immo-finance.opex",
+  financing: "immo-finance.financing"
 } as const;
 
 export const TEMPLATE_FILE_SUFFIXES = {
@@ -13,7 +14,8 @@ export const TEMPLATE_FILE_SUFFIXES = {
   capex: ".capex.json",
   property: ".property.json",
   closingCosts: ".closing-costs.json",
-  opex: ".opex.json"
+  opex: ".opex.json",
+  financing: ".financing.json"
 } as const;
 
 export const TEMPLATE_KINDS = [
@@ -22,10 +24,21 @@ export const TEMPLATE_KINDS = [
   "capex",
   "property",
   "closingCosts",
-  "opex"
+  "opex",
+  "financing"
 ] as const;
 
 export type TemplateKind = (typeof TEMPLATE_KINDS)[number];
+
+export const VISIBLE_INPUT_KINDS = [
+  "ownership",
+  "legalForm",
+  "capex",
+  "property",
+  "closingCosts",
+  "opex"
+] as const satisfies readonly TemplateKind[];
+
 export type TemplateSchemaId = (typeof TEMPLATE_SCHEMA_IDS)[TemplateKind];
 
 export type TemplateEnvelope<TData> = {
