@@ -158,6 +158,58 @@ export function loadProjectFromJson(raw: string): LoadResult<ProjectState> {
     }
   }
 
+  const rawPropertyData = readEmbeddedTemplateData(manifest, "property");
+  if (
+    rawPropertyData &&
+    typeof rawPropertyData === "object" &&
+    !("closingCosts" in rawPropertyData)
+  ) {
+    nextProjectState.property = {
+      ...nextProjectState.property,
+      data: {
+        ...nextProjectState.property.data,
+        closingCosts: nextProjectState.closingCosts.data
+      }
+    };
+    diagnostics.push(
+      diagnostic(
+        "persistence.legacy-closing-costs-migrated",
+        "info",
+        "persistence",
+        "Legacy closing costs were migrated into the property template."
+      )
+    );
+  }
+
+  if (
+    rawPropertyData &&
+    typeof rawPropertyData === "object" &&
+    !("renovationItems" in rawPropertyData)
+  ) {
+    nextProjectState.property = {
+      ...nextProjectState.property,
+      data: {
+        ...nextProjectState.property.data,
+        renovationItems: nextProjectState.capex.data.items.map((item) => ({
+          id: item.id,
+          label: item.label,
+          category: item.category,
+          amount: item.amount,
+          timingMonth: item.timingMonth,
+          notes: item.notes
+        }))
+      }
+    };
+    diagnostics.push(
+      diagnostic(
+        "persistence.legacy-renovations-migrated",
+        "info",
+        "persistence",
+        "Legacy capex renovation items were migrated into the property template."
+      )
+    );
+  }
+
   return {
     ok: true,
     value: nextProjectState,
@@ -167,6 +219,18 @@ export function loadProjectFromJson(raw: string): LoadResult<ProjectState> {
 
 export function serializeJsonFile(value: unknown): string {
   return `${JSON.stringify(value, null, 2)}\n`;
+}
+
+function readEmbeddedTemplateData(
+  manifest: ProjectManifest,
+  kind: TemplateKind
+): unknown {
+  const template = manifest.embeddedSnapshots?.[kind];
+  if (!template || typeof template !== "object" || !("data" in template)) {
+    return undefined;
+  }
+
+  return (template as { data?: unknown }).data;
 }
 
 function readSchemaIdentifier(value: unknown): string | undefined {

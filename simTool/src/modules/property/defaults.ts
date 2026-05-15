@@ -16,10 +16,35 @@ export const defaultPropertyTemplate: PropertyTemplate = {
     purchasePrice: 750000,
     federalState: "BW",
     rentableAreaSqm: 300,
+    plotAreaSqm: 850,
     units: 4,
     expectedMonthlyRent: 4500,
     vacancyRatePct: 3,
     purchaseMonth: 0,
+    reserveMonths: 3,
+    closingCosts: {
+      realEstateTransferTaxPct: 5,
+      notaryPct: 1.5,
+      landRegistryPct: 0.5,
+      brokerPct: 3.57,
+      otherCosts: [
+        {
+          id: "closing-001",
+          label: "Gutachten",
+          amount: 2500,
+          timingMonth: 0
+        }
+      ]
+    },
+    renovationItems: [
+      {
+        id: "renovation-001",
+        label: "Renovierung",
+        category: "renovation",
+        amount: 50000,
+        timingMonth: 0
+      }
+    ],
     notes: "Beispieldaten ohne Bezug zu einem realen Projekt."
   }
 };

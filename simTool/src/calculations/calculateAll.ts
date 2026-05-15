@@ -1,6 +1,9 @@
 import { hasBlockingDiagnostics } from "../validation/diagnostics";
 import { calculateCashflow } from "./calculateCashflow";
-import { calculateContributions } from "./calculateContributions";
+import {
+  calculateInitialContributions,
+  calculateRecurringContributions
+} from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
 import { calculateLiquidity } from "./calculateLiquidity";
 import { collectInputDiagnostics } from "./diagnostics";
@@ -13,9 +16,15 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     return emptyCalculationResult(snapshot, inputDiagnostics);
   }
 
-  const contributions = calculateContributions(snapshot);
-  const debt = calculateDebt(snapshot, contributions);
+  const initialContributions = calculateInitialContributions(snapshot);
+  const debt = calculateDebt(snapshot, initialContributions);
   const cashflow = calculateCashflow(snapshot, debt);
+  const contributions = calculateRecurringContributions(
+    snapshot,
+    debt,
+    cashflow,
+    initialContributions
+  );
   const liquidity = calculateLiquidity(snapshot, contributions, cashflow, debt);
 
   return {

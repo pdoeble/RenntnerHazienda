@@ -785,3 +785,29 @@ Calculations must be boring, traceable, and testable.
 A user should be able to answer:
 
 > Which input caused this number?
+
+---
+
+## Implementation Status: Owner Equity And Reserve Contributions
+
+As of 2026-05-15:
+
+- Initial project need is calculated from purchase price, property closing costs, and property renovation items.
+- Owner equity is the sum of `ownership.owners[].equityContribution`.
+- Debt principal is `max(0, initialProjectNeed - totalOwnerEquity)`.
+- Owner share is derived as `ownerEquity / totalOwnerEquity`.
+- Initial contributions are the direct owner equity values.
+- Recurring contributions are calculated yearly. For each year, one fixed monthly contribution amount is selected for the next 12 months so simulated liquidity does not fall below the reserve target.
+- Reserve target is `property.reserveMonths` times the current monthly cost basis: recoverable opex, non-recoverable opex, and debt service.
+- Recurring monthly contributions are allocated to owners proportionally to derived owner shares.
+- Liquidity includes owner equity inflow, loan inflow, acquisition outflow, renovation outflows, operating cashflow, debt service, and recurring owner contributions.
+- Opex annual amounts are converted according to the selected cost basis: fixed, rentable area, plot area, or property value.
+
+Current calculation checks cover:
+
+- derived shares from six owner equity values
+- debt principal from project need minus owner equity
+- annuity debt service and full 25-year amortization
+- opex cost modes
+- reserve-preserving yearly recurring contributions
+- blocked calculations when owner equity is missing

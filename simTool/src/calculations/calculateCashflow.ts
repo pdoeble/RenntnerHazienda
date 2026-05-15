@@ -36,12 +36,18 @@ export function calculateCashflow(
       const recoverableOpex = roundMoney(
         snapshot.opex.data.recurringItems
           .filter((item) => item.recoverableFromTenants)
-          .reduce((total, item) => total + monthlyOpexAmount(item, month), 0)
+          .reduce(
+            (total, item) => total + monthlyOpexAmount(item, month, snapshot),
+            0
+          )
       );
       const nonRecoverableOpex = roundMoney(
         snapshot.opex.data.recurringItems
           .filter((item) => !item.recoverableFromTenants)
-          .reduce((total, item) => total + monthlyOpexAmount(item, month), 0)
+          .reduce(
+            (total, item) => total + monthlyOpexAmount(item, month, snapshot),
+            0
+          )
       );
       const debtService = debt.monthlyDebtService[month]?.totalPayment ?? 0;
       const netCashflowBeforeContributions = roundMoney(
@@ -77,15 +83,42 @@ export function calculateCashflow(
   };
 }
 
-export function monthlyOpexAmount(item: OpexItem, month: number): number {
-  const baseMonthlyAmount =
-    item.period === "monthly"
-      ? item.amount
-      : item.period === "quarterly"
-        ? item.amount / 3
-        : item.amount / 12;
+export function monthlyOpexAmount(
+  item: OpexItem,
+  month: number,
+  snapshot?: ProjectSnapshot
+): number {
+  const baseMonthlyAmount = annualOpexAmount(item, snapshot) / 12;
   const inflationRate = (item.inflationPct ?? 0) / 100;
   return baseMonthlyAmount * (1 + inflationRate) ** (month / 12);
+}
+
+export function annualOpexAmount(
+  item: OpexItem,
+  snapshot?: ProjectSnapshot
+): number {
+  const legacyAnnualAmount =
+    item.period === "monthly"
+      ? item.amount * 12
+      : item.period === "quarterly"
+        ? item.amount * 4
+        : item.amount;
+  const base = item.annualAmount ?? legacyAnnualAmount;
+  const mode = item.annualCostMode ?? "fixed";
+
+  if (!snapshot || mode === "fixed") {
+    return base;
+  }
+
+  if (mode === "rentableArea") {
+    return base * (snapshot.property.data.rentableAreaSqm ?? 0);
+  }
+
+  if (mode === "plotArea") {
+    return base * (snapshot.property.data.plotAreaSqm ?? 0);
+  }
+
+  return (snapshot.property.data.purchasePrice * base) / 100;
 }
 
 function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear[] {

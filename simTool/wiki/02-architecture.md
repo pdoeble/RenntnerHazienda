@@ -810,7 +810,7 @@ visualization component
 
 ---
 
-## Implementation Status: Interactive Financing Scaffold
+## Implementation Status: Interactive Financing And Reserve Scaffold
 
 As of 2026-05-15, the repository contains an interactive static app scaffold.
 
@@ -818,12 +818,16 @@ Implemented:
 
 - npm/Vite/React/TypeScript/Vitest setup under `simTool`.
 - GitHub Pages production base path `/RenntnerHazienda/`.
-- v1 Zod schemas, defaults, validation, and identity migrations for the six visible input modules plus internal `financing`.
-- Financing is shown in the `Capex` tab but remains a separate project-state/template module.
+- v1 Zod schemas, defaults, validation, and identity migrations for all template modules.
+- Visible input modules are `ownership`, `legalForm`, `property`, and `opex`.
+- Internal compatibility modules `capex`, `closingCosts`, and `financing` remain part of project state and JSON persistence.
+- Financing is shown in the `Immobilie` tab but remains a separate project-state/template module.
+- Closing costs and renovation items are edited through the `property` module.
 - Interactive slider plus number inputs update React project state; snapshots, calculations, tables, and charts recalculate automatically.
 - JSON upload/download fallback for project load/save/export and visible template load/save/export.
-- Contribution, cashflow, liquidity, and annuity debt calculations for a 20% equity / 80% loan default case.
-- Six default owners with different ownership shares: 25%, 20%, 18%, 15%, 12%, and 10%.
+- Contribution, cashflow, liquidity, and annuity debt calculations with debt principal derived from project need minus owner equity.
+- Six default owners with different equity contributions; ownership shares are derived from total owner equity.
+- Yearly reserve contributions are calculated so liquidity remains above the configured reserve target where owner equity is available.
 - Two-column app shell with input tabs, visualization tabs, diagnostics panel, status badges, and Recharts charts/tables.
 
 Explicitly not implemented yet:
@@ -846,4 +850,4 @@ Next architecture steps:
 
 - Implement IndexedDB autosave behind the existing storage boundary.
 - Add direct-save support as an adapter on top of the current JSON fallback.
-- Add editable labels/categories and add/remove item workflows after the numeric model stabilizes.
+- Add richer import/export conflict workflows and optional direct file overwrite support.

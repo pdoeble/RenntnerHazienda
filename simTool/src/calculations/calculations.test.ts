@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { buildProjectSnapshot } from "./buildProjectSnapshot";
 import { calculateAll } from "./calculateAll";
-import { calculateCashflow, monthlyOpexAmount } from "./calculateCashflow";
-import { calculateContributions } from "./calculateContributions";
+import {
+  annualOpexAmount,
+  calculateCashflow,
+  monthlyOpexAmount
+} from "./calculateCashflow";
+import {
+  calculateInitialContributions,
+  calculateReserveTarget
+} from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
 import type { ProjectState } from "../state/projectStore";
 import { defaultProjectState } from "../state/projectStore";
@@ -20,61 +27,29 @@ describe("calculation pipeline", () => {
     expect(snapshot.metadata.timeHorizonMonths).toBe(360);
   });
 
-  it("allocates initial contributions by ownership share", () => {
+  it("derives ownership shares and initial contributions from owner equity", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
     });
-    const contributions = calculateContributions(snapshot);
+    const contributions = calculateInitialContributions(snapshot);
 
-    expect(contributions.requiredInitialContribution).toBe(176355);
-    expect(contributions.requiredMonthlyContribution).toBeCloseTo(3723.47, 1);
+    expect(contributions.requiredInitialContribution).toBe(200000);
+    expect(contributions.requiredMonthlyContribution).toBe(0);
     expect(contributions.initialContributions).toHaveLength(6);
     expect(contributions.initialContributions[0]).toEqual(
-      expect.objectContaining({ ownerId: "owner-a", amount: 44088.75 })
+      expect.objectContaining({
+        ownerId: "owner-a",
+        amount: 50000,
+        sharePct: 25
+      })
     );
-    expect(
-      contributions.recurringContributions[0]?.contributions[0]?.amount
-    ).toBeCloseTo(930.87, 1);
-  });
-
-  it("allocates initial contributions by equal split", () => {
-    const project = projectFixture();
-    project.ownership.data.contributionRules = [
-      {
-        id: "rule-equal",
-        name: "Gleich verteilt",
-        basis: "equalSplit"
-      }
-    ];
-
-    const contributions = calculateContributions(buildProjectSnapshot(project));
-
-    expect(contributions.initialContributions).toHaveLength(6);
-    expect(contributions.initialContributions[0]?.amount).toBe(29392.5);
-  });
-
-  it("allocates initial contributions by custom split", () => {
-    const project = projectFixture();
-    project.ownership.data.contributionRules = [
-      {
-        id: "rule-custom",
-        name: "Custom",
-        basis: "custom",
-        customShares: {
-          "owner-a": 40,
-          "owner-b": 20,
-          "owner-c": 15,
-          "owner-d": 10,
-          "owner-e": 10,
-          "owner-f": 5
-        }
-      }
-    ];
-
-    const contributions = calculateContributions(buildProjectSnapshot(project));
-
-    expect(contributions.initialContributions[0]?.amount).toBe(70542);
-    expect(contributions.initialContributions[1]?.amount).toBe(35271);
+    expect(contributions.initialContributions[5]).toEqual(
+      expect.objectContaining({
+        ownerId: "owner-f",
+        amount: 20000,
+        sharePct: 10
+      })
+    );
   });
 
   it("converts yearly opex to monthly values", () => {
@@ -83,11 +58,49 @@ describe("calculation pipeline", () => {
     expect(insurance ? monthlyOpexAmount(insurance, 0) : undefined).toBe(100);
   });
 
+  it("calculates opex from fixed, rentable area, plot area, and property value bases", () => {
+    const snapshot = buildProjectSnapshot(projectFixture(), {
+      timeHorizonMonths: 12
+    });
+
+    expect(
+      annualOpexAmount(snapshot.opex.data.recurringItems[0]!, snapshot)
+    ).toBe(5400);
+    expect(
+      annualOpexAmount(
+        {
+          id: "opex-plot",
+          label: "Grundstueckspflege",
+          amount: 1,
+          annualAmount: 2,
+          annualCostMode: "plotArea",
+          period: "yearly",
+          recoverableFromTenants: false
+        },
+        snapshot
+      )
+    ).toBe(1700);
+    expect(
+      annualOpexAmount(
+        {
+          id: "opex-value",
+          label: "Instandhaltung",
+          amount: 1,
+          annualAmount: 1,
+          annualCostMode: "propertyValue",
+          period: "yearly",
+          recoverableFromTenants: false
+        },
+        snapshot
+      )
+    ).toBe(7500);
+  });
+
   it("calculates vacancy and cashflow from rent, opex, and debt service", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
     });
-    const debt = calculateDebt(snapshot, calculateContributions(snapshot));
+    const debt = calculateDebt(snapshot, calculateInitialContributions(snapshot));
     const cashflow = calculateCashflow(snapshot, debt);
 
     expect(cashflow.monthly[0]).toEqual(
@@ -95,9 +108,13 @@ describe("calculation pipeline", () => {
         rentalIncome: 4500,
         vacancyLoss: 135,
         effectiveIncome: 4365,
-        nonRecoverableOpex: 600,
-        netCashflowAfterDebtService: 41.53
+        nonRecoverableOpex: 550,
+        netCashflowBeforeContributions: 3815
       })
+    );
+    expect(cashflow.monthly[0]?.netCashflowAfterDebtService).toBeCloseTo(
+      216.34,
+      1
     );
     expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeGreaterThan(0);
   });
@@ -106,15 +123,15 @@ describe("calculation pipeline", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 300
     });
-    const debt = calculateDebt(snapshot, calculateContributions(snapshot));
+    const debt = calculateDebt(snapshot, calculateInitialContributions(snapshot));
 
-    expect(debt.totalInitialDebt).toBe(705420);
-    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(3723.47, 1);
-    expect(debt.monthlyDebtService[0]?.interest).toBe(2351.4);
+    expect(debt.totalInitialDebt).toBe(681775);
+    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(3598.66, 1);
+    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(2272.58, 1);
     expect(debt.totalRemainingDebt).toBe(0);
   });
 
-  it("detects negative liquidity", () => {
+  it("calculates annual recurring contributions so liquidity stays above reserve", () => {
     const project = projectFixture();
     project.property.data.expectedMonthlyRent = 0;
     project.opex.data.recurringItems = [
@@ -122,20 +139,46 @@ describe("calculation pipeline", () => {
         id: "opex-high",
         label: "Hohe laufende Kosten",
         amount: 120000,
+        annualAmount: 120000,
+        annualCostMode: "fixed",
         period: "yearly",
         recoverableFromTenants: false
       }
     ];
 
+    const updatedSnapshot = buildProjectSnapshot(project, { timeHorizonMonths: 24 });
+    const result = calculateAll(updatedSnapshot);
+
+    expect(result.contributions.recurringContributions).toHaveLength(2);
+    expect(result.contributions.requiredMonthlyContribution).toBeGreaterThan(0);
+    for (const month of result.liquidity.monthly) {
+      expect(month.closingBalance).toBeGreaterThanOrEqual(
+        calculateReserveTarget(
+          updatedSnapshot,
+          result.debt,
+          result.cashflow,
+          month.month
+        ) - 0.1
+      );
+    }
+  });
+
+  it("blocks calculations when no owner equity is defined", () => {
+    const project = projectFixture();
+    project.ownership.data.owners = project.ownership.data.owners.map((owner) => ({
+      ...owner,
+      equityContribution: 0
+    }));
+
     const result = calculateAll(
       buildProjectSnapshot(project, { timeHorizonMonths: 12 })
     );
 
-    expect(result.liquidity.firstNegativeMonth).toBe(0);
+    expect(result.diagnostics.some((item) => item.id === "ownership.no-equity")).toBe(
+      true
+    );
     expect(
-      result.diagnostics.some(
-        (diagnostic) => diagnostic.id === "liquidity.first-negative-month"
-      )
+      result.diagnostics.some((item) => item.id === "project.calculation-blocked")
     ).toBe(true);
   });
 });

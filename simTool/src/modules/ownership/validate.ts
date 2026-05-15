@@ -13,6 +13,9 @@ export function validateOwnership(
   const diagnostics = [];
   const duplicateOwnerIds = findDuplicateIds(template.data.owners);
   const ownerIds = new Set(template.data.owners.map((owner) => owner.id));
+  const totalEquity = sum(
+    template.data.owners.map((owner) => owner.equityContribution)
+  );
 
   for (const duplicateId of duplicateOwnerIds) {
     diagnostics.push(
@@ -25,10 +28,21 @@ export function validateOwnership(
     );
   }
 
+  if (totalEquity <= 0) {
+    diagnostics.push(
+      diagnostic(
+        "ownership.no-equity",
+        "error",
+        "ownership",
+        "Total owner equity must be greater than zero."
+      )
+    );
+  }
+
   const ownershipTotal = sum(
     template.data.owners.map((owner) => owner.ownershipSharePct)
   );
-  if (!isApproximately(ownershipTotal, 100)) {
+  if (totalEquity > 0 && !isApproximately(ownershipTotal, 100)) {
     diagnostics.push(
       diagnostic(
         "ownership.share-total",

@@ -1,25 +1,25 @@
 import { diagnostic } from "../validation/diagnostics";
-import { isApproximately, sum } from "../validation/commonSchemas";
-import { calculateEquityContributionNeed } from "./financialInputs";
-import { calculateAnnuityMonthlyPayment } from "./loanMath";
+import {
+  calculateClosingCostsTotal,
+  calculateOwnerEquitySharePct,
+  calculateTotalOwnerEquity
+} from "./financialInputs";
 import { roundMoney, roundPct } from "./rounding";
 import type {
+  CashflowResult,
   ContributionResult,
+  DebtResult,
   OwnerContribution,
   ProjectSnapshot
 } from "./types";
 
-export function calculateContributions(
+export function calculateInitialContributions(
   snapshot: ProjectSnapshot
 ): ContributionResult {
   const diagnostics = [];
   const owners = snapshot.ownership.data.owners;
-  const requiredInitialContribution = roundMoney(
-    calculateEquityContributionNeed(snapshot)
-  );
-  const requiredMonthlyContribution = roundMoney(
-    calculateAnnuityMonthlyPayment(snapshot)
-  );
+  const requiredInitialContribution = roundMoney(calculateTotalOwnerEquity(snapshot));
+  const requiredMonthlyContribution = 0;
 
   if (owners.length === 0) {
     return {
@@ -39,90 +39,36 @@ export function calculateContributions(
     };
   }
 
-  const selectedRule = snapshot.ownership.data.contributionRules[0];
-  if (!selectedRule) {
+  const initialContributions = owners.map((owner) => {
+    const sharePct = calculateOwnerEquitySharePct(snapshot, owner.id);
+    return {
+      ownerId: owner.id,
+      ownerName: owner.displayName,
+      amount: roundMoney(owner.equityContribution),
+      basis: "ownershipShare",
+      sharePct: roundPct(sharePct)
+    } satisfies OwnerContribution;
+  });
+
+  if (requiredInitialContribution <= 0) {
     diagnostics.push(
       diagnostic(
-        "contributions.fallback-ownership-rule",
-        "warning",
+        "contributions.no-equity",
+        "error",
         "contributions",
-        "No contribution rule is defined; using ownership shares as fallback."
+        "No owner equity is defined; shares and contributions cannot be allocated."
       )
     );
   }
 
-  const basis = selectedRule?.basis ?? "ownershipShare";
-  const initialContributions = owners.map((owner) => {
-    const sharePct = resolveOwnerSharePct(snapshot, owner.id, basis);
-    return {
-      ownerId: owner.id,
-      ownerName: owner.displayName,
-      amount: roundMoney((requiredInitialContribution * sharePct) / 100),
-      basis,
-      sharePct: roundPct(sharePct)
-    } satisfies OwnerContribution;
-  });
-  const monthlyContributions = owners.map((owner) => {
-    const sharePct = resolveOwnerSharePct(snapshot, owner.id, basis);
-    return {
-      ownerId: owner.id,
-      ownerName: owner.displayName,
-      amount: roundMoney((requiredMonthlyContribution * sharePct) / 100),
-      basis,
-      sharePct: roundPct(sharePct)
-    } satisfies OwnerContribution;
-  });
-
-  if (basis === "custom" && selectedRule?.customShares) {
-    const unknownOwnerIds = Object.keys(selectedRule.customShares).filter(
-      (ownerId) => !owners.some((owner) => owner.id === ownerId)
-    );
-    for (const ownerId of unknownOwnerIds) {
-      diagnostics.push(
-        diagnostic(
-          `contributions.unknown-custom-owner.${ownerId}`,
-          "error",
-          "contributions",
-          `Custom contribution rule references unknown owner "${ownerId}".`
-        )
-      );
-    }
-
-    const shareTotal = sum(Object.values(selectedRule.customShares));
-    if (!isApproximately(shareTotal, 100)) {
-      diagnostics.push(
-        diagnostic(
-          "contributions.custom-share-total",
-          "warning",
-          "contributions",
-          `Custom contribution shares sum to ${shareTotal.toFixed(2)}% instead of 100%.`
-        )
-      );
-    }
-  }
-
   return {
     initialContributions,
-    recurringContributions: [
-      {
-        month: snapshot.financing.data.startMonth,
-        contributions: monthlyContributions
-      }
-    ],
+    recurringContributions: [],
     totalByOwner: Object.fromEntries(
-      initialContributions.map((contribution) => {
-        const monthlyContribution =
-          monthlyContributions.find(
-            (candidate) => candidate.ownerId === contribution.ownerId
-          )?.amount ?? 0;
-        return [
-          contribution.ownerId,
-          roundMoney(
-            contribution.amount +
-              monthlyContribution * snapshot.financing.data.termYears * 12
-          )
-        ];
-      })
+      initialContributions.map((contribution) => [
+        contribution.ownerId,
+        contribution.amount
+      ])
     ),
     requiredInitialContribution,
     requiredMonthlyContribution,
@@ -130,26 +76,153 @@ export function calculateContributions(
   };
 }
 
-function resolveOwnerSharePct(
+export function calculateRecurringContributions(
   snapshot: ProjectSnapshot,
-  ownerId: string,
-  basis: OwnerContribution["basis"]
-): number {
+  debt: DebtResult,
+  cashflow: CashflowResult,
+  initialResult: ContributionResult
+): ContributionResult {
   const owners = snapshot.ownership.data.owners;
-  const owner = owners.find((candidate) => candidate.id === ownerId);
-
-  if (!owner) {
-    return 0;
+  const totalEquity = calculateTotalOwnerEquity(snapshot);
+  if (owners.length === 0 || totalEquity <= 0) {
+    return initialResult;
   }
 
-  if (basis === "equalSplit") {
-    return 100 / owners.length;
+  const recurringContributions = [];
+  const totalByOwner = { ...initialResult.totalByOwner };
+  const yearlyContributionCount = Math.ceil(snapshot.metadata.timeHorizonMonths / 12);
+  let runningBalance = 0;
+
+  for (let yearIndex = 0; yearIndex < yearlyContributionCount; yearIndex += 1) {
+    const startMonth = yearIndex * 12;
+    const endMonth = Math.min(
+      snapshot.metadata.timeHorizonMonths - 1,
+      startMonth + 11
+    );
+    const monthlyContribution = roundMoney(
+      calculateRequiredMonthlyContributionForYear(
+        snapshot,
+        debt,
+        cashflow,
+        startMonth,
+        endMonth,
+        runningBalance
+      )
+    );
+
+    const contributions = owners.map((owner) => {
+      const sharePct = calculateOwnerEquitySharePct(snapshot, owner.id);
+      const amount = roundMoney((monthlyContribution * sharePct) / 100);
+      totalByOwner[owner.id] = roundMoney(
+        (totalByOwner[owner.id] ?? 0) + amount * (endMonth - startMonth + 1)
+      );
+
+      return {
+        ownerId: owner.id,
+        ownerName: owner.displayName,
+        amount,
+        basis: "ownershipShare" as const,
+        sharePct: roundPct(sharePct)
+      };
+    });
+
+    recurringContributions.push({
+      month: startMonth,
+      contributions
+    });
+
+    for (let month = startMonth; month <= endMonth; month += 1) {
+      runningBalance = roundMoney(
+        runningBalance +
+          monthlyContribution +
+          calculateNonContributionLiquidityFlow(snapshot, debt, cashflow, month)
+      );
+    }
   }
 
-  if (basis === "custom") {
-    const selectedRule = snapshot.ownership.data.contributionRules[0];
-    return selectedRule?.customShares?.[ownerId] ?? 0;
+  return {
+    ...initialResult,
+    recurringContributions,
+    totalByOwner,
+    requiredMonthlyContribution:
+      recurringContributions[0]?.contributions.reduce(
+        (total, contribution) => total + contribution.amount,
+        0
+      ) ?? 0
+  };
+}
+
+function calculateRequiredMonthlyContributionForYear(
+  snapshot: ProjectSnapshot,
+  debt: DebtResult,
+  cashflow: CashflowResult,
+  startMonth: number,
+  endMonth: number,
+  openingBalance: number
+): number {
+  let simulatedBalance = openingBalance;
+  let requiredMonthlyContribution = 0;
+
+  for (let month = startMonth; month <= endMonth; month += 1) {
+    simulatedBalance += calculateNonContributionLiquidityFlow(
+      snapshot,
+      debt,
+      cashflow,
+      month
+    );
+    const reserveTarget = calculateReserveTarget(snapshot, debt, cashflow, month);
+    const monthsReceivingContribution = month - startMonth + 1;
+    requiredMonthlyContribution = Math.max(
+      requiredMonthlyContribution,
+      (reserveTarget - simulatedBalance) / monthsReceivingContribution
+    );
   }
 
-  return owner.ownershipSharePct;
+  return Math.max(0, requiredMonthlyContribution);
+}
+
+function calculateNonContributionLiquidityFlow(
+  snapshot: ProjectSnapshot,
+  debt: DebtResult,
+  cashflow: CashflowResult,
+  month: number
+): number {
+  const purchaseMonth = snapshot.property.data.purchaseMonth ?? 0;
+  const initialContributionInflow =
+    month === 0 ? calculateTotalOwnerEquity(snapshot) : 0;
+  const loanInflow =
+    month === snapshot.financing.data.startMonth ? debt.totalInitialDebt : 0;
+  const acquisitionOutflow =
+    month === purchaseMonth
+      ? snapshot.property.data.purchasePrice + calculateClosingCostsTotal(snapshot)
+      : 0;
+  const renovationOutflow = snapshot.property.data.renovationItems
+    .filter((item) => item.timingMonth === month)
+    .reduce((total, item) => total + item.amount, 0);
+  const netCashflow = cashflow.monthly[month]?.netCashflowAfterDebtService ?? 0;
+
+  return (
+    initialContributionInflow +
+    loanInflow +
+    netCashflow -
+    acquisitionOutflow -
+    renovationOutflow
+  );
+}
+
+export function calculateReserveTarget(
+  snapshot: ProjectSnapshot,
+  debt: DebtResult,
+  cashflow: CashflowResult,
+  month: number
+): number {
+  const currentCashflow = cashflow.monthly[month];
+  const currentDebtService = debt.monthlyDebtService[month]?.totalPayment ?? 0;
+  const monthlyCostBasis = currentCashflow
+    ? currentCashflow.recoverableOpex +
+      currentCashflow.nonRecoverableOpex +
+      currentDebtService
+    : currentDebtService;
+
+  return roundMoney(monthlyCostBasis * snapshot.property.data.reserveMonths);
 }

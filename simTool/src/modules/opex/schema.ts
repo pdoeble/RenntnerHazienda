@@ -9,6 +9,13 @@ import {
 
 export const opexPeriodSchema = z.enum(["monthly", "quarterly", "yearly"]);
 
+export const opexAnnualCostModeSchema = z.enum([
+  "fixed",
+  "rentableArea",
+  "plotArea",
+  "propertyValue"
+]);
+
 export const opexCategorySchema = z.enum([
   "insurance",
   "maintenance",
@@ -27,6 +34,8 @@ export const opexItemSchema = z
     label: nonEmptyStringSchema,
     amount: nonNegativeNumberSchema,
     period: opexPeriodSchema,
+    annualCostMode: opexAnnualCostModeSchema.default("fixed"),
+    annualAmount: nonNegativeNumberSchema.optional(),
     inflationPct: z.number().finite().optional(),
     recoverableFromTenants: z.boolean().optional(),
     category: opexCategorySchema.optional(),

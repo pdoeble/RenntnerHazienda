@@ -122,6 +122,18 @@ function ContributionsView({ result }: { result: CalculationResult }) {
         )?.amount ?? 0
     })
   );
+  const yearlyContributionRows = result.contributions.recurringContributions.map(
+    (schedule) => [
+      `Jahr ${Math.floor(schedule.month / 12) + 1}`,
+      ...result.contributions.initialContributions.map((owner) =>
+        formatMoney(
+          schedule.contributions.find(
+            (contribution) => contribution.ownerId === owner.ownerId
+          )?.amount ?? 0
+        )
+      )
+    ]
+  );
 
   return (
     <div className="visualization-view">
@@ -167,6 +179,15 @@ function ContributionsView({ result }: { result: CalculationResult }) {
             )?.amount ?? 0
           )
         ])}
+      />
+      <DataTable
+        headers={[
+          "Jahr",
+          ...result.contributions.initialContributions.map(
+            (contribution) => contribution.ownerName
+          )
+        ]}
+        rows={clampItems(yearlyContributionRows, 10)}
       />
     </div>
   );
@@ -303,10 +324,10 @@ function DataTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.join("|")}>
-              {row.map((cell) => (
-                <td key={cell}>{cell}</td>
+          {rows.map((row, rowIndex) => (
+            <tr key={`${rowIndex}-${row.join("|")}`}>
+              {row.map((cell, cellIndex) => (
+                <td key={`${rowIndex}-${cellIndex}`}>{cell}</td>
               ))}
             </tr>
           ))}

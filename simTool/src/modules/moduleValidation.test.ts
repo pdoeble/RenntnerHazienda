@@ -72,6 +72,12 @@ describe("module validation contracts", () => {
 
   it("loads old embedded project manifests without financing by adding defaults", () => {
     const manifest = createProjectManifest(defaultProjectState);
+    const legacyProperty = structuredClone(
+      manifest.embeddedSnapshots?.property
+    ) as { data: Record<string, unknown> };
+    delete legacyProperty.data.closingCosts;
+    delete legacyProperty.data.renovationItems;
+
     const oldManifest = {
       ...manifest,
       templateRefs: {
@@ -86,7 +92,7 @@ describe("module validation contracts", () => {
         ownership: manifest.embeddedSnapshots?.ownership,
         legalForm: manifest.embeddedSnapshots?.legalForm,
         capex: manifest.embeddedSnapshots?.capex,
-        property: manifest.embeddedSnapshots?.property,
+        property: legacyProperty,
         closingCosts: manifest.embeddedSnapshots?.closingCosts,
         opex: manifest.embeddedSnapshots?.opex
       }
@@ -97,10 +103,26 @@ describe("module validation contracts", () => {
     expect(loaded.ok).toBe(true);
     if (loaded.ok) {
       expect(loaded.value.financing.data.equitySharePct).toBe(20);
+      expect(loaded.value.property.data.closingCosts.realEstateTransferTaxPct).toBe(
+        5
+      );
+      expect(loaded.value.property.data.renovationItems[0]?.amount).toBe(50000);
     }
     expect(
       loaded.diagnostics.some(
         (diagnostic) => diagnostic.id === "persistence.default-financing-added"
+      )
+    ).toBe(true);
+    expect(
+      loaded.diagnostics.some(
+        (diagnostic) =>
+          diagnostic.id === "persistence.legacy-closing-costs-migrated"
+      )
+    ).toBe(true);
+    expect(
+      loaded.diagnostics.some(
+        (diagnostic) =>
+          diagnostic.id === "persistence.legacy-renovations-migrated"
       )
     ).toBe(true);
   });

@@ -3,6 +3,7 @@ import { TEMPLATE_SCHEMA_IDS } from "../../domain/templates";
 import {
   idSchema,
   nonEmptyStringSchema,
+  nonNegativeNumberSchema,
   percentSchema,
   templateEnvelopeSchema
 } from "../../validation/commonSchemas";
@@ -19,6 +20,7 @@ export const ownerSchema = z
     id: idSchema,
     displayName: nonEmptyStringSchema,
     type: ownerTypeSchema,
+    equityContribution: nonNegativeNumberSchema.default(0),
     ownershipSharePct: percentSchema,
     votingSharePct: percentSchema.optional(),
     liabilitySharePct: percentSchema.optional(),

@@ -34,17 +34,16 @@ export function calculateLiquidity(
       month === purchaseMonth
         ? snapshot.property.data.purchasePrice + calculateClosingCostsTotal(snapshot)
         : 0;
-    const capexOutflow = snapshot.capex.data.items
+    const renovationOutflow = snapshot.property.data.renovationItems
       .filter((item) => item.timingMonth === month)
       .reduce((total, item) => total + item.amount, 0);
     const monthlyCashflow =
       cashflow.monthly[month]?.netCashflowAfterDebtService ?? 0;
     const contributionInflow = month === 0 ? initialContributionTotal : 0;
-    const recurringContributionInflow =
-      month >= snapshot.financing.data.startMonth &&
-      month < snapshot.financing.data.startMonth + snapshot.financing.data.termYears * 12
-        ? contributions.requiredMonthlyContribution
-        : 0;
+    const recurringContributionInflow = getRecurringContributionForMonth(
+      contributions,
+      month
+    );
     const loanInflow =
       month === snapshot.financing.data.startMonth ? debt.totalInitialDebt : 0;
     const inflows =
@@ -54,7 +53,7 @@ export function calculateLiquidity(
       (monthlyCashflow > 0 ? monthlyCashflow : 0);
     const outflows =
       acquisitionOutflow +
-      capexOutflow +
+      renovationOutflow +
       (monthlyCashflow < 0 ? Math.abs(monthlyCashflow) : 0);
 
     balance = roundMoney(openingBalance + inflows - outflows);
@@ -90,4 +89,22 @@ export function calculateLiquidity(
     ...(firstNegativeMonth !== undefined ? { firstNegativeMonth } : {}),
     diagnostics
   };
+}
+
+function getRecurringContributionForMonth(
+  contributions: ContributionResult,
+  month: number
+): number {
+  const activeSchedule = contributions.recurringContributions
+    .filter((schedule) => schedule.month <= month)
+    .at(-1);
+
+  if (!activeSchedule || month >= activeSchedule.month + 12) {
+    return 0;
+  }
+
+  return activeSchedule.contributions.reduce(
+    (total, contribution) => total + contribution.amount,
+    0
+  );
 }

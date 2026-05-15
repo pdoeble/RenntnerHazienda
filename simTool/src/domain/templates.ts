@@ -33,9 +33,7 @@ export type TemplateKind = (typeof TEMPLATE_KINDS)[number];
 export const VISIBLE_INPUT_KINDS = [
   "ownership",
   "legalForm",
-  "capex",
   "property",
-  "closingCosts",
   "opex"
 ] as const satisfies readonly TemplateKind[];
 

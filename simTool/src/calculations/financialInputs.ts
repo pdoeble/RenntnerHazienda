@@ -2,7 +2,7 @@ import type { ProjectSnapshot } from "./types";
 
 export function calculateClosingCostsTotal(snapshot: ProjectSnapshot): number {
   const purchasePrice = snapshot.property.data.purchasePrice;
-  const percentages = snapshot.closingCosts.data;
+  const percentages = snapshot.property.data.closingCosts;
   const percentageTotal =
     percentages.realEstateTransferTaxPct +
     percentages.notaryPct +
@@ -20,8 +20,7 @@ export function calculateClosingCostsTotal(snapshot: ProjectSnapshot): number {
 export function calculateEquityFundedCapexTotal(
   snapshot: ProjectSnapshot
 ): number {
-  return snapshot.capex.data.items
-    .filter((item) => item.financing === "equity" || item.financing === "mixed")
+  return snapshot.property.data.renovationItems
     .reduce((total, item) => total + item.amount, 0);
 }
 
@@ -33,18 +32,17 @@ export function calculateTotalProjectCost(snapshot: ProjectSnapshot): number {
   return (
     snapshot.property.data.purchasePrice +
     calculateClosingCostsTotal(snapshot) +
-    snapshot.capex.data.items.reduce((total, item) => total + item.amount, 0)
+    snapshot.property.data.renovationItems.reduce(
+      (total, item) => total + item.amount,
+      0
+    )
   );
 }
 
 export function calculateEquityContributionNeed(
   snapshot: ProjectSnapshot
 ): number {
-  return (
-    (calculateTotalProjectCost(snapshot) *
-      snapshot.financing.data.equitySharePct) /
-    100
-  );
+  return calculateTotalOwnerEquity(snapshot);
 }
 
 export function calculateDebtPrincipal(snapshot: ProjectSnapshot): number {
@@ -52,4 +50,26 @@ export function calculateDebtPrincipal(snapshot: ProjectSnapshot): number {
     0,
     calculateTotalProjectCost(snapshot) - calculateEquityContributionNeed(snapshot)
   );
+}
+
+export function calculateTotalOwnerEquity(snapshot: ProjectSnapshot): number {
+  return snapshot.ownership.data.owners.reduce(
+    (total, owner) => total + owner.equityContribution,
+    0
+  );
+}
+
+export function calculateOwnerEquitySharePct(
+  snapshot: ProjectSnapshot,
+  ownerId: string
+): number {
+  const totalEquity = calculateTotalOwnerEquity(snapshot);
+  if (totalEquity <= 0) {
+    return 0;
+  }
+
+  const owner = snapshot.ownership.data.owners.find(
+    (candidate) => candidate.id === ownerId
+  );
+  return owner ? (owner.equityContribution / totalEquity) * 100 : 0;
 }

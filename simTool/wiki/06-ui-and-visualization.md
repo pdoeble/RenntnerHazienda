@@ -36,9 +36,9 @@ The app uses two main columns on desktop.
 ├───────────────────────────────┼────────────────────────────────────┤
 │ Eignerschaft                  │ Liquidität                          │
 │ Gesellschaftsform             │ Beiträge                            │
-│ Capex                         │ Cashflow                            │
-│ Immobilie                     │ Schulden                            │
-│ Nebenkosten                   │                                    │
+│ Immobilie                     │ Cashflow                            │
+│   inkl. Nebenkosten           │ Schulden                            │
+│   Renovierungen, Finanzierung │                                    │
 │ Opex                          │                                    │
 └───────────────────────────────┴────────────────────────────────────┘
 ```
@@ -73,12 +73,10 @@ Required input tabs:
 
 1. Eignerschaft
 2. Gesellschaftsform
-3. Capex
-4. Immobilie
-5. Nebenkosten
-6. Opex
+3. Immobilie
+4. Opex
 
-Each tab owns one input domain.
+`Capex`, `closingCosts`, and `financing` remain separate internal template domains for compatibility and persistence. The current UI exposes them through the `Immobilie` tab instead of separate visible tabs.
 
 Each input tab must provide:
 
@@ -245,17 +243,19 @@ Should allow:
 - remove owner
 - edit owner display name
 - select owner type
-- edit ownership share
+- edit owner equity contribution
+- show ownership share derived from `owner.equityContribution / totalOwnerEquity`
 - edit voting share, optional
 - edit liability share, optional
 - define contribution rules
 
-The UI should clearly show whether shares sum to 100%.
+The UI should clearly show the total owner equity and each derived share.
 
 Recommended visualization inside tab:
 
 ```text
-Total ownership: 100%
+Total equity: 200,000 EUR
+Derived ownership: 100%
 Total voting: 100%
 Total liability: 100%
 ```
@@ -286,7 +286,11 @@ Empfohlene Gesellschaftsform
 
 ### Capex
 
-Should allow:
+Status: no longer a separate visible MVP tab.
+
+Renovation/capex entries are currently edited as `property.renovationItems` in the `Immobilie` tab. The internal `capex` template remains available for importing older project files and migrating renovation data into the property template.
+
+The integrated renovation editor should allow:
 
 - add capex item
 - remove capex item
@@ -313,6 +317,10 @@ Should allow:
 - edit expected monthly rent
 - edit vacancy rate
 - edit purchase month
+- edit reserve months
+- edit closing cost percentages and fixed closing costs
+- add/remove renovation items
+- edit loan interest, term, start month, and monthly additional repayment through the integrated financing section
 - add notes
 
 Show basic derived indicators where useful:
@@ -325,7 +333,11 @@ Derived indicators in input tabs must be clearly marked as derived.
 
 ### Nebenkosten
 
-Should allow:
+Status: no longer a separate visible MVP tab.
+
+Closing costs are edited inside the `Immobilie` tab as `property.closingCosts`. The internal `closingCosts` template remains for compatibility with older project files.
+
+The integrated closing-cost editor should allow:
 
 - edit real estate transfer tax percentage
 - edit notary percentage
@@ -349,8 +361,8 @@ Should allow:
 - remove item
 - edit label
 - edit category
-- edit amount
-- select period
+- select annual cost mode: fixed, rentable area, plot area, or property value
+- edit annual amount or annual rate according to the selected mode
 - edit inflation assumption
 - mark recoverable from tenants
 - add notes
@@ -410,9 +422,9 @@ Required key figures:
 
 - total contribution by owner
 - initial contribution by owner
-- recurring contribution by owner
+- yearly recalculated recurring monthly contribution by owner
 - allocation basis
-- share percentage
+- share percentage derived from owner equity
 
 The contribution view must use owner IDs internally and display owner names only as labels.
 
@@ -542,22 +554,9 @@ Do not mix German and English in the same visible UI label unless the term is in
 
 ## Disclaimer UI
 
-The app must include a visible disclaimer.
+The app shell currently does not show a visible disclaimer panel.
 
-Suggested text:
-
-```text
-Dieses Tool dient nur der Szenariomodellierung. Es stellt keine Rechts-, Steuer-, Finanzierungs- oder Anlageberatung dar. Alle Annahmen, Kosten, Zinssätze, Gesellschaftsformen und steuerlichen Effekte müssen vor Entscheidungen extern geprüft werden.
-```
-
-The disclaimer may be shown:
-
-- in an info panel
-- in the footer
-- on first load
-- in exports, if export reports are later implemented
-
-Do not let calculations appear legally or financially binding.
+Product boundaries remain documented in `01-product-scope.md`. If report exports are added later, legal/product boundary text can be included in those generated artifacts without taking space from the working UI.
 
 ## Accessibility Basics
 
@@ -769,6 +768,18 @@ As of 2026-05-15:
 
 - Numeric assumptions are editable through a slider plus direct number input.
 - Changes update React state immediately and recalculate visualizations from the current project snapshot.
-- Financing is displayed inside the `Capex` tab as a separate section.
+- Visible input tabs are `Eignerschaft`, `Gesellschaftsform`, `Immobilie`, and `Opex`.
+- Eigner names and equity contributions are editable; owner shares are derived from total owner equity.
+- Financing is displayed inside the `Immobilie` tab as a separate section.
+- Closing costs and renovation items are displayed inside the `Immobilie` tab.
+- Renovation items and opex blocks can be added and removed in the UI.
+- Opex annual costs support fixed, rentable-area, plot-area, and property-value bases.
+- Contribution visualizations include initial equity and yearly recalculated monthly contribution schedules.
 - Project and template load/save/export use browser JSON upload/download fallback.
 - The visible disclaimer panel was removed from the app shell; legal and product boundaries remain documented in the wiki.
+
+Next UI steps:
+
+- Add inline totals for closing costs, renovation totals, and annual opex equivalents directly inside the input tabs.
+- Add richer empty states for blocked calculations.
+- Add optional editing for fixed other closing-cost items.

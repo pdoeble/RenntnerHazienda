@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 type NumberSliderFieldProps = {
   label: string;
   value: number;
@@ -17,7 +19,8 @@ export function NumberSliderField({
   unit,
   onChange
 }: NumberSliderFieldProps) {
-  const fieldId = `field-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+  const reactId = useId();
+  const fieldId = `field-${reactId}`;
 
   function handleChange(rawValue: string) {
     const parsed = Number(rawValue);

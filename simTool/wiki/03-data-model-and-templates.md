@@ -972,3 +972,30 @@ Projects are compositions of assumptions.
 Calculations are consequences.
 
 Do not blur these layers.
+
+---
+
+## Implementation Status: Integrated Property Costs
+
+As of 2026-05-15:
+
+- `ownership.owners[]` stores direct `equityContribution` values. `ownershipSharePct` remains present for compatibility and UI display, but the calculation path derives shares from owner equity.
+- The default ownership template contains six owners with different equity contributions.
+- `property` now stores `plotAreaSqm`, `reserveMonths`, `closingCosts`, and `renovationItems`.
+- `closingCosts` and `capex` remain internal template kinds for legacy project import and JSON compatibility. Old embedded project files without `property.closingCosts` or `property.renovationItems` migrate those values from the legacy templates into `property`.
+- `financing` remains an internal template kind. The current debt principal is derived from total project need minus owner equity, while interest rate, term, start month, loan name, and additional monthly repayment stay in the financing template.
+- `opex.recurringItems[]` supports `annualCostMode`:
+  - `fixed`: annual amount in EUR/year
+  - `rentableArea`: EUR per rentable square meter per year
+  - `plotArea`: EUR per plot square meter per year
+  - `propertyValue`: percent of purchase price per year
+- JSON load/save/export remains browser upload/download based; no file handles are persisted in domain JSON.
+
+Current visible tabs:
+
+| UI tab | Primary template |
+|---|---|
+| Eignerschaft | `ownership` |
+| Gesellschaftsform | `legalForm` |
+| Immobilie | `property` plus integrated `financing` controls |
+| Opex | `opex` |

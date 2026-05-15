@@ -117,6 +117,11 @@ button:disabled {
   color: #243447;
 }
 
+.icon-button.danger {
+  border-color: #f1b5b5;
+  color: #9f1d1d;
+}
+
 .icon-button:hover:not(:disabled),
 .tabs button:hover {
   border-color: #748494;
@@ -262,6 +267,13 @@ button:disabled {
   padding: 12px;
 }
 
+.nested-item {
+  border-top: 1px solid #e3e8ed;
+  display: grid;
+  gap: 10px;
+  padding-top: 10px;
+}
+
 .form-section h3 {
   font-size: 1rem;
   margin: 0;
@@ -281,9 +293,34 @@ button:disabled {
 }
 
 .number-slider-field > span,
+.text-field > span,
 .summary-line span {
   color: #44515f;
   font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.text-field {
+  display: grid;
+  flex: 1;
+  gap: 6px;
+  min-width: 180px;
+}
+
+.text-field input,
+.text-field select,
+.text-field textarea {
+  border: 1px solid #c9d2dc;
+  border-radius: 6px;
+  min-height: 34px;
+  padding: 6px 8px;
+}
+
+.checkbox-field {
+  align-items: center;
+  color: #44515f;
+  display: flex;
+  gap: 8px;
   font-weight: 700;
 }
 

@@ -18,36 +18,42 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         id: "owner-a",
         displayName: "Eigner A",
         type: "person",
+        equityContribution: 50000,
         ownershipSharePct: 25
       },
       {
         id: "owner-b",
         displayName: "Eigner B",
         type: "person",
+        equityContribution: 40000,
         ownershipSharePct: 20
       },
       {
         id: "owner-c",
         displayName: "Eigner C",
         type: "person",
+        equityContribution: 36000,
         ownershipSharePct: 18
       },
       {
         id: "owner-d",
         displayName: "Eigner D",
         type: "person",
+        equityContribution: 30000,
         ownershipSharePct: 15
       },
       {
         id: "owner-e",
         displayName: "Eigner E",
         type: "person",
+        equityContribution: 24000,
         ownershipSharePct: 12
       },
       {
         id: "owner-f",
         displayName: "Eigner F",
         type: "person",
+        equityContribution: 20000,
         ownershipSharePct: 10
       }
     ],
