@@ -1,4 +1,4 @@
-import { Download, FolderOpen, Plus, Save, Trash2 } from "lucide-react";
+import { Download, Plus, Save, Trash2 } from "lucide-react";
 import type { TemplateEnvelope, TemplateKind } from "../../domain/templates";
 import type {
   LegalFormValue,
@@ -46,6 +46,9 @@ export function InputTabs({
   );
   const activeTemplate = projectState[selectedKind];
   const validation = activeModule?.validate(activeTemplate);
+  const validationErrors =
+    validation?.diagnostics.filter((diagnostic) => diagnostic.severity === "error") ??
+    [];
 
   return (
     <div className="panel">
@@ -71,10 +74,9 @@ export function InputTabs({
           <span className="muted">Template: {activeTemplate.id}</span>
         </div>
         <div className="button-row">
-          <FileActionButton
-            label="Laden"
-            icon={FolderOpen}
-            onClick={() => onLoadTemplate(selectedKind)}
+          <TemplateLoadSelect
+            templateName={activeTemplate.name}
+            onUpload={() => onLoadTemplate(selectedKind)}
           />
           <FileActionButton
             label="Speichern"
@@ -89,15 +91,13 @@ export function InputTabs({
         </div>
       </div>
 
-      {validation && validation.diagnostics.length > 0 ? (
+      {validationErrors.length > 0 ? (
         <ul className="inline-diagnostics">
-          {validation.diagnostics.map((diagnostic) => (
+          {validationErrors.map((diagnostic) => (
             <li key={diagnostic.id}>{diagnostic.message}</li>
           ))}
         </ul>
-      ) : (
-        <p className="success-note">Schema und Moduldiagnosen sind gueltig.</p>
-      )}
+      ) : null}
 
       <InputTabBody
         kind={selectedKind}
@@ -105,6 +105,36 @@ export function InputTabs({
         onTemplateChange={onTemplateChange}
       />
     </div>
+  );
+}
+
+function TemplateLoadSelect({
+  templateName,
+  onUpload
+}: {
+  templateName: string;
+  onUpload: () => void;
+}) {
+  return (
+    <label className="action-select">
+      <span>Laden</span>
+      <select
+        aria-label="Laden"
+        defaultValue=""
+        onChange={(event) => {
+          if (event.currentTarget.value === "upload") {
+            onUpload();
+          }
+          event.currentTarget.value = "";
+        }}
+      >
+        <option value="" disabled>
+          Laden
+        </option>
+        <option value="current-template">{templateName}</option>
+        <option value="upload">Upload...</option>
+      </select>
+    </label>
   );
 }
 

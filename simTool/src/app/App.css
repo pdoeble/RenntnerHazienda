@@ -117,12 +117,37 @@ button:disabled {
   color: #243447;
 }
 
+.action-select {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #c9d2dc;
+  border-radius: 6px;
+  color: #243447;
+  display: inline-flex;
+  gap: 7px;
+  min-height: 34px;
+  padding: 4px 6px 4px 10px;
+}
+
+.action-select > span {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.action-select select {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  min-height: 26px;
+}
+
 .icon-button.danger {
   border-color: #f1b5b5;
   color: #9f1d1d;
 }
 
 .icon-button:hover:not(:disabled),
+.action-select:hover,
 .tabs button:hover {
   border-color: #748494;
 }
@@ -202,21 +227,12 @@ button:disabled {
 }
 
 .inline-diagnostics {
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
   border-radius: 6px;
-  color: #9a3412;
+  color: #991b1b;
   margin: 14px 0;
   padding: 10px 14px 10px 30px;
-}
-
-.success-note {
-  background: #f0f9f4;
-  border: 1px solid #bbdfc7;
-  border-radius: 6px;
-  color: #166534;
-  margin: 14px 0;
-  padding: 10px 12px;
 }
 
 .data-grid {

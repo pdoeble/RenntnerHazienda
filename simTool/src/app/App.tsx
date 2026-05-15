@@ -1,4 +1,4 @@
-import { Download, FolderOpen, Save } from "lucide-react";
+import { Download, Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { calculateAll } from "../calculations/calculateAll";
 import { buildProjectSnapshot } from "../calculations/buildProjectSnapshot";
@@ -17,7 +17,6 @@ import {
   type ProjectState
 } from "../state/projectStore";
 import type { VisualizationTab } from "../state/uiStore";
-import { AutosaveStatus } from "../ui/status/AutosaveStatus";
 import { DiagnosticsPanel } from "../ui/status/DiagnosticsPanel";
 import { DirtyStateIndicator } from "../ui/status/DirtyStateIndicator";
 import { FileActionButton } from "../ui/buttons/FileActionButton";
@@ -33,9 +32,7 @@ export function App() {
     structuredClone(defaultProjectState)
   );
   const [dirtyState, setDirtyState] = useState<DirtyState>(initialDirtyState);
-  const [persistenceMessage, setPersistenceMessage] = useState(
-    "JSON-Fallback bereit"
-  );
+  const [persistenceMessage, setPersistenceMessage] = useState("");
   const [persistenceDiagnostics, setPersistenceDiagnostics] = useState<
     ReturnType<typeof calculateAll>["diagnostics"]
   >([]);
@@ -143,14 +140,14 @@ export function App() {
         </div>
         <div className="status-row">
           <DirtyStateIndicator dirtyState={dirtyState} />
-          <AutosaveStatus />
-          <span className="status-pill">{persistenceMessage}</span>
+          {persistenceMessage ? (
+            <span className="status-pill">{persistenceMessage}</span>
+          ) : null}
         </div>
         <div className="button-row">
-          <FileActionButton
-            label="Projekt laden"
-            icon={FolderOpen}
-            onClick={() => void loadProject()}
+          <ProjectLoadSelect
+            projectName={manifest.name}
+            onUpload={() => void loadProject()}
           />
           <FileActionButton
             label="Projekt speichern"
@@ -189,6 +186,36 @@ export function App() {
         }
       />
     </div>
+  );
+}
+
+function ProjectLoadSelect({
+  projectName,
+  onUpload
+}: {
+  projectName: string;
+  onUpload: () => void;
+}) {
+  return (
+    <label className="action-select">
+      <span>Projekt laden</span>
+      <select
+        aria-label="Projekt laden"
+        defaultValue=""
+        onChange={(event) => {
+          if (event.currentTarget.value === "upload") {
+            onUpload();
+          }
+          event.currentTarget.value = "";
+        }}
+      >
+        <option value="" disabled>
+          Laden
+        </option>
+        <option value="current-project">{projectName}</option>
+        <option value="upload">Upload...</option>
+      </select>
+    </label>
   );
 }
 

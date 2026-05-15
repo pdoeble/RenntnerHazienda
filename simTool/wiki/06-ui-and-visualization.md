@@ -768,14 +768,16 @@ As of 2026-05-15:
 
 - Numeric assumptions are editable through a slider plus direct number input.
 - Changes update React state immediately and recalculate visualizations from the current project snapshot.
-- Visible input tabs are `Eignerschaft`, `Gesellschaftsform`, `Immobilie`, and `Opex`.
+- Visible input tabs are `Eignerschaft`, `Gesellschaftsform`, `Immobilie`, `Finanzierung`, `Strategie`, and `Opex`.
 - Eigner names and equity contributions are editable; owner shares are derived from total owner equity.
-- Financing is displayed inside the `Immobilie` tab as a separate section.
+- Financing is displayed in its own visible tab and remains a separate persisted template.
 - Closing costs and renovation items are displayed inside the `Immobilie` tab.
 - Renovation items and opex blocks can be added and removed in the UI.
 - Opex annual costs support fixed, rentable-area, plot-area, and property-value bases.
 - Contribution visualizations include initial equity and yearly recalculated monthly contribution schedules.
-- Project and template load/save/export use browser JSON upload/download fallback.
+- Project and template load/save/export use browser JSON upload/download fallback. `Laden` is a dropdown with the current project or template plus `Upload...`; file import stays under `Upload...`.
+- The app shell does not show idle persistence badges. Transient status appears only after project/template actions.
+- Inline validation hints are hidden while the selected template is valid; only blocking validation errors appear as red inline messages.
 - The visible disclaimer panel was removed from the app shell; legal and product boundaries remain documented in the wiki.
 
 Next UI steps:

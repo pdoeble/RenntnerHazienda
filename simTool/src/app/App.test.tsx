@@ -82,4 +82,17 @@ describe("App shell", () => {
       screen.queryByText(/Dieses Tool dient nur der Szenariomodellierung/i)
     ).not.toBeInTheDocument();
   });
+
+  it("uses load dropdowns and hides redundant success/status hints", () => {
+    render(<App />);
+
+    expect(screen.getByLabelText("Projekt laden")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Laden")[0]).toBeInTheDocument();
+    expect(screen.getAllByText("Upload...").length).toBeGreaterThanOrEqual(2);
+    expect(
+      screen.queryByText("Schema und Moduldiagnosen sind gueltig.")
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Autosave vorbereitet")).not.toBeInTheDocument();
+    expect(screen.queryByText("JSON-Fallback bereit")).not.toBeInTheDocument();
+  });
 });
