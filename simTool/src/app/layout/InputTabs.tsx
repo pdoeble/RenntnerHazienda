@@ -5,11 +5,16 @@ import type { ExtractResult } from "../../listingAssist/extractListing";
 import { extractListingFromText } from "../../listingAssist/extractListing";
 import { extractListingFromUrl } from "../../listingAssist/extractListingFromUrl";
 import { isListingUrl } from "../../listingAssist/fetchListingContent";
+import {
+  enrichHouseWithGoogleMaps,
+  hasGoogleMapsKey
+} from "../../maps/googleMapsEnrichment";
 import type { LegalFormValue } from "../../modules/legal-form/types";
 import { visibleInputModules } from "../../modules/registry";
 import type { OpexAnnualCostMode } from "../../modules/opex/types";
 import type {
   AustrianFederalState,
+  CandidateHouse,
   PropertyRenovationItem,
   PropertyUseType
 } from "../../modules/property/types";
@@ -768,6 +773,17 @@ function PropertyEditor({
           }
         />
         <NumberSliderField
+          label="Schlafzimmer"
+          value={projectState.property.data.bedrooms ?? 0}
+          min={0}
+          max={30}
+          step={1}
+          unit="Schlafzimmer"
+          onChange={(bedrooms) =>
+            updatePropertyData({ ...projectState.property.data, bedrooms })
+          }
+        />
+        <NumberSliderField
           label="Zimmer"
           value={projectState.property.data.rooms ?? 0}
           min={0}
@@ -776,6 +792,26 @@ function PropertyEditor({
           unit="Zimmer"
           onChange={(rooms) =>
             updatePropertyData({ ...projectState.property.data, rooms })
+          }
+        />
+        <NumberSliderField
+          label="Fremdgaeste"
+          value={projectState.property.data.guestNightsPerYear}
+          min={0}
+          max={365}
+          step={5}
+          unit="Naechte/Jahr"
+          onChange={(guestNightsPerYear) =>
+            updatePropertyData({
+              ...projectState.property.data,
+              guestNightsPerYear,
+              candidateHouses: projectState.property.data.candidateHouses.map(
+                (house) =>
+                  house.id === projectState.property.data.activeHouseId
+                    ? { ...house, guestNightsPerYear }
+                    : house
+              )
+            })
           }
         />
         <NumberSliderField
@@ -924,16 +960,49 @@ function ListingImportPanel({
     setStatus("Text ausgewertet. Bitte Vorschau pruefen und uebernehmen.");
   }
 
-  function applyExtract() {
+  async function applyExtract() {
     if (!extractResult) {
       return;
     }
 
-    updatePropertyData({
+    const importedData = {
       ...projectState.property.data,
       ...stripUndefined(extractResult.draft)
+    };
+    const importedHouse = candidateFromPropertyData(importedData);
+    let nextHouse = importedHouse;
+    let importStatus = "Inseratdaten uebernommen und im Hausvergleich angelegt.";
+
+    if (hasGoogleMapsKey()) {
+      try {
+        const enriched = await enrichHouseWithGoogleMaps(importedHouse);
+        nextHouse = enriched.house;
+        importStatus = `Inseratdaten uebernommen. ${enriched.message}`;
+      } catch (error) {
+        importStatus =
+          error instanceof Error
+            ? `Inseratdaten uebernommen. Google Maps fehlgeschlagen: ${error.message}`
+            : "Inseratdaten uebernommen. Google Maps fehlgeschlagen.";
+      }
+    }
+
+    updatePropertyData({
+      ...importedData,
+      activeHouseId: nextHouse.id,
+      guestNightsPerYear: nextHouse.guestNightsPerYear,
+      candidateHouses: [
+        ...projectState.property.data.candidateHouses.filter(
+          (house) => house.id !== nextHouse.id
+        ),
+        nextHouse
+      ],
+      mapEnrichment: {
+        provider: hasGoogleMapsKey() ? "googleMaps" : "excel",
+        status: hasGoogleMapsKey() ? "attempted" : "fallback",
+        message: importStatus
+      }
     });
-    setStatus("Inseratdaten uebernommen.");
+    setStatus(importStatus);
   }
 
   return (
@@ -984,7 +1053,11 @@ function ListingImportPanel({
               ["Gemeinde", extractResult.draft.municipality ?? ""]
             ]}
           />
-          <button className="icon-button" type="button" onClick={applyExtract}>
+          <button
+            className="icon-button"
+            type="button"
+            onClick={() => void applyExtract()}
+          >
             Vorschau uebernehmen
           </button>
         </>
@@ -1244,9 +1317,40 @@ function StrategyEditor({
         </label>
       </div>
       <div className="form-section">
-        <h3>Punktesystem</h3>
+        <h3>Kapital- und Nutzungssystem</h3>
         <label className="text-field">
-          <span>Anteilsmodus</span>
+          <span>Kapitalanteilsmodus</span>
+          <select
+            aria-label="Kapitalanteilsmodus"
+            value={projectState.strategy.data.capitalShareMode}
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                capitalShareMode: event.currentTarget
+                  .value as ProjectState["strategy"]["data"]["capitalShareMode"]
+              })
+            }
+          >
+            <option value="scheduledPrincipal">Tilgung nach Start-EK-Anteil</option>
+            <option value="manualMonthly">Manuelle Anlagebeitraege</option>
+          </select>
+        </label>
+        <NumberSliderField
+          label="Bewertungszins Anlage"
+          value={projectState.strategy.data.capitalValuationInterestPct}
+          min={-5}
+          max={10}
+          step={0.25}
+          unit="%/Jahr"
+          onChange={(capitalValuationInterestPct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              capitalValuationInterestPct
+            })
+          }
+        />
+        <label className="text-field">
+          <span>Nutzungspunkt-Modus</span>
           <select
             aria-label="Punkte Anteilsmodus"
             value={projectState.strategy.data.pointShareMode}
@@ -1257,13 +1361,14 @@ function StrategyEditor({
               })
             }
           >
-            <option value="blended">Tier und Eigenkapital</option>
-            <option value="tier">Nur Beteiligungsstufe</option>
-            <option value="equity">Nur Eigenkapital</option>
+            <option value="usage">Nur Nutzungsbeitrag</option>
+            <option value="blended">Nutzung und Unternehmensanteil</option>
+            <option value="tier">Legacy: Nutzungsbeitrag</option>
+            <option value="equity">Legacy: Unternehmensanteil</option>
           </select>
         </label>
         <NumberSliderField
-          label="Tier-Gewicht"
+          label="Nutzungsgewicht"
           value={projectState.strategy.data.pointTierWeight}
           min={0}
           max={100}
@@ -1277,7 +1382,7 @@ function StrategyEditor({
           }
         />
         <NumberSliderField
-          label="EK-Gewicht"
+          label="Unternehmensgewicht"
           value={projectState.strategy.data.pointEquityWeight}
           min={0}
           max={100}
@@ -1996,8 +2101,72 @@ function numberPreview(value: number | undefined, unit: string): string {
   return `${value.toLocaleString("de-DE")}${unit ? ` ${unit}` : ""}`;
 }
 
+function candidateFromPropertyData(
+  data: ProjectState["property"]["data"]
+): CandidateHouse {
+  const title = data.title?.trim() || "Importiertes Inserat";
+  const place =
+    data.municipality ??
+    data.addressData?.place ??
+    data.address ??
+    "Ort offen";
+  const id = data.sourceUrl
+    ? `import-${slugId(data.sourceUrl)}`
+    : `import-${slugId(title)}`;
+
+  return {
+    id,
+    title,
+    place,
+    postalCode: data.addressData?.postalCode,
+    federalState: data.federalState === "T" ? "Tirol" : data.addressData?.region,
+    purchasePrice: data.purchasePrice,
+    rentableAreaSqm: data.rentableAreaSqm,
+    plotAreaSqm: data.plotAreaSqm,
+    pricePerSqm: data.pricePerM2Eur,
+    rooms: data.rooms,
+    bedrooms: data.bedrooms,
+    beds: data.beds,
+    bathrooms: data.bathrooms,
+    toilets: data.toilets,
+    yearBuilt: data.yearBuilt,
+    condition: data.condition,
+    heating: data.heating.join(", "),
+    brokerPct: data.closingCosts.brokerPct,
+    closingCostsPctRough:
+      data.closingCosts.realEstateTransferTaxPct +
+      data.closingCosts.notaryPct +
+      data.closingCosts.landRegistryPct +
+      data.closingCosts.brokerPct,
+    totalCostRough:
+      data.purchasePrice *
+      (1 +
+        (data.closingCosts.realEstateTransferTaxPct +
+          data.closingCosts.notaryPct +
+          data.closingCosts.landRegistryPct +
+          data.closingCosts.brokerPct) /
+          100),
+    sourceUrl: data.sourceUrl,
+    guestNightsPerYear: data.guestNightsPerYear,
+    travelTimes: [],
+    skiAreas: [],
+    tourismStatus: "Importiert; Nutzung rechtlich pruefen",
+    highlights: data.features.join(", "),
+    risks: "Nach Import pruefen: Widmung, Freizeitwohnsitz, Skigebiet, Fahrzeiten."
+  };
+}
+
 function stripUndefined<T extends Record<string, unknown>>(value: T): Partial<T> {
   return Object.fromEntries(
     Object.entries(value).filter(([, entryValue]) => entryValue !== undefined)
   ) as Partial<T>;
+}
+
+function slugId(value: string): string {
+  const slug = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48);
+  return slug || "listing";
 }

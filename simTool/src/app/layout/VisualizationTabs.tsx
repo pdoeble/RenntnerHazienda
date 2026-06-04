@@ -73,6 +73,8 @@ function VisualizationBody({
       return <PointsView result={result} />;
     case "myShare":
       return <MyShareView result={result} />;
+    case "occupancy":
+      return <OccupancyView result={result} />;
     case "cashflow":
       return <CashflowView result={result} />;
     case "debt":
@@ -163,6 +165,9 @@ function MyShareView({ result }: { result: CalculationResult }) {
     result.contributions.recurringContributions[0]?.contributions.find(
       (contribution) => contribution.ownerId === owner?.ownerId
     )?.totalMonthlyContribution ?? 0;
+  const capitalShareOwner = result.capitalShares.owners.find(
+    (candidate) => candidate.ownerId === owner?.ownerId
+  );
   const companySharePct = owner?.companySharePct ?? 0;
   const projectedValue =
     (companySharePct / 100) *
@@ -195,7 +200,11 @@ function MyShareView({ result }: { result: CalculationResult }) {
           ["Punkte-Anteil", `${owner.pointSharePct.toFixed(2)}%`],
           ["Unternehmensanteil", `${owner.companySharePct.toFixed(2)}%`],
           ["Eigenkapital", formatMoney(initialContribution?.amount ?? 0)],
-          ["Monatlicher Beitrag", `${formatMoney(monthlyContribution)}/Monat`],
+          [
+            "Anlagebeitrag mtl.",
+            `${formatMoney(capitalShareOwner?.monthlyCapitalContribution ?? 0)}/Monat`
+          ],
+          ["Kostenbeitrag mtl.", `${formatMoney(monthlyContribution)}/Monat`],
           ["Jahrespunkte", owner.annualPoints.toLocaleString("de-DE")],
           ["Ø Naechte", owner.affordableNightsAverage.toString()]
         ]}
@@ -222,6 +231,48 @@ function MyShareView({ result }: { result: CalculationResult }) {
       <p className="muted">
         Die Anteilsansicht modelliert interne Planungsgroessen. Sie ersetzt keine
         Rechts-, Steuer- oder Finanzierungspruefung.
+      </p>
+    </div>
+  );
+}
+
+function OccupancyView({ result }: { result: CalculationResult }) {
+  const occupancy = result.occupancy;
+
+  return (
+    <div className="visualization-view">
+      <MetricGrid
+        metrics={[
+          ["Haus", occupancy.houseTitle || "offen"],
+          ["Kapazitaet", `${occupancy.capacityPersons} Personen`],
+          ["Basis", occupancy.capacityDataQuality],
+          ["Eigennutzung", `${occupancy.ownerDemandNights} Naechte/Jahr`],
+          ["Fremdgaeste", `${occupancy.guestNights} Naechte/Jahr`],
+          ["Freie Naechte", occupancy.freeNights.toString()],
+          ["Auslastung", `${occupancy.occupancyPct.toFixed(1)}%`],
+          ["Belegungsdruck", occupancy.pressureLabel],
+          [
+            "Punkte je verfuegb. Nacht",
+            occupancy.pointsPerAvailableNight.toLocaleString("de-DE")
+          ]
+        ]}
+      />
+      <DataTable
+        headers={["Kennzahl", "Wert"]}
+        rows={[
+          ["Schlafzimmer", occupancy.bedrooms?.toString() ?? "offen"],
+          ["Betten", occupancy.beds?.toString() ?? "offen"],
+          ["Eigner", occupancy.ownerCount.toString()],
+          ["Eigennutzung geschaetzt", `${occupancy.ownerDemandNights} Naechte`],
+          ["Fremdgaeste", `${occupancy.guestNights} Naechte`],
+          ["Blockierte Naechte gesamt", `${occupancy.blockedNights} Naechte`],
+          ["Freie Naechte", `${occupancy.freeNights} Naechte`]
+        ]}
+      />
+      <p className="muted">
+        Standardkapazitaet ist zwei Personen je Schlafzimmer. Wenn Schlafzimmer
+        fehlen, nutzt das Modell Betten; fehlen beide Werte, bleibt die
+        Kapazitaet offen.
       </p>
     </div>
   );

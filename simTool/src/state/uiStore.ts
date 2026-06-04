@@ -18,6 +18,7 @@ export type VisualizationTab =
   | "contributions"
   | "points"
   | "myShare"
+  | "occupancy"
   | "cashflow"
   | "debt"
   | "wiki"
@@ -30,6 +31,7 @@ export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
   "contributions",
   "points",
   "myShare",
+  "occupancy",
   "cashflow",
   "debt",
   "wiki",
@@ -43,6 +45,7 @@ export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
   contributions: "Beitraege",
   points: "Punkte",
   myShare: "Mein Anteil",
+  occupancy: "Belegung",
   cashflow: "Cashflow",
   debt: "Darlehen",
   wiki: "Wiki",
