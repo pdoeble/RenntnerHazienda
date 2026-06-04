@@ -47,10 +47,10 @@ export function calculateInitialContributions(
     return {
       ownerId: owner.id,
       ownerName: owner.displayName,
-      amount: roundMoney(owner.equityContribution),
+      amount: roundMoney(owner.startEquityContribution),
       basis: "ownershipShare",
       sharePct: roundPct(sharePct),
-      initialEquity: roundMoney(owner.equityContribution),
+      initialEquity: roundMoney(owner.startEquityContribution),
       baseMonthlyObligation: 0,
       reserveTopUp: 0,
       specialAssessment: 0,

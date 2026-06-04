@@ -29,5 +29,22 @@ export function validateLegalForm(
     );
   }
 
+  const hasAnyCost =
+    template.data.foundingCostAmount > 0 ||
+    template.data.annualAccountingCostAmount > 0 ||
+    template.data.annualAdministrationCostAmount > 0 ||
+    template.data.annualComplianceCostAmount > 0;
+
+  if (!hasAnyCost || template.data.costStatus === "missing") {
+    diagnostics.push(
+      diagnostic(
+        "legal-form.costs-missing",
+        "warning",
+        "legalForm",
+        "Rechtsformkosten fehlen oder sind nicht belastbar; Kapitalbedarf und Opex koennen zu niedrig sein."
+      )
+    );
+  }
+
   return validationResult(diagnostics);
 }

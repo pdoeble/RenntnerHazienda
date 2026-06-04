@@ -1,6 +1,7 @@
 import { diagnostic } from "../validation/diagnostics";
 import { roundPct } from "./rounding";
 import type {
+  CapitalShareResult,
   OwnerPointResult,
   PointNightType,
   PointsResult,
@@ -9,7 +10,10 @@ import type {
 
 type Season = "winterSki" | "summer" | "spring" | "autumn";
 
-export function calculatePoints(snapshot: ProjectSnapshot): PointsResult {
+export function calculatePoints(
+  snapshot: ProjectSnapshot,
+  capitalShares?: CapitalShareResult
+): PointsResult {
   const capacity = Math.max(
     1,
     snapshot.property.data.beds ??
@@ -21,7 +25,12 @@ export function calculatePoints(snapshot: ProjectSnapshot): PointsResult {
     capacity * snapshot.property.data.pointRules.basePointsPerBedPerYear
   );
   const nightTypes = sampleNightTypes(snapshot);
-  const owners = calculateOwnerPoints(snapshot, annualPointPool, nightTypes);
+  const owners = calculateOwnerPoints(
+    snapshot,
+    annualPointPool,
+    nightTypes,
+    capitalShares
+  );
   const diagnostics = [];
 
   if (snapshot.strategy.data.pointShareMode === "blended") {
@@ -40,6 +49,23 @@ export function calculatePoints(snapshot: ProjectSnapshot): PointsResult {
     }
   }
 
+  if (
+    snapshot.strategy.data.pointShareMode === "usage" &&
+    snapshot.ownership.data.owners.reduce(
+      (total, owner) => total + owner.usagePointBudget,
+      0
+    ) <= 0
+  ) {
+    diagnostics.push(
+      diagnostic(
+        "points.no-usage-budget",
+        "warning",
+        "ownership",
+        "Keine Nutzungspunkte hinterlegt; Nutzung kann nicht verteilt werden."
+      )
+    );
+  }
+
   return {
     capacity,
     annualPointPool,
@@ -55,14 +81,15 @@ export function calculatePoints(snapshot: ProjectSnapshot): PointsResult {
 function calculateOwnerPoints(
   snapshot: ProjectSnapshot,
   annualPointPool: number,
-  nightTypes: PointNightType[]
+  nightTypes: PointNightType[],
+  capitalShares?: CapitalShareResult
 ): OwnerPointResult[] {
-  const tierTotal = snapshot.ownership.data.owners.reduce(
-    (total, owner) => total + owner.participationTier,
+  const usageTotal = snapshot.ownership.data.owners.reduce(
+    (total, owner) => total + owner.usagePointBudget,
     0
   );
   const equityTotal = snapshot.ownership.data.owners.reduce(
-    (total, owner) => total + owner.equityContribution,
+    (total, owner) => total + owner.startEquityContribution,
     0
   );
   const weightTotal =
@@ -70,21 +97,26 @@ function calculateOwnerPoints(
     snapshot.strategy.data.pointEquityWeight;
 
   return snapshot.ownership.data.owners.map((owner) => {
-    const tierSharePct =
-      tierTotal > 0 ? (owner.participationTier / tierTotal) * 100 : 0;
+    const usageSharePct =
+      usageTotal > 0 ? (owner.usagePointBudget / usageTotal) * 100 : 0;
     const equitySharePct =
-      equityTotal > 0 ? (owner.equityContribution / equityTotal) * 100 : 0;
-    let pointSharePct = equitySharePct;
+      equityTotal > 0 ? (owner.startEquityContribution / equityTotal) * 100 : 0;
+    const companySharePct =
+      capitalShares?.owners.find((candidate) => candidate.ownerId === owner.id)
+        ?.companySharePct ?? owner.companySharePct ?? equitySharePct;
+    let pointSharePct = usageSharePct;
 
     if (snapshot.strategy.data.pointShareMode === "tier") {
-      pointSharePct = tierSharePct;
+      pointSharePct = usageSharePct;
+    } else if (snapshot.strategy.data.pointShareMode === "equity") {
+      pointSharePct = companySharePct;
     } else if (
       snapshot.strategy.data.pointShareMode === "blended" &&
       weightTotal > 0
     ) {
       pointSharePct =
-        (snapshot.strategy.data.pointTierWeight * tierSharePct +
-          snapshot.strategy.data.pointEquityWeight * equitySharePct) /
+        (snapshot.strategy.data.pointTierWeight * usageSharePct +
+          snapshot.strategy.data.pointEquityWeight * companySharePct) /
         weightTotal;
     }
 
@@ -97,8 +129,9 @@ function calculateOwnerPoints(
     return {
       ownerId: owner.id,
       ownerName: owner.displayName,
-      tierSharePct: roundPct(tierSharePct),
-      equitySharePct: roundPct(equitySharePct),
+      usagePointBudget: owner.usagePointBudget,
+      usageSharePct: roundPct(usageSharePct),
+      companySharePct: roundPct(companySharePct),
       pointSharePct: roundPct(pointSharePct),
       annualPoints: Math.round(annualPoints),
       affordableNightsAverage

@@ -20,11 +20,17 @@ export const ownerSchema = z
     id: idSchema,
     displayName: nonEmptyStringSchema,
     type: ownerTypeSchema,
-    participationTier: percentSchema.default(0),
+    participationTier: nonNegativeNumberSchema.default(0),
     equityContribution: nonNegativeNumberSchema.default(0),
+    startEquityContribution: nonNegativeNumberSchema.default(0),
+    monthlyCapitalContribution: nonNegativeNumberSchema.default(0),
+    usagePointBudget: nonNegativeNumberSchema.default(0),
     ownershipSharePct: percentSchema,
+    companySharePct: percentSchema.optional(),
+    capitalValueAtLoanEnd: nonNegativeNumberSchema.optional(),
     votingSharePct: percentSchema.optional(),
     liabilitySharePct: percentSchema.optional(),
+    homeLocationId: z.string().optional(),
     notes: z.string().optional()
   })
   .strict();

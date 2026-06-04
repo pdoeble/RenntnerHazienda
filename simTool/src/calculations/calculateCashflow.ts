@@ -1,4 +1,5 @@
 import type { OpexItem } from "../modules/opex/types";
+import { calculateAnnualLegalOngoingCosts } from "./financialInputs";
 import { diagnostic } from "../validation/diagnostics";
 import { roundMoney } from "./rounding";
 import type {
@@ -128,28 +129,44 @@ function monthlyOpexBreakdown(
   snapshot: ProjectSnapshot,
   month: number
 ): OpexBreakdownItem[] {
-  const recurring = snapshot.opex.data.recurringItems.map((item) => ({
-    itemId: item.id,
-    label: item.label,
-    category: item.category,
-    recoverableFromTenants: item.recoverableFromTenants ?? false,
-    amount: roundMoney(monthlyOpexAmount(item, month, snapshot))
-  }));
+  const recurring = snapshot.opex.data.recurringItems
+    .filter((item) => item.category !== "reserve")
+    .map((item) => ({
+      itemId: item.id,
+      label: item.label,
+      category: item.category,
+      recoverableFromTenants: item.recoverableFromTenants ?? false,
+      amount: roundMoney(monthlyOpexAmount(item, month, snapshot))
+    }));
   const tourismFee = roundMoney(snapshot.property.data.tourismFeeAnnualAmount / 12);
-
-  if (tourismFee <= 0) {
-    return recurring;
-  }
+  const legalOngoing = roundMoney(calculateAnnualLegalOngoingCosts(snapshot) / 12);
+  const legalOngoingItem =
+    legalOngoing > 0
+      ? [
+          {
+            itemId: "legal-form-ongoing",
+            label: "Rechtsform/Buchhaltung",
+            category: "accounting",
+            recoverableFromTenants: false,
+            amount: legalOngoing
+          }
+        ]
+      : [];
 
   return [
     ...recurring,
-    {
-      itemId: "tourism-fee",
-      label: "Aufenthaltsabgaben",
-      category: "tax",
-      recoverableFromTenants: false,
-      amount: tourismFee
-    }
+    ...legalOngoingItem,
+    ...(tourismFee > 0
+      ? [
+          {
+            itemId: "tourism-fee",
+            label: "Aufenthaltsabgaben",
+            category: "tax",
+            recoverableFromTenants: false,
+            amount: tourismFee
+          }
+        ]
+      : [])
   ];
 }
 

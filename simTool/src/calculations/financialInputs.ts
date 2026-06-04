@@ -18,6 +18,18 @@ export function calculateClosingCostsTotal(snapshot: ProjectSnapshot): number {
   return percentageCosts + fixedCosts;
 }
 
+export function calculateLegalFoundingCosts(snapshot: ProjectSnapshot): number {
+  return snapshot.legalForm.data.foundingCostAmount;
+}
+
+export function calculateAnnualLegalOngoingCosts(snapshot: ProjectSnapshot): number {
+  return (
+    snapshot.legalForm.data.annualAccountingCostAmount +
+    snapshot.legalForm.data.annualAdministrationCostAmount +
+    snapshot.legalForm.data.annualComplianceCostAmount
+  );
+}
+
 export function calculateVatAtPurchase(snapshot: ProjectSnapshot): number {
   return (snapshot.property.data.purchasePrice * snapshot.property.data.vatRatePct) / 100;
 }
@@ -61,6 +73,7 @@ export function calculateTotalProjectCost(snapshot: ProjectSnapshot): number {
       (total, item) => total + item.amount,
       0
     ) +
+    calculateLegalFoundingCosts(snapshot) +
     calculateInitialReserveNeed(snapshot)
   );
 }
@@ -80,7 +93,7 @@ export function calculateDebtPrincipal(snapshot: ProjectSnapshot): number {
 
 export function calculateTotalOwnerEquity(snapshot: ProjectSnapshot): number {
   return snapshot.ownership.data.owners.reduce(
-    (total, owner) => total + owner.equityContribution,
+    (total, owner) => total + owner.startEquityContribution,
     0
   );
 }
@@ -97,7 +110,7 @@ export function calculateOwnerEquitySharePct(
   const owner = snapshot.ownership.data.owners.find(
     (candidate) => candidate.id === ownerId
   );
-  return owner ? (owner.equityContribution / totalEquity) * 100 : 0;
+  return owner ? (owner.startEquityContribution / totalEquity) * 100 : 0;
 }
 
 export function calculateInitialReserveNeed(snapshot: ProjectSnapshot): number {
@@ -130,6 +143,7 @@ export function calculateCapitalNeed(snapshot: ProjectSnapshot) {
       0
     )
   );
+  const legalFoundingCosts = roundMoney(calculateLegalFoundingCosts(snapshot));
   const initialReserve = roundMoney(calculateInitialReserveNeed(snapshot));
   const totalProjectNeed = roundMoney(calculateTotalProjectCost(snapshot));
   const ownerEquity = roundMoney(calculateTotalOwnerEquity(snapshot));
@@ -147,6 +161,11 @@ export function calculateCapitalNeed(snapshot: ProjectSnapshot) {
         amount: mortgageRegistrationFee
       },
       { id: "renovations", label: "Renovierungen", amount: renovations },
+      {
+        id: "legal-founding",
+        label: "Rechtsform-Gruendung",
+        amount: legalFoundingCosts
+      },
       { id: "reserve", label: "Initiale Reserve", amount: initialReserve },
       { id: "equity", label: "Eigner-EK", amount: -ownerEquity },
       { id: "debt", label: "Darlehen", amount: debtPrincipal }
@@ -157,6 +176,7 @@ export function calculateCapitalNeed(snapshot: ProjectSnapshot) {
     closingCosts,
     mortgageRegistrationFee,
     renovations,
+    legalFoundingCosts,
     initialReserve,
     totalProjectNeed,
     ownerEquity,

@@ -114,11 +114,20 @@ function PointsView({ result }: { result: CalculationResult }) {
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Eigner", "Tier-Anteil", "EK-Anteil", "Punkte-Anteil", "Jahrespunkte", "Ø Naechte"]}
+        headers={[
+          "Eigner",
+          "Nutzungsbeitrag",
+          "Nutzungsanteil",
+          "Unternehmensanteil",
+          "Punkte-Anteil",
+          "Jahrespunkte",
+          "Ø Naechte"
+        ]}
         rows={result.points.owners.map((owner) => [
           owner.ownerName,
-          `${owner.tierSharePct.toFixed(2)}%`,
-          `${owner.equitySharePct.toFixed(2)}%`,
+          owner.usagePointBudget.toLocaleString("de-DE"),
+          `${owner.usageSharePct.toFixed(2)}%`,
+          `${owner.companySharePct.toFixed(2)}%`,
           `${owner.pointSharePct.toFixed(2)}%`,
           owner.annualPoints.toLocaleString("de-DE"),
           owner.affordableNightsAverage.toString()
@@ -154,9 +163,9 @@ function MyShareView({ result }: { result: CalculationResult }) {
     result.contributions.recurringContributions[0]?.contributions.find(
       (contribution) => contribution.ownerId === owner?.ownerId
     )?.totalMonthlyContribution ?? 0;
-  const equitySharePct = owner?.equitySharePct ?? 0;
+  const companySharePct = owner?.companySharePct ?? 0;
   const projectedValue =
-    (equitySharePct / 100) *
+    (companySharePct / 100) *
     result.points.propertyValue *
     Math.pow(1 + result.points.appreciationPercentPerYear / 100, projectionYears);
   const cumulativePayments = monthlyContribution * 12 * projectionYears;
@@ -184,6 +193,7 @@ function MyShareView({ result }: { result: CalculationResult }) {
       <MetricGrid
         metrics={[
           ["Punkte-Anteil", `${owner.pointSharePct.toFixed(2)}%`],
+          ["Unternehmensanteil", `${owner.companySharePct.toFixed(2)}%`],
           ["Eigenkapital", formatMoney(initialContribution?.amount ?? 0)],
           ["Monatlicher Beitrag", `${formatMoney(monthlyContribution)}/Monat`],
           ["Jahrespunkte", owner.annualPoints.toLocaleString("de-DE")],
@@ -808,13 +818,16 @@ function NumberInput({
 }
 
 function pointModeLabel(mode: CalculationResult["points"]["shareMode"]): string {
+  if (mode === "usage") {
+    return "Nutzungsbeitrag";
+  }
   if (mode === "tier") {
-    return "Beteiligungsstufe";
+    return "Nutzungsbeitrag";
   }
   if (mode === "equity") {
-    return "Eigenkapital";
+    return "Unternehmensanteil";
   }
-  return "Tier + Eigenkapital";
+  return "Nutzung + Unternehmensanteil";
 }
 
 function looksLikeHtml(text: string): boolean {

@@ -89,12 +89,33 @@ export type CapitalNeedResult = {
   closingCosts: number;
   mortgageRegistrationFee: number;
   renovations: number;
+  legalFoundingCosts: number;
   initialReserve: number;
   totalProjectNeed: number;
   ownerEquity: number;
   debtPrincipal: number;
   actualEquityRatioPct: number;
   targetEquityRatioPct: number;
+  diagnostics: DiagnosticMessage[];
+};
+
+export type CapitalShareOwnerResult = {
+  ownerId: string;
+  ownerName: string;
+  startEquityContribution: number;
+  startEquitySharePct: number;
+  monthlyCapitalContribution: number;
+  usagePointBudget: number;
+  capitalValueAtLoanEnd: number;
+  companySharePct: number;
+};
+
+export type CapitalShareResult = {
+  mode: "scheduledPrincipal" | "manualMonthly";
+  termYears: number;
+  valuationInterestPct: number;
+  totalCapitalValueAtLoanEnd: number;
+  owners: CapitalShareOwnerResult[];
   diagnostics: DiagnosticMessage[];
 };
 
@@ -172,8 +193,9 @@ export type PointNightType = {
 export type OwnerPointResult = {
   ownerId: string;
   ownerName: string;
-  tierSharePct: number;
-  equitySharePct: number;
+  usagePointBudget: number;
+  usageSharePct: number;
+  companySharePct: number;
   pointSharePct: number;
   annualPoints: number;
   affordableNightsAverage: number;
@@ -184,15 +206,61 @@ export type PointsResult = {
   annualPointPool: number;
   propertyValue: number;
   appreciationPercentPerYear: number;
-  shareMode: "blended" | "tier" | "equity";
+  shareMode: "usage" | "blended" | "tier" | "equity";
   owners: OwnerPointResult[];
   nightTypes: PointNightType[];
   diagnostics: DiagnosticMessage[];
 };
 
+export type OccupancyResult = {
+  activeHouseId?: string;
+  houseTitle: string;
+  bedrooms?: number;
+  beds?: number;
+  capacityPersons: number;
+  capacityDataQuality: "bedrooms" | "beds" | "missing";
+  ownerCount: number;
+  ownerDemandNights: number;
+  guestNights: number;
+  blockedNights: number;
+  freeNights: number;
+  occupancyPct: number;
+  pointsPerAvailableNight: number;
+  pressureLabel: string;
+  diagnostics: DiagnosticMessage[];
+};
+
+export type HouseComparisonRow = {
+  id: string;
+  title: string;
+  place: string;
+  purchasePrice: number;
+  totalCostRough: number;
+  rentableAreaSqm?: number;
+  plotAreaSqm?: number;
+  rooms?: number;
+  bedrooms?: number;
+  capacityPersons: number;
+  averageDriveMinutes?: number;
+  nearestSkiArea?: string;
+  nearestSkiMinutes?: number;
+  guestNightsPerYear: number;
+  occupancyPressurePct: number;
+  sourceUrl?: string;
+};
+
+export type HouseComparisonResult = {
+  activeHouseId?: string;
+  houses: HouseComparisonRow[];
+  diagnostics: DiagnosticMessage[];
+};
+
 export type CalculationResult = {
   capitalNeed: CapitalNeedResult;
+  capitalShares: CapitalShareResult;
   points: PointsResult;
+  occupancy: OccupancyResult;
+  houseComparison: HouseComparisonResult;
   timeline: TimelineEvent[];
   liquidity: LiquidityResult;
   contributions: ContributionResult;

@@ -1,11 +1,14 @@
 import { hasBlockingDiagnostics } from "../validation/diagnostics";
 import { calculateCashflow } from "./calculateCashflow";
+import { calculateCapitalShares } from "./calculateCapitalShares";
 import {
   calculateInitialContributions,
   calculateRecurringContributions
 } from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
+import { calculateHouseComparison } from "./calculateHouseComparison";
 import { calculateLiquidity } from "./calculateLiquidity";
+import { calculateOccupancy } from "./calculateOccupancy";
 import { calculatePoints } from "./calculatePoints";
 import { calculateTimeline } from "./calculateTimeline";
 import { collectInputDiagnostics } from "./diagnostics";
@@ -30,12 +33,18 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   );
   const liquidity = calculateLiquidity(snapshot, contributions, cashflow, debt);
   const capitalNeed = calculateCapitalNeed(snapshot);
-  const points = calculatePoints(snapshot);
+  const capitalShares = calculateCapitalShares(snapshot, debt);
+  const points = calculatePoints(snapshot, capitalShares);
+  const occupancy = calculateOccupancy(snapshot, points);
+  const houseComparison = calculateHouseComparison(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
 
   return {
     capitalNeed,
+    capitalShares,
     points,
+    occupancy,
+    houseComparison,
     timeline,
     liquidity,
     contributions,
@@ -47,7 +56,10 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       ...debt.diagnostics,
       ...cashflow.diagnostics,
       ...liquidity.diagnostics,
-      ...points.diagnostics
+      ...capitalShares.diagnostics,
+      ...points.diagnostics,
+      ...occupancy.diagnostics,
+      ...houseComparison.diagnostics
     ]
   };
 }
@@ -73,6 +85,7 @@ function emptyCalculationResult(
       closingCosts: 0,
       mortgageRegistrationFee: 0,
       renovations: 0,
+      legalFoundingCosts: 0,
       initialReserve: 0,
       totalProjectNeed: 0,
       ownerEquity: 0,
@@ -81,14 +94,40 @@ function emptyCalculationResult(
       targetEquityRatioPct: 0,
       diagnostics: []
     },
+    capitalShares: {
+      mode: "scheduledPrincipal",
+      termYears: snapshot.financing.data.termYears,
+      valuationInterestPct: snapshot.strategy.data.capitalValuationInterestPct,
+      totalCapitalValueAtLoanEnd: 0,
+      owners: [],
+      diagnostics: []
+    },
     points: {
       capacity: 0,
       annualPointPool: 0,
       propertyValue: 0,
       appreciationPercentPerYear: 0,
-      shareMode: "blended",
+      shareMode: "usage",
       owners: [],
       nightTypes: [],
+      diagnostics: []
+    },
+    occupancy: {
+      houseTitle: "",
+      capacityPersons: 0,
+      capacityDataQuality: "missing",
+      ownerCount: 0,
+      ownerDemandNights: 0,
+      guestNights: 0,
+      blockedNights: 0,
+      freeNights: 0,
+      occupancyPct: 0,
+      pointsPerAvailableNight: 0,
+      pressureLabel: "offen",
+      diagnostics: []
+    },
+    houseComparison: {
+      houses: [],
       diagnostics: []
     },
     timeline: [],

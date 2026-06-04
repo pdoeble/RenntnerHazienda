@@ -19,9 +19,11 @@ export const defaultStrategyTemplate: StrategyTemplate = {
     contributionPolicy: "minimumObligationPlusReserveTopUp",
     rentOffsetsOwnerContributions: false,
     targetEquityRatioPct: 20,
-    pointShareMode: "blended",
+    pointShareMode: "usage",
     pointTierWeight: 50,
     pointEquityWeight: 50,
+    capitalShareMode: "scheduledPrincipal",
+    capitalValuationInterestPct: 2,
     appreciationPercentPerYear: 2,
     goNoGoChecks: [
       {

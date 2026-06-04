@@ -2,6 +2,7 @@ import {
   CURRENT_TEMPLATE_VERSION,
   DEFAULT_TEMPLATE_TIMESTAMP
 } from "../common";
+import { defaultCandidateHouses } from "./houseCandidates";
 import type { PropertyTemplate } from "./types";
 
 export const defaultPropertyTemplate: PropertyTemplate = {
@@ -78,6 +79,14 @@ export const defaultPropertyTemplate: PropertyTemplate = {
       otherCosts: []
     },
     renovationItems: [],
+    activeHouseId: "IS24AT-69f2ef",
+    guestNightsPerYear: 60,
+    candidateHouses: defaultCandidateHouses,
+    mapEnrichment: {
+      provider: "excel",
+      status: "fallback",
+      message: "Excel-Fallbackwerte aus immobilienvergleich_ferienhaus_tirol.xlsx"
+    },
     pointRules: {
       basePointsPerBedPerYear: 365,
       basePerBedPerNight: 1,

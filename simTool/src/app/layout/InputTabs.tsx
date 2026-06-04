@@ -215,7 +215,7 @@ function OwnershipEditor({
   ) => void;
 }) {
   const totalEquity = projectState.ownership.data.owners.reduce(
-    (total, owner) => total + owner.equityContribution,
+    (total, owner) => total + owner.startEquityContribution,
     0
   );
 
@@ -270,43 +270,70 @@ function OwnershipEditor({
             </button>
           </div>
           <NumberSliderField
-            label="Beteiligungsstufe"
-            value={owner.participationTier}
+            label="Nutzungsbeitrag"
+            value={owner.usagePointBudget}
             min={0}
             max={100}
             step={25}
             unit="Punkte"
-            onChange={(participationTier) =>
+            onChange={(usagePointBudget) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
                   candidate.id === owner.id
-                    ? { ...candidate, participationTier }
+                    ? {
+                        ...candidate,
+                        usagePointBudget,
+                        participationTier: usagePointBudget
+                      }
                     : candidate
                 )
               )
             }
           />
           <NumberSliderField
-            label="Eigenkapital"
-            value={owner.equityContribution}
+            label="Start-EK"
+            value={owner.startEquityContribution}
             min={0}
             max={500000}
             step={1000}
             unit="EUR"
-            onChange={(equityContribution) =>
+            onChange={(startEquityContribution) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
                   candidate.id === owner.id
-                    ? { ...candidate, equityContribution }
+                    ? {
+                        ...candidate,
+                        startEquityContribution,
+                        equityContribution: startEquityContribution
+                      }
+                    : candidate
+                )
+              )
+            }
+          />
+          <NumberSliderField
+            label="Anlagebeitrag mtl."
+            value={owner.monthlyCapitalContribution}
+            min={0}
+            max={5000}
+            step={25}
+            unit="EUR"
+            onChange={(monthlyCapitalContribution) =>
+              updateOwners(
+                projectState.ownership.data.owners.map((candidate) =>
+                  candidate.id === owner.id
+                    ? { ...candidate, monthlyCapitalContribution }
                     : candidate
                 )
               )
             }
           />
           <SummaryLine
-            label="Abgeleiteter Anteil"
+            label="EK-Anteil"
             value={formatPercent(
-              totalEquity > 0 ? (owner.equityContribution / totalEquity) * 100 : 0
+              totalEquity > 0
+                ? (owner.startEquityContribution / totalEquity) * 100
+                : 0
             )}
           />
         </div>
@@ -323,7 +350,11 @@ function OwnershipEditor({
               type: "person",
               participationTier: 50,
               equityContribution: 0,
-              ownershipSharePct: 0
+              startEquityContribution: 0,
+              monthlyCapitalContribution: 0,
+              usagePointBudget: 50,
+              ownershipSharePct: 0,
+              companySharePct: 0
             }
           ])
         }
@@ -1591,14 +1622,18 @@ function withDerivedShares(
   owners: ProjectState["ownership"]["data"]["owners"]
 ): ProjectState["ownership"]["data"]["owners"] {
   const totalEquity = owners.reduce(
-    (total, owner) => total + owner.equityContribution,
+    (total, owner) => total + owner.startEquityContribution,
     0
   );
 
   return owners.map((owner) => ({
     ...owner,
+    equityContribution: owner.startEquityContribution,
+    participationTier: owner.usagePointBudget,
     ownershipSharePct:
-      totalEquity > 0 ? (owner.equityContribution / totalEquity) * 100 : 0
+      totalEquity > 0 ? (owner.startEquityContribution / totalEquity) * 100 : 0,
+    companySharePct:
+      totalEquity > 0 ? (owner.startEquityContribution / totalEquity) * 100 : 0
   }));
 }
 

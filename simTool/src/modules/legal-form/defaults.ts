@@ -17,7 +17,21 @@ export const defaultLegalFormTemplate: LegalFormTemplate = {
     liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "ownershipShare",
+    foundingCostAmount: 0,
+    annualAccountingCostAmount: 0,
+    annualAdministrationCostAmount: 0,
+    annualComplianceCostAmount: 0,
+    costStatus: "missing",
+    sourceRefs: [
+      {
+        label: "Wiki Rechtsformen",
+        url: "wiki/04_ownership.md",
+        publisher: "Projekt-Wiki",
+        retrievedAt: "2026-05-15",
+        scope: "Oesterreich"
+      }
+    ],
     notes:
-      "Annahme nur zur Modellierung. Rechtliche und steuerliche Prüfung erforderlich."
+      "Annahme nur zur Modellierung. Kosten muessen mit Notar, Steuerberatung und Bank konkretisiert werden."
   }
 };

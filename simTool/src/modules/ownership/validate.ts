@@ -14,7 +14,7 @@ export function validateOwnership(
   const duplicateOwnerIds = findDuplicateIds(template.data.owners);
   const ownerIds = new Set(template.data.owners.map((owner) => owner.id));
   const totalEquity = sum(
-    template.data.owners.map((owner) => owner.equityContribution)
+    template.data.owners.map((owner) => owner.startEquityContribution)
   );
 
   for (const duplicateId of duplicateOwnerIds) {
@@ -34,13 +34,18 @@ export function validateOwnership(
         "ownership.no-equity",
         "error",
         "ownership",
-        "Total owner equity must be greater than zero."
+        "Total owner start equity must be greater than zero."
       )
     );
   }
 
+  const companyShares = template.data.owners
+    .map((owner) => owner.companySharePct)
+    .filter((share): share is number => share !== undefined);
   const ownershipTotal = sum(
-    template.data.owners.map((owner) => owner.ownershipSharePct)
+    companyShares.length > 0
+      ? companyShares
+      : template.data.owners.map((owner) => owner.ownershipSharePct)
   );
   if (totalEquity > 0 && !isApproximately(ownershipTotal, 100)) {
     diagnostics.push(
@@ -48,8 +53,8 @@ export function validateOwnership(
         "ownership.share-total",
         "warning",
         "ownership",
-        `Ownership shares sum to ${ownershipTotal.toFixed(2)}% instead of 100%.`,
-        [{ kind: "ownership", field: "owners.ownershipSharePct" }]
+        `Company shares sum to ${ownershipTotal.toFixed(2)}% instead of 100%.`,
+        [{ kind: "ownership", field: "owners.companySharePct" }]
       )
     );
   }

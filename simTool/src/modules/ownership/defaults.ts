@@ -20,7 +20,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 100,
         equityContribution: 40000,
-        ownershipSharePct: 21.62162162162162
+        startEquityContribution: 40000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 100,
+        ownershipSharePct: 17.77777777777778,
+        companySharePct: 17.77777777777778,
+        homeLocationId: "esslingen"
       },
       {
         id: "jonas",
@@ -28,7 +33,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 100,
         equityContribution: 40000,
-        ownershipSharePct: 21.62162162162162
+        startEquityContribution: 40000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 100,
+        ownershipSharePct: 17.77777777777778,
+        companySharePct: 17.77777777777778,
+        homeLocationId: "muenchen"
       },
       {
         id: "margarele",
@@ -36,7 +46,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "neuburg"
       },
       {
         id: "manu",
@@ -44,7 +59,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "neuburg"
       },
       {
         id: "niels",
@@ -52,7 +72,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "hinwil"
       },
       {
         id: "nils",
@@ -60,7 +85,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "hinwil"
       },
       {
         id: "kai",
@@ -68,7 +98,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "innsbruck"
       },
       {
         id: "stressi",
@@ -76,7 +111,12 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "esslingen"
       },
       {
         id: "jens",
@@ -84,7 +124,38 @@ export const defaultOwnershipTemplate: OwnershipTemplate = {
         type: "person",
         participationTier: 50,
         equityContribution: 15000,
-        ownershipSharePct: 8.108108108108109
+        startEquityContribution: 15000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 6.666666666666667,
+        companySharePct: 6.666666666666667,
+        homeLocationId: "muenchen"
+      },
+      {
+        id: "michael",
+        displayName: "Michael",
+        type: "person",
+        participationTier: 50,
+        equityContribution: 20000,
+        startEquityContribution: 20000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 8.88888888888889,
+        companySharePct: 8.88888888888889,
+        homeLocationId: "muenchen"
+      },
+      {
+        id: "rieke",
+        displayName: "Rieke",
+        type: "person",
+        participationTier: 50,
+        equityContribution: 20000,
+        startEquityContribution: 20000,
+        monthlyCapitalContribution: 0,
+        usagePointBudget: 50,
+        ownershipSharePct: 8.88888888888889,
+        companySharePct: 8.88888888888889,
+        homeLocationId: "esslingen"
       }
     ],
     contributionRules: [

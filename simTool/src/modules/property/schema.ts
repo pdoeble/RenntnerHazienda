@@ -76,6 +76,91 @@ export const propertyPointRulesSchema = z
     seasonMultipliers: { winterSki: 1.8, summer: 1.4, spring: 1, autumn: 1 }
   });
 
+export const mapDataQualitySchema = z.enum([
+  "excelFallback",
+  "googleMaps",
+  "manual",
+  "missing"
+]);
+
+export const travelTimeSchema = z
+  .object({
+    originId: idSchema,
+    originLabel: nonEmptyStringSchema,
+    minutes: nonNegativeNumberSchema.optional(),
+    distanceKm: nonNegativeNumberSchema.optional(),
+    mapsUrl: z.string().optional(),
+    provider: z.string().default("excel"),
+    dataQuality: mapDataQualitySchema.default("excelFallback"),
+    fetchedAt: z.string().optional()
+  })
+  .strict();
+
+export const skiAreaSchema = z
+  .object({
+    id: idSchema,
+    name: nonEmptyStringSchema,
+    stationPlace: z.string().optional(),
+    distanceKm: nonNegativeNumberSchema.optional(),
+    driveMinutes: nonNegativeNumberSchema.optional(),
+    mapsUrl: z.string().optional(),
+    sourceUrl: z.string().optional(),
+    provider: z.string().default("excel"),
+    dataQuality: mapDataQualitySchema.default("excelFallback"),
+    fetchedAt: z.string().optional()
+  })
+  .strict();
+
+export const candidateHouseSchema = z
+  .object({
+    id: idSchema,
+    title: nonEmptyStringSchema,
+    place: nonEmptyStringSchema,
+    postalCode: z.string().optional(),
+    federalState: z.string().optional(),
+    purchasePrice: nonNegativeNumberSchema,
+    rentableAreaSqm: nonNegativeNumberSchema.optional(),
+    plotAreaSqm: nonNegativeNumberSchema.optional(),
+    pricePerSqm: nonNegativeNumberSchema.optional(),
+    rooms: nonNegativeNumberSchema.optional(),
+    bedrooms: nonNegativeNumberSchema.optional(),
+    beds: nonNegativeNumberSchema.optional(),
+    bathrooms: nonNegativeNumberSchema.optional(),
+    toilets: nonNegativeNumberSchema.optional(),
+    yearBuilt: z.number().int().positive().optional(),
+    propertyType: z.string().optional(),
+    condition: z.string().optional(),
+    floors: nonNegativeNumberSchema.optional(),
+    parking: z.string().optional(),
+    energy: z.string().optional(),
+    heating: z.string().optional(),
+    brokerPct: nonNegativeNumberSchema.default(0),
+    closingCostsPctRough: nonNegativeNumberSchema.default(0),
+    totalCostRough: nonNegativeNumberSchema.optional(),
+    averageDriveMinutes: nonNegativeNumberSchema.optional(),
+    nearestSkiArea: z.string().optional(),
+    nearestSkiMinutes: nonNegativeNumberSchema.optional(),
+    tourismStatus: z.string().optional(),
+    holidayUseNotes: z.string().optional(),
+    unitsAndUse: z.string().optional(),
+    highlights: z.string().optional(),
+    risks: z.string().optional(),
+    sourceUrl: z.string().optional(),
+    guestNightsPerYear: nonNegativeNumberSchema.default(60),
+    travelTimes: z.array(travelTimeSchema).default([]),
+    skiAreas: z.array(skiAreaSchema).default([])
+  })
+  .strict();
+
+export const mapEnrichmentSchema = z
+  .object({
+    provider: z.string().default("none"),
+    status: z.string().default("fallback"),
+    message: z.string().optional(),
+    fetchedAt: z.string().optional()
+  })
+  .strict();
+
 export const propertyClosingCostItemSchema = z
   .object({
     id: idSchema,
@@ -172,6 +257,10 @@ export const propertyDataSchema = z
     closingCosts: propertyClosingCostsSchema,
     renovationItems: z.array(propertyRenovationItemSchema).default([]),
     pointRules: propertyPointRulesSchema,
+    activeHouseId: z.string().optional(),
+    guestNightsPerYear: nonNegativeNumberSchema.default(60),
+    candidateHouses: z.array(candidateHouseSchema).default([]),
+    mapEnrichment: mapEnrichmentSchema.optional(),
     notes: z.string().optional()
   })
   .strict();
