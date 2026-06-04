@@ -19,6 +19,10 @@ export const defaultStrategyTemplate: StrategyTemplate = {
     contributionPolicy: "minimumObligationPlusReserveTopUp",
     rentOffsetsOwnerContributions: false,
     targetEquityRatioPct: 20,
+    pointShareMode: "blended",
+    pointTierWeight: 50,
+    pointEquityWeight: 50,
+    appreciationPercentPerYear: 2,
     goNoGoChecks: [
       {
         id: "check-leisure-residence",

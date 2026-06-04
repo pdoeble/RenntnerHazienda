@@ -6,6 +6,7 @@ import {
 } from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
 import { calculateLiquidity } from "./calculateLiquidity";
+import { calculatePoints } from "./calculatePoints";
 import { calculateTimeline } from "./calculateTimeline";
 import { collectInputDiagnostics } from "./diagnostics";
 import { calculateCapitalNeed } from "./financialInputs";
@@ -29,10 +30,12 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   );
   const liquidity = calculateLiquidity(snapshot, contributions, cashflow, debt);
   const capitalNeed = calculateCapitalNeed(snapshot);
+  const points = calculatePoints(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
 
   return {
     capitalNeed,
+    points,
     timeline,
     liquidity,
     contributions,
@@ -43,7 +46,8 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       ...contributions.diagnostics,
       ...debt.diagnostics,
       ...cashflow.diagnostics,
-      ...liquidity.diagnostics
+      ...liquidity.diagnostics,
+      ...points.diagnostics
     ]
   };
 }
@@ -75,6 +79,16 @@ function emptyCalculationResult(
       debtPrincipal: 0,
       actualEquityRatioPct: 0,
       targetEquityRatioPct: 0,
+      diagnostics: []
+    },
+    points: {
+      capacity: 0,
+      annualPointPool: 0,
+      propertyValue: 0,
+      appreciationPercentPerYear: 0,
+      shareMode: "blended",
+      owners: [],
+      nightTypes: [],
       diagnostics: []
     },
     timeline: [],

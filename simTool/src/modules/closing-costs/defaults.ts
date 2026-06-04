@@ -7,23 +7,16 @@ import type { ClosingCostsTemplate } from "./types";
 export const defaultClosingCostsTemplate: ClosingCostsTemplate = {
   schema: "immo-finance.closing-costs",
   version: CURRENT_TEMPLATE_VERSION,
-  id: "closing-costs-demo-bw",
+  id: "closing-costs-demo-at",
   name: "Demo Nebenkosten",
-  description: "Neutrale Beispielwerte fuer Erwerbsnebenkosten.",
+  description: "Oesterreichische Beispielwerte fuer Erwerbsnebenkosten.",
   createdAt: DEFAULT_TEMPLATE_TIMESTAMP,
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,
   data: {
-    realEstateTransferTaxPct: 5,
+    realEstateTransferTaxPct: 3.5,
     notaryPct: 1.5,
-    landRegistryPct: 0.5,
-    brokerPct: 3.57,
-    otherCosts: [
-      {
-        id: "closing-001",
-        label: "Gutachten",
-        amount: 2500,
-        timingMonth: 0
-      }
-    ]
+    landRegistryPct: 1.1,
+    brokerPct: 0,
+    otherCosts: []
   }
 };

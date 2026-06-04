@@ -20,6 +20,7 @@ export const ownerSchema = z
     id: idSchema,
     displayName: nonEmptyStringSchema,
     type: ownerTypeSchema,
+    participationTier: percentSchema.default(0),
     equityContribution: nonNegativeNumberSchema.default(0),
     ownershipSharePct: percentSchema,
     votingSharePct: percentSchema.optional(),

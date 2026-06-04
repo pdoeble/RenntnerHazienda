@@ -25,7 +25,7 @@ describe("module validation contracts", () => {
     expect(parsed.version).toBe(1);
     expect(parsed.id).toBeTruthy();
     expect(parsed.name).toBeTruthy();
-    expect(parsed.data.owners).toHaveLength(6);
+    expect(parsed.data.owners).toHaveLength(9);
   });
 
   it("validates the financing template envelope", () => {
@@ -122,7 +122,7 @@ describe("module validation contracts", () => {
       expect(loaded.value.property.data.country).toBe("AT");
       expect(loaded.value.property.data.federalState).toBeUndefined();
       expect(loaded.value.property.data.closingCosts.realEstateTransferTaxPct).toBe(
-        5
+        3.5
       );
       expect(loaded.value.property.data.renovationItems[0]?.amount).toBe(50000);
     }

@@ -6,6 +6,7 @@ import type {
   CashflowResult,
   CashflowYear,
   DebtResult,
+  OpexBreakdownItem,
   ProjectSnapshot
 } from "./types";
 
@@ -33,21 +34,16 @@ export function calculateCashflow(
     (_value, month) => {
       const vacancyLoss = roundMoney((monthlyRent * vacancyRatePct) / 100);
       const effectiveIncome = roundMoney(monthlyRent - vacancyLoss);
+      const opexBreakdown = monthlyOpexBreakdown(snapshot, month);
       const recoverableOpex = roundMoney(
-        snapshot.opex.data.recurringItems
+        opexBreakdown
           .filter((item) => item.recoverableFromTenants)
-          .reduce(
-            (total, item) => total + monthlyOpexAmount(item, month, snapshot),
-            0
-          )
+          .reduce((total, item) => total + item.amount, 0)
       );
       const nonRecoverableOpex = roundMoney(
-        snapshot.opex.data.recurringItems
+        opexBreakdown
           .filter((item) => !item.recoverableFromTenants)
-          .reduce(
-            (total, item) => total + monthlyOpexAmount(item, month, snapshot),
-            0
-          ) + snapshot.property.data.tourismFeeAnnualAmount / 12
+          .reduce((total, item) => total + item.amount, 0)
       );
       const debtService = debt.monthlyDebtService[month]?.totalPayment ?? 0;
       const interest = debt.monthlyDebtService[month]?.interest ?? 0;
@@ -62,6 +58,7 @@ export function calculateCashflow(
         rentalIncome: roundMoney(monthlyRent),
         vacancyLoss,
         effectiveIncome,
+        opexBreakdown,
         recoverableOpex,
         nonRecoverableOpex,
         operatingResult: netCashflowBeforeContributions,
@@ -125,6 +122,35 @@ export function annualOpexAmount(
   }
 
   return (snapshot.property.data.purchasePrice * base) / 100;
+}
+
+function monthlyOpexBreakdown(
+  snapshot: ProjectSnapshot,
+  month: number
+): OpexBreakdownItem[] {
+  const recurring = snapshot.opex.data.recurringItems.map((item) => ({
+    itemId: item.id,
+    label: item.label,
+    category: item.category,
+    recoverableFromTenants: item.recoverableFromTenants ?? false,
+    amount: roundMoney(monthlyOpexAmount(item, month, snapshot))
+  }));
+  const tourismFee = roundMoney(snapshot.property.data.tourismFeeAnnualAmount / 12);
+
+  if (tourismFee <= 0) {
+    return recurring;
+  }
+
+  return [
+    ...recurring,
+    {
+      itemId: "tourism-fee",
+      label: "Aufenthaltsabgaben",
+      category: "tax",
+      recoverableFromTenants: false,
+      amount: tourismFee
+    }
+  ];
 }
 
 function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear[] {

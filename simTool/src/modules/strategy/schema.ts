@@ -12,6 +12,12 @@ export const contributionPolicySchema = z.enum([
   "minimumObligationPlusReserveTopUp"
 ]);
 
+export const pointShareModeSchema = z.enum([
+  "blended",
+  "tier",
+  "equity"
+]);
+
 export const goNoGoStatusSchema = z.enum([
   "open",
   "clarified",
@@ -38,6 +44,10 @@ export const strategyDataSchema = z
     ),
     rentOffsetsOwnerContributions: z.boolean().default(false),
     targetEquityRatioPct: percentSchema.default(20),
+    pointShareMode: pointShareModeSchema.default("blended"),
+    pointTierWeight: percentSchema.default(50),
+    pointEquityWeight: percentSchema.default(50),
+    appreciationPercentPerYear: z.number().finite().default(2),
     goNoGoChecks: z.array(goNoGoCheckSchema).default([])
   })
   .strict();

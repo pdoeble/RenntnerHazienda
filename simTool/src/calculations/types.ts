@@ -103,6 +103,7 @@ export type CashflowMonth = {
   rentalIncome: number;
   vacancyLoss: number;
   effectiveIncome: number;
+  opexBreakdown: OpexBreakdownItem[];
   recoverableOpex: number;
   nonRecoverableOpex: number;
   operatingResult: number;
@@ -113,7 +114,15 @@ export type CashflowMonth = {
   netCashflowAfterDebtService: number;
 };
 
-export type CashflowYear = Omit<CashflowMonth, "month"> & {
+export type OpexBreakdownItem = {
+  itemId: string;
+  label: string;
+  category?: string;
+  recoverableFromTenants: boolean;
+  amount: number;
+};
+
+export type CashflowYear = Omit<CashflowMonth, "month" | "opexBreakdown"> & {
   year: number;
 };
 
@@ -155,8 +164,35 @@ export type TimelineEvent = {
     | "debt";
 };
 
+export type PointNightType = {
+  label: string;
+  pointsPerNight: number;
+};
+
+export type OwnerPointResult = {
+  ownerId: string;
+  ownerName: string;
+  tierSharePct: number;
+  equitySharePct: number;
+  pointSharePct: number;
+  annualPoints: number;
+  affordableNightsAverage: number;
+};
+
+export type PointsResult = {
+  capacity: number;
+  annualPointPool: number;
+  propertyValue: number;
+  appreciationPercentPerYear: number;
+  shareMode: "blended" | "tier" | "equity";
+  owners: OwnerPointResult[];
+  nightTypes: PointNightType[];
+  diagnostics: DiagnosticMessage[];
+};
+
 export type CalculationResult = {
   capitalNeed: CapitalNeedResult;
+  points: PointsResult;
   timeline: TimelineEvent[];
   liquidity: LiquidityResult;
   contributions: ContributionResult;

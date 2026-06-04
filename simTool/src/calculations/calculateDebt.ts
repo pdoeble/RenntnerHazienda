@@ -29,8 +29,11 @@ export function calculateDebt(
     const interest = inLoanWindow
       ? roundMoney(openingBalance * monthlyInterestRate)
       : 0;
+    const isFinalLoanMonth = month === startMonth + termMonths - 1;
     const plannedPrincipalRepayment = inLoanWindow
-      ? Math.max(0, monthlyPayment - interest)
+      ? isFinalLoanMonth
+        ? openingBalance
+        : Math.max(0, monthlyPayment - interest)
       : 0;
     const principalRepayment = roundMoney(
       Math.min(openingBalance, plannedPrincipalRepayment)
