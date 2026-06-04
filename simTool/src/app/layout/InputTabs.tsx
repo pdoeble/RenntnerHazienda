@@ -1,5 +1,10 @@
 import { Download, Plus, Save, Trash2 } from "lucide-react";
+import { useState } from "react";
 import type { TemplateEnvelope, TemplateKind } from "../../domain/templates";
+import type { ExtractResult } from "../../listingAssist/extractListing";
+import { extractListingFromText } from "../../listingAssist/extractListing";
+import { extractListingFromUrl } from "../../listingAssist/extractListingFromUrl";
+import { isListingUrl } from "../../listingAssist/fetchListingContent";
 import type {
   LegalFormValue,
   LiabilityModel,
@@ -17,7 +22,7 @@ import type { GoNoGoStatus } from "../../modules/strategy/types";
 import type { ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
-import { formatPercent } from "../../utils/money";
+import { formatMoney, formatPercent } from "../../utils/money";
 
 type InputTabsProps = {
   projectState: ProjectState;
@@ -265,6 +270,23 @@ function OwnershipEditor({
             </button>
           </div>
           <NumberSliderField
+            label="Beteiligungsstufe"
+            value={owner.participationTier}
+            min={0}
+            max={100}
+            step={25}
+            unit="Punkte"
+            onChange={(participationTier) =>
+              updateOwners(
+                projectState.ownership.data.owners.map((candidate) =>
+                  candidate.id === owner.id
+                    ? { ...candidate, participationTier }
+                    : candidate
+                )
+              )
+            }
+          />
+          <NumberSliderField
             label="Eigenkapital"
             value={owner.equityContribution}
             min={0}
@@ -299,6 +321,7 @@ function OwnershipEditor({
               id: `owner-${projectState.ownership.data.owners.length + 1}`,
               displayName: `Eigner ${projectState.ownership.data.owners.length + 1}`,
               type: "person",
+              participationTier: 50,
               equityContribution: 0,
               ownershipSharePct: 0
             }
@@ -448,8 +471,38 @@ function PropertyEditor({
 
   return (
     <div className="form-grid">
+      <ListingImportPanel
+        projectState={projectState}
+        updatePropertyData={updatePropertyData}
+      />
       <div className="form-section">
         <h3>Immobilie</h3>
+        <label className="text-field">
+          <span>Objekttitel</span>
+          <input
+            aria-label="Objekttitel"
+            value={projectState.property.data.title ?? ""}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                title: event.currentTarget.value
+              })
+            }
+          />
+        </label>
+        <label className="text-field">
+          <span>Inserat-URL</span>
+          <input
+            aria-label="Inserat-URL"
+            value={projectState.property.data.sourceUrl ?? ""}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                sourceUrl: event.currentTarget.value
+              })
+            }
+          />
+        </label>
         <SummaryLine label="Land" value="Oesterreich" />
         <label className="text-field">
           <span>Bundesland</span>
@@ -483,6 +536,24 @@ function PropertyEditor({
               updatePropertyData({
                 ...projectState.property.data,
                 municipality: event.currentTarget.value
+              })
+            }
+          />
+        </label>
+        <label className="text-field">
+          <span>Adresse / PLZ</span>
+          <input
+            aria-label="Adresse / PLZ"
+            value={[
+              projectState.property.data.addressData?.postalCode,
+              projectState.property.data.addressData?.place
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            onChange={(event) =>
+              updatePropertyData({
+                ...projectState.property.data,
+                address: event.currentTarget.value
               })
             }
           />
@@ -554,6 +625,28 @@ function PropertyEditor({
           }
         />
         <NumberSliderField
+          label="Betten"
+          value={projectState.property.data.beds ?? 0}
+          min={0}
+          max={40}
+          step={1}
+          unit="Betten"
+          onChange={(beds) =>
+            updatePropertyData({ ...projectState.property.data, beds })
+          }
+        />
+        <NumberSliderField
+          label="Zimmer"
+          value={projectState.property.data.rooms ?? 0}
+          min={0}
+          max={40}
+          step={1}
+          unit="Zimmer"
+          onChange={(rooms) =>
+            updatePropertyData({ ...projectState.property.data, rooms })
+          }
+        />
+        <NumberSliderField
           label="Grundstuecksflaeche"
           value={projectState.property.data.plotAreaSqm ?? 0}
           min={0}
@@ -562,6 +655,17 @@ function PropertyEditor({
           unit="qm"
           onChange={(plotAreaSqm) =>
             updatePropertyData({ ...projectState.property.data, plotAreaSqm })
+          }
+        />
+        <NumberSliderField
+          label="Gartenflaeche"
+          value={projectState.property.data.gardenAreaSqm ?? 0}
+          min={0}
+          max={5000}
+          step={10}
+          unit="qm"
+          onChange={(gardenAreaSqm) =>
+            updatePropertyData({ ...projectState.property.data, gardenAreaSqm })
           }
         />
         <NumberSliderField
@@ -579,7 +683,7 @@ function PropertyEditor({
           }
         />
         <NumberSliderField
-          label="USt"
+          label="USt-Zuschlag Kauf"
           value={projectState.property.data.vatRatePct}
           min={0}
           max={20}
@@ -638,6 +742,122 @@ function PropertyEditor({
         projectState={projectState}
         updatePropertyData={updatePropertyData}
       />
+      <PointRulesEditor
+        projectState={projectState}
+        updatePropertyData={updatePropertyData}
+      />
+    </div>
+  );
+}
+
+function ListingImportPanel({
+  projectState,
+  updatePropertyData
+}: {
+  projectState: ProjectState;
+  updatePropertyData: (data: ProjectState["property"]["data"]) => void;
+}) {
+  const [url, setUrl] = useState(projectState.property.data.sourceUrl ?? "");
+  const [paste, setPaste] = useState("");
+  const [extractResult, setExtractResult] = useState<ExtractResult | null>(null);
+  const [status, setStatus] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+
+  async function extractFromUrl() {
+    if (!isListingUrl(url)) {
+      setStatus("Bitte eine gueltige Inserat-URL eingeben.");
+      return;
+    }
+
+    setIsFetching(true);
+    setStatus("");
+    try {
+      const result = await extractListingFromUrl(url);
+      setExtractResult(result);
+      setPaste(result.rawText);
+      setStatus("Inserat geladen. Bitte Vorschau pruefen und uebernehmen.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Inserat konnte nicht geladen werden.");
+    } finally {
+      setIsFetching(false);
+    }
+  }
+
+  function extractFromPaste() {
+    if (!paste.trim()) {
+      setStatus("Bitte Inserat-Text einfuegen.");
+      return;
+    }
+    setExtractResult(extractListingFromText(paste, url.trim() || undefined));
+    setStatus("Text ausgewertet. Bitte Vorschau pruefen und uebernehmen.");
+  }
+
+  function applyExtract() {
+    if (!extractResult) {
+      return;
+    }
+
+    updatePropertyData({
+      ...projectState.property.data,
+      ...stripUndefined(extractResult.draft)
+    });
+    setStatus("Inseratdaten uebernommen.");
+  }
+
+  return (
+    <div className="form-section">
+      <h3>Inserat importieren</h3>
+      <label className="text-field">
+        <span>Inserat-URL</span>
+        <input
+          aria-label="Inserat importieren URL"
+          type="url"
+          value={url}
+          onChange={(event) => setUrl(event.currentTarget.value)}
+          placeholder="https://www.immobilienscout24.at/expose/..."
+        />
+      </label>
+      <div className="button-row">
+        <button
+          className="icon-button"
+          type="button"
+          onClick={() => void extractFromUrl()}
+          disabled={isFetching}
+        >
+          {isFetching ? "Laedt..." : "URL laden"}
+        </button>
+        <button className="icon-button" type="button" onClick={extractFromPaste}>
+          Text auswerten
+        </button>
+      </div>
+      <label className="text-field">
+        <span>Inserat-Text Fallback</span>
+        <textarea
+          aria-label="Inserat-Text"
+          rows={4}
+          value={paste}
+          onChange={(event) => setPaste(event.currentTarget.value)}
+        />
+      </label>
+      {extractResult ? (
+        <>
+          <DataPreview
+            rows={[
+              ["Titel", extractResult.draft.title ?? ""],
+              ["Kaufpreis", numberPreview(extractResult.draft.purchasePrice, "EUR")],
+              ["Wohnflaeche", numberPreview(extractResult.draft.rentableAreaSqm, "qm")],
+              ["Grundstueck", numberPreview(extractResult.draft.plotAreaSqm, "qm")],
+              ["Zimmer", numberPreview(extractResult.draft.rooms, "")],
+              ["Betten", numberPreview(extractResult.draft.beds, "")],
+              ["Gemeinde", extractResult.draft.municipality ?? ""]
+            ]}
+          />
+          <button className="icon-button" type="button" onClick={applyExtract}>
+            Vorschau uebernehmen
+          </button>
+        </>
+      ) : null}
+      {status ? <p className="muted">{status}</p> : null}
     </div>
   );
 }
@@ -892,6 +1112,68 @@ function StrategyEditor({
         </label>
       </div>
       <div className="form-section">
+        <h3>Punktesystem</h3>
+        <label className="text-field">
+          <span>Anteilsmodus</span>
+          <select
+            aria-label="Punkte Anteilsmodus"
+            value={projectState.strategy.data.pointShareMode}
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                pointShareMode: event.currentTarget.value as ProjectState["strategy"]["data"]["pointShareMode"]
+              })
+            }
+          >
+            <option value="blended">Tier und Eigenkapital</option>
+            <option value="tier">Nur Beteiligungsstufe</option>
+            <option value="equity">Nur Eigenkapital</option>
+          </select>
+        </label>
+        <NumberSliderField
+          label="Tier-Gewicht"
+          value={projectState.strategy.data.pointTierWeight}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(pointTierWeight) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              pointTierWeight
+            })
+          }
+        />
+        <NumberSliderField
+          label="EK-Gewicht"
+          value={projectState.strategy.data.pointEquityWeight}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(pointEquityWeight) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              pointEquityWeight
+            })
+          }
+        />
+        <NumberSliderField
+          label="Wertsteigerung"
+          value={projectState.strategy.data.appreciationPercentPerYear}
+          min={-5}
+          max={10}
+          step={0.25}
+          unit="%/Jahr"
+          onChange={(appreciationPercentPerYear) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              appreciationPercentPerYear
+            })
+          }
+        />
+      </div>
+      <div className="form-section">
         <h3>Go/No-Go-Pruefpunkte</h3>
         {projectState.strategy.data.goNoGoChecks.map((check) => (
           <div className="nested-item" key={check.id}>
@@ -924,6 +1206,93 @@ function StrategyEditor({
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+function PointRulesEditor({
+  projectState,
+  updatePropertyData
+}: {
+  projectState: ProjectState;
+  updatePropertyData: (data: ProjectState["property"]["data"]) => void;
+}) {
+  const rules = projectState.property.data.pointRules;
+
+  function updateRules(pointRules: ProjectState["property"]["data"]["pointRules"]) {
+    updatePropertyData({
+      ...projectState.property.data,
+      pointRules
+    });
+  }
+
+  return (
+    <div className="form-section">
+      <h3>Nutzungspunkte</h3>
+      <NumberSliderField
+        label="Punkte je Bett/Jahr"
+        value={rules.basePointsPerBedPerYear}
+        min={0}
+        max={1000}
+        step={5}
+        unit="Punkte"
+        onChange={(basePointsPerBedPerYear) =>
+          updateRules({ ...rules, basePointsPerBedPerYear })
+        }
+      />
+      <NumberSliderField
+        label="Basis je Bett/Nacht"
+        value={rules.basePerBedPerNight}
+        min={0}
+        max={10}
+        step={0.1}
+        unit="Punkte"
+        onChange={(basePerBedPerNight) =>
+          updateRules({ ...rules, basePerBedPerNight })
+        }
+      />
+      <NumberSliderField
+        label="Winter/Ski-Faktor"
+        value={rules.seasonMultipliers.winterSki}
+        min={0}
+        max={5}
+        step={0.1}
+        unit="x"
+        onChange={(winterSki) =>
+          updateRules({
+            ...rules,
+            seasonMultipliers: { ...rules.seasonMultipliers, winterSki }
+          })
+        }
+      />
+      <NumberSliderField
+        label="Sommer-Faktor"
+        value={rules.seasonMultipliers.summer}
+        min={0}
+        max={5}
+        step={0.1}
+        unit="x"
+        onChange={(summer) =>
+          updateRules({
+            ...rules,
+            seasonMultipliers: { ...rules.seasonMultipliers, summer }
+          })
+        }
+      />
+      <NumberSliderField
+        label="Wochenende-Faktor"
+        value={rules.weekendMultipliers.satSun}
+        min={0}
+        max={5}
+        step={0.1}
+        unit="x"
+        onChange={(satSun) =>
+          updateRules({
+            ...rules,
+            weekendMultipliers: { ...rules.weekendMultipliers, satSun }
+          })
+        }
+      />
     </div>
   );
 }
@@ -1058,8 +1427,25 @@ function OpexEditor({
     });
   }
 
+  const opexSummary = summarizeOpex(projectState);
+
   return (
     <div className="form-grid">
+      <div className="form-section">
+        <h3>Opex-Plausibilitaet</h3>
+        <DataPreview
+          rows={[
+            ["Modelliert pro Jahr", formatMoney(opexSummary.annualTotal)],
+            ["Modelliert pro Monat", formatMoney(opexSummary.monthlyTotal)],
+            ["Ansatz je Wohnflaeche", opexSummary.perSqmLabel],
+            ["Offene Kategorien", opexSummary.missingCategories]
+          ]}
+        />
+        <p className="muted">
+          Nur angelegte Kostenbloecke gehen in Cashflow und Beitraege ein.
+          Fehlende Kategorien sind offene Annahmen.
+        </p>
+      </div>
       <button
         className="icon-button"
         type="button"
@@ -1228,6 +1614,66 @@ function opexUnit(mode: OpexAnnualCostMode | undefined): string {
   return "EUR/Jahr";
 }
 
+function summarizeOpex(projectState: ProjectState): {
+  annualTotal: number;
+  monthlyTotal: number;
+  perSqmLabel: string;
+  missingCategories: string;
+} {
+  const annualTotal = projectState.opex.data.recurringItems.reduce(
+    (total, item) => total + annualOpexPreview(projectState, item),
+    0
+  );
+  const area = projectState.property.data.rentableAreaSqm ?? 0;
+  const perSqm = area > 0 ? annualTotal / area : 0;
+  const missingCategories = [
+    ["utilities", "Energie/Wasser/Internet"],
+    ["administration", "Verwaltung"],
+    ["propertyManagement", "Hausbetreuung/Garten/Winterdienst"],
+    ["accounting", "Buchhaltung/Steuer"]
+  ]
+    .filter(
+      ([category]) =>
+        !projectState.opex.data.recurringItems.some(
+          (item) => item.category === category
+        )
+    )
+    .map(([, label]) => label);
+
+  return {
+    annualTotal,
+    monthlyTotal: annualTotal / 12,
+    perSqmLabel: area > 0 ? `${perSqm.toFixed(2)} EUR/qm/Jahr` : "keine Flaeche",
+    missingCategories: missingCategories.length > 0
+      ? missingCategories.join(", ")
+      : "keine markiert"
+  };
+}
+
+function annualOpexPreview(
+  projectState: ProjectState,
+  item: ProjectState["opex"]["data"]["recurringItems"][number]
+): number {
+  const base = item.annualAmount ?? item.amount;
+
+  if (item.annualCostMode === "rentableArea") {
+    return base * (projectState.property.data.rentableAreaSqm ?? 0);
+  }
+  if (item.annualCostMode === "plotArea") {
+    return base * (projectState.property.data.plotAreaSqm ?? 0);
+  }
+  if (item.annualCostMode === "propertyValue") {
+    return (projectState.property.data.purchasePrice * base) / 100;
+  }
+  if (item.period === "monthly" && item.annualAmount === undefined) {
+    return item.amount * 12;
+  }
+  if (item.period === "quarterly" && item.annualAmount === undefined) {
+    return item.amount * 4;
+  }
+  return base;
+}
+
 const LEGAL_FORM_OPTIONS: { value: LegalFormValue; label: string }[] = [
   { value: "coOwnership", label: "Miteigentum" },
   { value: "kg", label: "KG" },
@@ -1289,4 +1735,30 @@ function SummaryLine({ label, value }: { label: string; value: string }) {
       <strong>{value}</strong>
     </div>
   );
+}
+
+function DataPreview({ rows }: { rows: [string, string][] }) {
+  return (
+    <dl className="definition-grid">
+      {rows.map(([label, value]) => (
+        <div key={label}>
+          <dt>{label}</dt>
+          <dd>{value || "kein Wert"}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function numberPreview(value: number | undefined, unit: string): string {
+  if (value === undefined) {
+    return "";
+  }
+  return `${value.toLocaleString("de-DE")}${unit ? ` ${unit}` : ""}`;
+}
+
+function stripUndefined<T extends Record<string, unknown>>(value: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, entryValue]) => entryValue !== undefined)
+  ) as Partial<T>;
 }

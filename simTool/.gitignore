@@ -4,3 +4,4 @@ coverage/
 .vite/
 *.tsbuildinfo
 node_modules/.tmp/
+public/wiki/

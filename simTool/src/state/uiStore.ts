@@ -16,8 +16,11 @@ export type VisualizationTab =
   | "capitalNeed"
   | "liquidity"
   | "contributions"
+  | "points"
+  | "myShare"
   | "cashflow"
   | "debt"
+  | "wiki"
   | "timeline";
 
 export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
@@ -25,8 +28,11 @@ export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
   "capitalNeed",
   "liquidity",
   "contributions",
+  "points",
+  "myShare",
   "cashflow",
   "debt",
+  "wiki",
   "timeline"
 ];
 
@@ -35,7 +41,10 @@ export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
   capitalNeed: "Kapitalbedarf",
   liquidity: "Liquiditaet",
   contributions: "Beitraege",
+  points: "Punkte",
+  myShare: "Mein Anteil",
   cashflow: "Cashflow",
-  debt: "Schulden",
+  debt: "Darlehen",
+  wiki: "Wiki",
   timeline: "Zeitachse"
 };

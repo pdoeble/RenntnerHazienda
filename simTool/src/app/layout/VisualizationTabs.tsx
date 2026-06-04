@@ -10,7 +10,8 @@ import {
   XAxis,
   YAxis
 } from "recharts";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import ReactMarkdown from "react-markdown";
 import type { CalculationResult } from "../../calculations/types";
 import {
   VISUALIZATION_LABELS,
@@ -68,13 +69,152 @@ function VisualizationBody({
       return <LiquidityView result={result} />;
     case "contributions":
       return <ContributionsView result={result} />;
+    case "points":
+      return <PointsView result={result} />;
+    case "myShare":
+      return <MyShareView result={result} />;
     case "cashflow":
       return <CashflowView result={result} />;
     case "debt":
       return <DebtView result={result} />;
+    case "wiki":
+      return <WikiView />;
     case "timeline":
       return <TimelineView result={result} />;
   }
+}
+
+function PointsView({ result }: { result: CalculationResult }) {
+  const chartData = result.points.owners.map((owner) => ({
+    owner: owner.ownerName,
+    punkte: owner.annualPoints,
+    naechte: owner.affordableNightsAverage
+  }));
+
+  return (
+    <div className="visualization-view">
+      <MetricGrid
+        metrics={[
+          ["Jahrespunkt-Pool", result.points.annualPointPool.toLocaleString("de-DE")],
+          ["Kapazitaet", `${result.points.capacity} Betten/Einheiten`],
+          ["Modus", pointModeLabel(result.points.shareMode)]
+        ]}
+      />
+      <ChartFrame>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="owner" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="punkte" fill="#0f766e" />
+            <Bar dataKey="naechte" fill="#2563eb" />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+      <DataTable
+        headers={["Eigner", "Tier-Anteil", "EK-Anteil", "Punkte-Anteil", "Jahrespunkte", "Ø Naechte"]}
+        rows={result.points.owners.map((owner) => [
+          owner.ownerName,
+          `${owner.tierSharePct.toFixed(2)}%`,
+          `${owner.equitySharePct.toFixed(2)}%`,
+          `${owner.pointSharePct.toFixed(2)}%`,
+          owner.annualPoints.toLocaleString("de-DE"),
+          owner.affordableNightsAverage.toString()
+        ])}
+      />
+      <DataTable
+        headers={["Nacht-Typ", "Punkte je Nacht"]}
+        rows={result.points.nightTypes.map((nightType) => [
+          nightType.label,
+          nightType.pointsPerNight.toLocaleString("de-DE")
+        ])}
+      />
+    </div>
+  );
+}
+
+function MyShareView({ result }: { result: CalculationResult }) {
+  const [requestedOwnerId, setRequestedOwnerId] = useState("");
+  const [projectionYears, setProjectionYears] = useState(10);
+  const selectedOwnerId = result.points.owners.some(
+    (owner) => owner.ownerId === requestedOwnerId
+  )
+    ? requestedOwnerId
+    : result.points.owners[0]?.ownerId ?? "";
+
+  const owner =
+    result.points.owners.find((candidate) => candidate.ownerId === selectedOwnerId) ??
+    result.points.owners[0];
+  const initialContribution = result.contributions.initialContributions.find(
+    (contribution) => contribution.ownerId === owner?.ownerId
+  );
+  const monthlyContribution =
+    result.contributions.recurringContributions[0]?.contributions.find(
+      (contribution) => contribution.ownerId === owner?.ownerId
+    )?.totalMonthlyContribution ?? 0;
+  const equitySharePct = owner?.equitySharePct ?? 0;
+  const projectedValue =
+    (equitySharePct / 100) *
+    result.points.propertyValue *
+    Math.pow(1 + result.points.appreciationPercentPerYear / 100, projectionYears);
+  const cumulativePayments = monthlyContribution * 12 * projectionYears;
+
+  if (!owner) {
+    return <p className="empty-state">Keine Eigner fuer die Anteilsansicht vorhanden.</p>;
+  }
+
+  return (
+    <div className="visualization-view">
+      <label className="text-field">
+        <span>Eigner</span>
+        <select
+          aria-label="Mein Anteil Eigner"
+          value={owner.ownerId}
+          onChange={(event) => setRequestedOwnerId(event.currentTarget.value)}
+        >
+          {result.points.owners.map((candidate) => (
+            <option key={candidate.ownerId} value={candidate.ownerId}>
+              {candidate.ownerName}
+            </option>
+          ))}
+        </select>
+      </label>
+      <MetricGrid
+        metrics={[
+          ["Punkte-Anteil", `${owner.pointSharePct.toFixed(2)}%`],
+          ["Eigenkapital", formatMoney(initialContribution?.amount ?? 0)],
+          ["Monatlicher Beitrag", `${formatMoney(monthlyContribution)}/Monat`],
+          ["Jahrespunkte", owner.annualPoints.toLocaleString("de-DE")],
+          ["Ø Naechte", owner.affordableNightsAverage.toString()]
+        ]}
+      />
+      <div className="form-section">
+        <NumberInput
+          label="Projektionsjahre"
+          value={projectionYears}
+          min={1}
+          max={30}
+          onChange={setProjectionYears}
+        />
+        <MetricGrid
+          metrics={[
+            ["Kumulierte Monatsbeitraege", formatMoney(cumulativePayments)],
+            [
+              `Vermoegensanteil (${projectionYears} J.)`,
+              formatMoney(projectedValue)
+            ],
+            ["Planungssaldo", formatMoney(projectedValue - cumulativePayments)]
+          ]}
+        />
+      </div>
+      <p className="muted">
+        Die Anteilsansicht modelliert interne Planungsgroessen. Sie ersetzt keine
+        Rechts-, Steuer- oder Finanzierungspruefung.
+      </p>
+    </div>
+  );
 }
 
 function DashboardView({ result }: { result: CalculationResult }) {
@@ -305,25 +445,36 @@ function ContributionsView({ result }: { result: CalculationResult }) {
 }
 
 function CashflowView({ result }: { result: CalculationResult }) {
+  const firstMonth = result.cashflow.monthly[0];
+  const firstMonthOpex = firstMonth
+    ? firstMonth.recoverableOpex + firstMonth.nonRecoverableOpex
+    : 0;
   const chartData = clampItems(result.cashflow.yearly, 10).map((year) => ({
     year: year.year,
-    operativ: year.operatingResult,
-    zinsen: year.interest,
-    tilgung: year.principalRepayment,
-    liquiditaet: year.netCashflowAfterDebtService
+    vorBank: year.operatingResult,
+    zinsabfluss: -year.interest,
+    tilgungsabfluss: -year.principalRepayment,
+    vorBeitraegen: year.netCashflowAfterDebtService
   }));
 
   return (
     <div className="visualization-view">
       <MetricGrid
         metrics={[
-          ["Liquiditaets-Cashflow kumuliert", formatMoney(result.cashflow.cumulativeCashflow)],
           [
-            "Jahr 1 operativ",
+            "Cashflow vor Beitraegen kumuliert",
+            formatMoney(result.cashflow.cumulativeCashflow)
+          ],
+          ["Bankrate Monat 1", formatMoney(firstMonth?.debtService ?? 0)],
+          ["Zins Monat 1", formatMoney(firstMonth?.interest ?? 0)],
+          ["Tilgung Monat 1", formatMoney(firstMonth?.principalRepayment ?? 0)],
+          ["Opex Monat 1", formatMoney(firstMonthOpex)],
+          [
+            "Jahr 1 vor Bank",
             formatMoney(result.cashflow.yearly[0]?.operatingResult ?? 0)
           ],
           [
-            "Jahr 1 nach Kapitaldienst",
+            "Jahr 1 nach Opex und Bank",
             formatMoney(result.cashflow.yearly[0]?.netCashflowAfterDebtService ?? 0)
           ]
         ]}
@@ -336,28 +487,39 @@ function CashflowView({ result }: { result: CalculationResult }) {
             <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="operativ" fill="#15803d" />
-            <Bar dataKey="zinsen" fill="#b45309" />
-            <Bar dataKey="tilgung" fill="#7c3aed" />
-            <Bar dataKey="liquiditaet" fill="#2563eb" />
+            <Bar dataKey="vorBank" fill="#15803d" />
+            <Bar dataKey="zinsabfluss" fill="#b45309" />
+            <Bar dataKey="tilgungsabfluss" fill="#7c3aed" />
+            <Bar dataKey="vorBeitraegen" fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Jahr", "Operativ", "Zinsen", "Tilgung", "Liquiditaet"]}
+        headers={[
+          "Jahr",
+          "Vor Bank",
+          "Zinsabfluss",
+          "Tilgungsabfluss",
+          "Vor Beitraegen"
+        ]}
         rows={clampItems(result.cashflow.yearly, 5).map((year) => [
           year.year.toString(),
           formatMoney(year.operatingResult),
-          formatMoney(year.interest),
-          formatMoney(year.principalRepayment),
+          formatMoney(-year.interest),
+          formatMoney(-year.principalRepayment),
           formatMoney(year.netCashflowAfterDebtService)
         ])}
+      />
+      <DataTable
+        headers={["Monat 1 Kostenblock", "Art", "Betrag"]}
+        rows={firstMonthCostRows(firstMonth)}
       />
     </div>
   );
 }
 
 function DebtView({ result }: { result: CalculationResult }) {
+  const firstMonth = result.debt.monthlyDebtService[0];
   const chartData = clampItems(result.debt.monthlyDebtService, 300)
     .filter((month) => month.month % 12 === 0)
     .map((month) => ({
@@ -372,6 +534,9 @@ function DebtView({ result }: { result: CalculationResult }) {
       <MetricGrid
         metrics={[
           ["Initiale Schulden", formatMoney(result.debt.totalInitialDebt)],
+          ["Rate Monat 1", formatMoney(firstMonth?.totalPayment ?? 0)],
+          ["Zins Monat 1", formatMoney(firstMonth?.interest ?? 0)],
+          ["Tilgung Monat 1", formatMoney(firstMonth?.principalRepayment ?? 0)],
           ["Restschuld", formatMoney(result.debt.totalRemainingDebt)],
           ["Gezahlte Zinsen", formatMoney(result.debt.totalInterestPaid)]
         ]}
@@ -401,6 +566,16 @@ function DebtView({ result }: { result: CalculationResult }) {
           formatMoney(year.restschuld),
           formatMoney(year.zins),
           formatMoney(year.tilgung)
+        ])}
+      />
+      <DataTable
+        headers={["Monat", "Rate", "Zins", "Tilgung", "Restschuld"]}
+        rows={clampItems(result.debt.monthlyDebtService, 12).map((month) => [
+          (month.month + 1).toString(),
+          formatMoney(month.totalPayment),
+          formatMoney(month.interest),
+          formatMoney(month.principalRepayment),
+          formatMoney(month.remainingDebt)
         ])}
       />
     </div>
@@ -436,6 +611,96 @@ function TimelineView({ result }: { result: CalculationResult }) {
         headers={["Monat", "Ereignis", "Typ", "Betrag"]}
         rows={rows}
       />
+    </div>
+  );
+}
+
+const WIKI_DOCS = [
+  { path: "wiki/01_overall.md", title: "Gesamtueberblick" },
+  { path: "wiki/02_legal.md", title: "Recht" },
+  { path: "wiki/03_tax.md", title: "Steuern" },
+  { path: "wiki/04_ownership.md", title: "Eigentum" },
+  { path: "wiki/05_finance.md", title: "Finanzierung" },
+  { path: "wiki/06_usage.md", title: "Nutzung" },
+  { path: "wiki/07_operational.md", title: "Betrieb" },
+  { path: "references/260515-DeepResearch1.md", title: "DeepResearch 1" },
+  { path: "references/260515-DeepResearch2.md", title: "DeepResearch 2" }
+];
+
+function WikiView() {
+  const [selectedPath, setSelectedPath] = useState(WIKI_DOCS[0]!.path);
+  const [wikiState, setWikiState] = useState({
+    path: "",
+    content: "",
+    status: ""
+  });
+  const isLoading = wikiState.path !== selectedPath;
+  const content = isLoading ? "" : wikiState.content;
+  const status = isLoading ? "Laedt..." : wikiState.status;
+
+  useEffect(() => {
+    const base = import.meta.env.BASE_URL;
+    let cancelled = false;
+
+    fetch(`${base}wiki/${selectedPath}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((text) => {
+        if (looksLikeHtml(text)) {
+          throw new Error("HTML fallback erhalten");
+        }
+        if (!cancelled) {
+          setWikiState({
+            path: selectedPath,
+            content: text,
+            status: ""
+          });
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setWikiState({
+            path: selectedPath,
+            content: "",
+            status:
+              error instanceof Error
+                ? `Wiki konnte nicht geladen werden: ${error.message}`
+                : "Wiki konnte nicht geladen werden."
+          });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedPath]);
+
+  return (
+    <div className="visualization-view">
+      <label className="text-field">
+        <span>Wiki-Dokument</span>
+        <select
+          aria-label="Wiki-Dokument"
+          value={selectedPath}
+          onChange={(event) => setSelectedPath(event.currentTarget.value)}
+        >
+          {WIKI_DOCS.map((doc) => (
+            <option key={doc.path} value={doc.path}>
+              {doc.title}
+            </option>
+          ))}
+        </select>
+      </label>
+      {status ? <p className="empty-state">{status}</p> : null}
+      {content ? (
+        <article className="wiki-document">
+          <ReactMarkdown>{content}</ReactMarkdown>
+        </article>
+      ) : null}
     </div>
   );
 }
@@ -486,4 +751,73 @@ function DataTable({
       </table>
     </div>
   );
+}
+
+function firstMonthCostRows(
+  month: CalculationResult["cashflow"]["monthly"][number] | undefined
+): string[][] {
+  if (!month) {
+    return [["Keine Monatswerte", "offen", formatMoney(0)]];
+  }
+
+  return [
+    ["Mieteinnahmen", "Zufluss", formatMoney(month.effectiveIncome)],
+    ["Bank Zins", "Abfluss Bank", formatMoney(month.interest)],
+    ["Bank Tilgung", "Abfluss Bank", formatMoney(month.principalRepayment)],
+    ...month.opexBreakdown.map((item) => [
+      item.label,
+      item.recoverableFromTenants
+        ? "Opex umlagefaehig"
+        : "Opex nicht umlagefaehig",
+      formatMoney(item.amount)
+    ]),
+    [
+      "Saldo nach Opex und Bank",
+      "Cashflow",
+      formatMoney(month.netCashflowAfterDebtService)
+    ]
+  ];
+}
+
+function NumberInput({
+  label,
+  value,
+  min,
+  max,
+  onChange
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="text-field">
+      <span>{label}</span>
+      <input
+        aria-label={label}
+        type="number"
+        min={min}
+        max={max}
+        value={value}
+        onChange={(event) => onChange(Number(event.currentTarget.value))}
+      />
+    </label>
+  );
+}
+
+function pointModeLabel(mode: CalculationResult["points"]["shareMode"]): string {
+  if (mode === "tier") {
+    return "Beteiligungsstufe";
+  }
+  if (mode === "equity") {
+    return "Eigenkapital";
+  }
+  return "Tier + Eigenkapital";
+}
+
+function looksLikeHtml(text: string): boolean {
+  const preview = text.trimStart().slice(0, 200).toLowerCase();
+  return preview.startsWith("<!doctype") || preview.startsWith("<html");
 }

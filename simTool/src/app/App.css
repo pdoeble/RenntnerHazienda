@@ -49,6 +49,20 @@ button:disabled {
   padding: 16px 18px;
 }
 
+.github-row {
+  align-items: end;
+  border-top: 1px solid #e3e8ed;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  grid-column: 1 / -1;
+  padding-top: 12px;
+}
+
+.github-token-field {
+  flex: 0 1 260px;
+}
+
 .project-title h1,
 .project-title p {
   margin: 0;
@@ -486,6 +500,32 @@ th {
   border-radius: 6px;
   margin: 0;
   padding: 14px;
+}
+
+.wiki-document {
+  border: 1px solid #dbe2e8;
+  border-radius: 6px;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 14px;
+}
+
+.wiki-document h1,
+.wiki-document h2,
+.wiki-document h3 {
+  line-height: 1.25;
+}
+
+.wiki-document pre {
+  background: #f8fafc;
+  border: 1px solid #dbe2e8;
+  border-radius: 6px;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.wiki-document a {
+  color: #0f766e;
 }
 
 @media (max-width: 980px) {
