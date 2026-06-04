@@ -5,12 +5,7 @@ import type { ExtractResult } from "../../listingAssist/extractListing";
 import { extractListingFromText } from "../../listingAssist/extractListing";
 import { extractListingFromUrl } from "../../listingAssist/extractListingFromUrl";
 import { isListingUrl } from "../../listingAssist/fetchListingContent";
-import type {
-  LegalFormValue,
-  LiabilityModel,
-  TaxModel,
-  VotingModel
-} from "../../modules/legal-form/types";
+import type { LegalFormValue } from "../../modules/legal-form/types";
 import { visibleInputModules } from "../../modules/registry";
 import type { OpexAnnualCostMode } from "../../modules/opex/types";
 import type {
@@ -383,21 +378,29 @@ function LegalFormEditor({
       data
     });
   }
+  const selectedProfile = legalFormProfile(projectState.legalForm.data.legalForm);
 
   return (
     <div className="form-grid">
       <div className="form-section">
-        <h3>Gesellschaftsform</h3>
+        <h3>Rechtsform-Auswahl</h3>
         <label className="text-field">
           <span>Gesellschaftsform</span>
           <select
             aria-label="Gesellschaftsform"
             value={projectState.legalForm.data.legalForm}
             onChange={(event) =>
+              {
+                const legalForm = event.currentTarget.value as LegalFormValue;
+                const profile = legalFormProfile(legalForm);
               updateLegalFormData({
                 ...projectState.legalForm.data,
-                legalForm: event.currentTarget.value as LegalFormValue
-              })
+                legalForm,
+                liabilityModel: profile.liabilityModel,
+                taxModel: profile.taxModel,
+                votingModel: profile.votingModel
+              });
+            }
             }
           >
             {LEGAL_FORM_OPTIONS.map((option) => (
@@ -407,63 +410,101 @@ function LegalFormEditor({
             ))}
           </select>
         </label>
+        <DataPreview
+          rows={[
+            ["Haftung", selectedProfile.liability],
+            ["Steuerlogik", selectedProfile.tax],
+            ["Governance", selectedProfile.governance],
+            ["Eignung", selectedProfile.fit],
+            ["Quellenstatus", selectedProfile.sourceStatus]
+          ]}
+        />
+      </div>
+      <div className="form-section">
+        <h3>Kostenannahmen</h3>
+        <NumberSliderField
+          label="Gruendungskosten"
+          value={projectState.legalForm.data.foundingCostAmount}
+          min={0}
+          max={25000}
+          step={250}
+          unit="EUR"
+          onChange={(foundingCostAmount) =>
+            updateLegalFormData({
+              ...projectState.legalForm.data,
+              foundingCostAmount,
+              costStatus:
+                foundingCostAmount > 0
+                  ? projectState.legalForm.data.costStatus
+                  : "missing"
+            })
+          }
+        />
+        <NumberSliderField
+          label="Buchhaltung mtl."
+          value={projectState.legalForm.data.annualAccountingCostAmount / 12}
+          min={0}
+          max={2500}
+          step={25}
+          unit="EUR/Monat"
+          onChange={(monthlyAccounting) =>
+            updateLegalFormData({
+              ...projectState.legalForm.data,
+              annualAccountingCostAmount: monthlyAccounting * 12
+            })
+          }
+        />
+        <NumberSliderField
+          label="Verwaltung mtl."
+          value={projectState.legalForm.data.annualAdministrationCostAmount / 12}
+          min={0}
+          max={2500}
+          step={25}
+          unit="EUR/Monat"
+          onChange={(monthlyAdministration) =>
+            updateLegalFormData({
+              ...projectState.legalForm.data,
+              annualAdministrationCostAmount: monthlyAdministration * 12
+            })
+          }
+        />
+        <NumberSliderField
+          label="Compliance mtl."
+          value={projectState.legalForm.data.annualComplianceCostAmount / 12}
+          min={0}
+          max={2500}
+          step={25}
+          unit="EUR/Monat"
+          onChange={(monthlyCompliance) =>
+            updateLegalFormData({
+              ...projectState.legalForm.data,
+              annualComplianceCostAmount: monthlyCompliance * 12
+            })
+          }
+        />
         <label className="text-field">
-          <span>Haftungsmodell</span>
+          <span>Kostenstatus</span>
           <select
-            aria-label="Haftungsmodell"
-            value={projectState.legalForm.data.liabilityModel}
+            aria-label="Kostenstatus"
+            value={projectState.legalForm.data.costStatus}
             onChange={(event) =>
               updateLegalFormData({
                 ...projectState.legalForm.data,
-                liabilityModel: event.currentTarget.value as LiabilityModel
+                costStatus: event.currentTarget
+                  .value as ProjectState["legalForm"]["data"]["costStatus"]
               })
             }
           >
-            {LIABILITY_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option value="missing">fehlt / pruefen</option>
+            <option value="planningEstimate">Planungsannahme</option>
+            <option value="sourceBacked">quellenbasiert</option>
           </select>
         </label>
-        <label className="text-field">
-          <span>Steuermodell</span>
-          <select
-            aria-label="Steuermodell"
-            value={projectState.legalForm.data.taxModel}
-            onChange={(event) =>
-              updateLegalFormData({
-                ...projectState.legalForm.data,
-                taxModel: event.currentTarget.value as TaxModel
-              })
-            }
-          >
-            {TAX_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="text-field">
-          <span>Stimmrechte</span>
-          <select
-            aria-label="Stimmrechte"
-            value={projectState.legalForm.data.votingModel ?? "unknown"}
-            onChange={(event) =>
-              updateLegalFormData({
-                ...projectState.legalForm.data,
-                votingModel: event.currentTarget.value as VotingModel
-              })
-            }
-          >
-            {VOTING_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <p className="muted">
+          Gruendungskosten erhoehen den Kapitalbedarf. Laufende Rechtsform-,
+          Buchhaltungs- und Compliancekosten laufen monatlich in Cashflow,
+          Liquiditaet und Beitraege.
+        </p>
         <label className="text-field">
           <span>Notizen</span>
           <textarea
@@ -478,6 +519,38 @@ function LegalFormEditor({
             }
           />
         </label>
+      </div>
+      <div className="form-section">
+        <h3>Rechtsformvergleich</h3>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rechtsform</th>
+                <th>Haftung</th>
+                <th>Steuerlogik</th>
+                <th>Aufwand</th>
+                <th>Eignung</th>
+              </tr>
+            </thead>
+            <tbody>
+              {LEGAL_FORM_PROFILES.map((profile) => (
+                <tr key={profile.value}>
+                  <td>{profile.label}</td>
+                  <td>{profile.liability}</td>
+                  <td>{profile.tax}</td>
+                  <td>{profile.effort}</td>
+                  <td>{profile.fit}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="muted">
+          Vergleich ist eine Planungsuebersicht aus dem Wiki. Die konkrete
+          Rechtsform muss vor Kauf mit Rechts- und Steuerberatung festgelegt
+          werden.
+        </p>
       </div>
     </div>
   );
@@ -1709,35 +1782,138 @@ function annualOpexPreview(
   return base;
 }
 
-const LEGAL_FORM_OPTIONS: { value: LegalFormValue; label: string }[] = [
-  { value: "coOwnership", label: "Miteigentum" },
-  { value: "kg", label: "KG" },
-  { value: "gmbh", label: "GmbH" },
-  { value: "gmbhCoKg", label: "GmbH & Co KG" },
-  { value: "verein", label: "Verein" },
-  { value: "other", label: "Andere" }
+type LegalFormProfile = {
+  value: LegalFormValue;
+  label: string;
+  liabilityModel: ProjectState["legalForm"]["data"]["liabilityModel"];
+  taxModel: ProjectState["legalForm"]["data"]["taxModel"];
+  votingModel: NonNullable<ProjectState["legalForm"]["data"]["votingModel"]>;
+  liability: string;
+  tax: string;
+  governance: string;
+  effort: string;
+  fit: string;
+  sourceStatus: string;
+};
+
+const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
+  {
+    value: "coOwnership",
+    label: "Miteigentum",
+    liabilityModel: "mixed",
+    taxModel: "transparent",
+    votingModel: "ownershipShare",
+    liability: "persoenlich/vertraglich, keine eigene Haftungshuelle",
+    tax: "transparent bei den Beteiligten",
+    governance: "Benutzungs-, Kosten- und Exitvertrag zentral",
+    effort: "niedrig bis mittel",
+    fit: "einfacher Start, aber konflikt- und haftungsintensiv",
+    sourceStatus: "Wiki 04_ownership, vor Kauf pruefen"
+  },
+  {
+    value: "verein",
+    label: "Verein",
+    liabilityModel: "limited",
+    taxModel: "association",
+    votingModel: "equalPerOwner",
+    liability: "primaer Vereinsvermoegen, Zweck-/Gewerbefragen",
+    tax: "nur bei stimmigem ideellem Zweck plausibel",
+    governance: "Vereinsorgane, Mitgliederlogik",
+    effort: "mittel",
+    fit: "meist Negativvergleich fuer eigentumsnahe Nutzung",
+    sourceStatus: "Wiki 04_ownership, BMI/WKO pruefen"
+  },
+  {
+    value: "gmbh",
+    label: "GmbH",
+    liabilityModel: "limited",
+    taxModel: "corporate",
+    votingModel: "ownershipShare",
+    liability: "grundsaetzlich Gesellschaftsvermoegen",
+    tax: "Koerperschaftsteuer plus Ausschuettungsebene",
+    governance: "Geschaeftsfuehrung, Gesellschafterbeschluesse",
+    effort: "hoch",
+    fit: "professioneller Rechtstraeger, laufend teurer",
+    sourceStatus: "Wiki 04_ownership, WKO/USP pruefen"
+  },
+  {
+    value: "flexCo",
+    label: "FlexCo",
+    liabilityModel: "limited",
+    taxModel: "corporate",
+    votingModel: "ownershipShare",
+    liability: "kapitalgesellschaftlich beschraenkt",
+    tax: "Koerperschaftsteuer plus Ausschuettungsebene",
+    governance: "aehnlich GmbH, flexiblere Beteiligung",
+    effort: "hoch",
+    fit: "moeglich, aber fuer Immo-Gruppe gesondert pruefen",
+    sourceStatus: "Wiki/Quellen ergaenzen"
+  },
+  {
+    value: "kg",
+    label: "KG",
+    liabilityModel: "mixed",
+    taxModel: "transparent",
+    votingModel: "custom",
+    liability: "Komplementaer unbeschraenkt, Kommanditisten beschraenkt",
+    tax: "transparent, Gesellschaft fuer USt/Lohn relevant",
+    governance: "Gesellschaftsvertrag kann Anteile gut abbilden",
+    effort: "mittel",
+    fit: "guter Kompromiss bei klarer Haftungsbereitschaft",
+    sourceStatus: "Wiki 04_ownership, WKO pruefen"
+  },
+  {
+    value: "gmbhCoKg",
+    label: "GmbH & Co KG",
+    liabilityModel: "mixed",
+    taxModel: "transparent",
+    votingModel: "custom",
+    liability: "Haftungsschirm ueber GmbH-Komplementaerin",
+    tax: "KG-Transparenz plus GmbH-Ebene",
+    governance: "zwei Ebenen, sauberer Gesellschaftsvertrag",
+    effort: "hoch bis sehr hoch",
+    fit: "stark fuer gemischtes Modell, aber teuer/komplex",
+    sourceStatus: "Wiki 04_ownership, WKO pruefen"
+  },
+  {
+    value: "genossenschaft",
+    label: "Genossenschaft",
+    liabilityModel: "limited",
+    taxModel: "corporate",
+    votingModel: "equalPerOwner",
+    liability: "je nach Satzung und Anteilsmodell zu pruefen",
+    tax: "eigener Rechtstraeger, Details offen",
+    governance: "mitgliederorientiert, formal",
+    effort: "hoch",
+    fit: "nur als Sonderfall pruefen",
+    sourceStatus: "Quellen im Wiki ergaenzen"
+  },
+  {
+    value: "other",
+    label: "Sonstige / individuell",
+    liabilityModel: "unknown",
+    taxModel: "unknown",
+    votingModel: "unknown",
+    liability: "offen",
+    tax: "offen",
+    governance: "offen",
+    effort: "offen",
+    fit: "nur mit Einzelfallpruefung",
+    sourceStatus: "fehlt"
+  }
 ];
 
-const LIABILITY_OPTIONS: { value: LiabilityModel; label: string }[] = [
-  { value: "unlimited", label: "Unbeschraenkt" },
-  { value: "limited", label: "Beschraenkt" },
-  { value: "mixed", label: "Gemischt" },
-  { value: "unknown", label: "Unklar" }
-];
+const LEGAL_FORM_OPTIONS = LEGAL_FORM_PROFILES.map(({ value, label }) => ({
+  value,
+  label
+}));
 
-const TAX_OPTIONS: { value: TaxModel; label: string }[] = [
-  { value: "transparent", label: "Transparent" },
-  { value: "corporate", label: "Koerperschaft" },
-  { value: "association", label: "Verein" },
-  { value: "unknown", label: "Unklar" }
-];
-
-const VOTING_OPTIONS: { value: VotingModel; label: string }[] = [
-  { value: "ownershipShare", label: "Nach Anteil" },
-  { value: "equalPerOwner", label: "Gleich je Eigner" },
-  { value: "custom", label: "Individuell" },
-  { value: "unknown", label: "Unklar" }
-];
+function legalFormProfile(value: LegalFormValue): LegalFormProfile {
+  return (
+    LEGAL_FORM_PROFILES.find((profile) => profile.value === value) ??
+    LEGAL_FORM_PROFILES.at(-1)!
+  );
+}
 
 const AUSTRIAN_STATE_OPTIONS: {
   value: AustrianFederalState;

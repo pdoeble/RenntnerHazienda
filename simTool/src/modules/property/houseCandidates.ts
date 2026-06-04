@@ -109,7 +109,7 @@ export const defaultCandidateHouses: CandidateHouse[] = [
     unitsAndUse: "Mehrere Nutzungsoptionen, abgetrennte 2-Zimmerwohnung",
     highlights: "Sehr viel Flaeche; Garten laut Text; Dorfkernlage.",
     risks:
-      "Grundstueck mit 0 qm klären; Energieausweis fehlt; Zimmerzahl offen.",
+      "Grundstueck mit 0 qm klaeren; Energieausweis fehlt; Zimmerzahl offen.",
     sourceUrl: "https://www.immobilienscout24.de/expose/167388287",
     guestNightsPerYear: 60,
     travelTimes: travelTimes("IS24-167388287", [
