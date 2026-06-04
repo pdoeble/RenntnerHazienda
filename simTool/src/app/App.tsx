@@ -29,7 +29,7 @@ import { DirtyStateIndicator } from "../ui/status/DirtyStateIndicator";
 import { FileActionButton } from "../ui/buttons/FileActionButton";
 import { formatDateTime } from "../utils/dates";
 import type { TemplateKind } from "../domain/templates";
-import { InputTabs } from "./layout/InputTabs";
+import { InputTabs, type InputPanelTab } from "./layout/InputTabs";
 import { TwoColumnLayout } from "./layout/TwoColumnLayout";
 import { VisualizationTabs } from "./layout/VisualizationTabs";
 import "./App.css";
@@ -43,7 +43,7 @@ export function App() {
   const [persistenceDiagnostics, setPersistenceDiagnostics] = useState<
     ReturnType<typeof calculateAll>["diagnostics"]
   >([]);
-  const [selectedInput, setSelectedInput] = useState<TemplateKind>("ownership");
+  const [selectedInput, setSelectedInput] = useState<InputPanelTab>("ownership");
   const [selectedVisualization, setSelectedVisualization] =
     useState<VisualizationTab>("dashboard");
   const [githubToken, setGithubToken] = useState(() => getStoredGithubToken() ?? "");

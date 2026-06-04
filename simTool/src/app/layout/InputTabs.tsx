@@ -18,11 +18,14 @@ import type { ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
 import { formatMoney, formatPercent } from "../../utils/money";
+import { HouseComparisonEditor } from "./HouseComparisonEditor";
+
+export type InputPanelTab = TemplateKind | "houseComparison";
 
 type InputTabsProps = {
   projectState: ProjectState;
-  selectedKind: TemplateKind;
-  onSelectKind: (kind: TemplateKind) => void;
+  selectedKind: InputPanelTab;
+  onSelectKind: (kind: InputPanelTab) => void;
   onTemplateChange: (
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
@@ -41,10 +44,19 @@ export function InputTabs({
   onSaveTemplate,
   onExportTemplate
 }: InputTabsProps) {
+  const visibleTabs = [
+    ...visibleInputModules.map((module) => ({
+      kind: module.kind as InputPanelTab,
+      label: module.label
+    })),
+    { kind: "houseComparison" as const, label: "Hausvergleich" }
+  ];
   const activeModule = visibleInputModules.find(
     (module) => module.kind === selectedKind
   );
-  const activeTemplate = projectState[selectedKind];
+  const templateKind: TemplateKind =
+    selectedKind === "houseComparison" ? "property" : selectedKind;
+  const activeTemplate = projectState[templateKind];
   const validation = activeModule?.validate(activeTemplate);
   const validationErrors =
     validation?.diagnostics.filter((diagnostic) => diagnostic.severity === "error") ??
@@ -53,7 +65,7 @@ export function InputTabs({
   return (
     <div className="panel">
       <div className="tabs" role="tablist" aria-label="Eingabe-Tabs">
-        {visibleInputModules.map((module) => (
+        {visibleTabs.map((module) => (
           <button
             key={module.kind}
             type="button"
@@ -69,24 +81,28 @@ export function InputTabs({
 
       <div className="tab-header">
         <div>
-          <p className="eyebrow">{activeModule?.label}</p>
-          <h2>{activeTemplate.name}</h2>
+          <p className="eyebrow">
+            {selectedKind === "houseComparison" ? "Hausvergleich" : activeModule?.label}
+          </p>
+          <h2>
+            {selectedKind === "houseComparison" ? "Hausvergleich" : activeTemplate.name}
+          </h2>
           <span className="muted">Template: {activeTemplate.id}</span>
         </div>
         <div className="button-row">
           <TemplateLoadSelect
             templateName={activeTemplate.name}
-            onUpload={() => onLoadTemplate(selectedKind)}
+            onUpload={() => onLoadTemplate(templateKind)}
           />
           <FileActionButton
             label="Speichern"
             icon={Save}
-            onClick={() => onSaveTemplate(selectedKind)}
+            onClick={() => onSaveTemplate(templateKind)}
           />
           <FileActionButton
             label="Export"
             icon={Download}
-            onClick={() => onExportTemplate(selectedKind)}
+            onClick={() => onExportTemplate(templateKind)}
           />
         </div>
       </div>
@@ -143,7 +159,7 @@ function InputTabBody({
   projectState,
   onTemplateChange
 }: {
-  kind: TemplateKind;
+  kind: InputPanelTab;
   projectState: ProjectState;
   onTemplateChange: (
     kind: TemplateKind,
@@ -151,6 +167,18 @@ function InputTabBody({
   ) => void;
 }) {
   switch (kind) {
+    case "houseComparison":
+      return (
+        <HouseComparisonEditor
+          projectState={projectState}
+          updatePropertyData={(data) =>
+            onTemplateChange("property", {
+              ...projectState.property,
+              data
+            })
+          }
+        />
+      );
     case "ownership":
       return (
         <OwnershipEditor

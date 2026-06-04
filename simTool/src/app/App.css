@@ -346,6 +346,56 @@ button:disabled {
   padding: 6px 8px;
 }
 
+.compact-number {
+  border: 1px solid #c9d2dc;
+  border-radius: 6px;
+  min-height: 32px;
+  padding: 5px 7px;
+  width: 92px;
+}
+
+.plot-controls {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+}
+
+.scatter-plot {
+  border: 1px solid #dbe2e8;
+  border-radius: 6px;
+  height: 330px;
+  overflow: visible;
+  width: 100%;
+}
+
+.scatter-plot line {
+  stroke: #94a3b8;
+  stroke-width: 1;
+}
+
+.plot-point circle,
+.plot-point path,
+.plot-point rect {
+  fill: #0f766e;
+  opacity: 0.78;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+}
+
+.plot-point.active circle,
+.plot-point.active path,
+.plot-point.active rect {
+  fill: #b45309;
+  opacity: 0.95;
+  stroke: #243447;
+}
+
+.plot-point text {
+  fill: #334155;
+  font-size: 10px;
+  pointer-events: none;
+}
+
 .checkbox-field {
   align-items: center;
   color: #44515f;
@@ -551,7 +601,8 @@ th {
 
   .definition-grid,
   .data-row,
-  .slider-control {
+  .slider-control,
+  .plot-controls {
     grid-template-columns: 1fr;
   }
 }
