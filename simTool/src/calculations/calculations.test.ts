@@ -46,21 +46,28 @@ describe("calculation pipeline", () => {
     });
     const contributions = calculateInitialContributions(snapshot);
 
-    expect(contributions.requiredInitialContribution).toBe(185000);
+    expect(contributions.requiredInitialContribution).toBe(225000);
     expect(contributions.requiredMonthlyContribution).toBe(0);
-    expect(contributions.initialContributions).toHaveLength(9);
+    expect(contributions.initialContributions).toHaveLength(11);
     expect(contributions.initialContributions[0]).toEqual(
       expect.objectContaining({
         ownerId: "phil",
         amount: 40000,
-        sharePct: 21.6216
+        sharePct: 17.7778
       })
     );
     expect(contributions.initialContributions[8]).toEqual(
       expect.objectContaining({
         ownerId: "jens",
         amount: 15000,
-        sharePct: 8.1081
+        sharePct: 6.6667
+      })
+    );
+    expect(contributions.initialContributions[9]).toEqual(
+      expect.objectContaining({
+        ownerId: "michael",
+        amount: 20000,
+        sharePct: 8.8889
       })
     );
   });
@@ -130,23 +137,19 @@ describe("calculation pipeline", () => {
         rentalIncome: 0,
         vacancyLoss: 0,
         effectiveIncome: 0,
-        nonRecoverableOpex: 520,
-        operatingResult: -520,
-        netCashflowBeforeContributions: -520
+        nonRecoverableOpex: 100,
+        operatingResult: -100,
+        netCashflowBeforeContributions: -100
       })
     );
     expect(cashflow.monthly[0]?.opexBreakdown).toEqual([
-      expect.objectContaining({
-        label: "Instandhaltungsruecklage",
-        amount: 420
-      }),
       expect.objectContaining({
         label: "Versicherung",
         amount: 100
       })
     ]);
     expect(cashflow.monthly[0]?.netCashflowAfterDebtService).toBeCloseTo(
-      -3496.52,
+      -2865.39,
       1
     );
     expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeLessThan(0);
@@ -158,9 +161,9 @@ describe("calculation pipeline", () => {
     });
     const debt = calculateDebt(snapshot, calculateInitialContributions(snapshot));
 
-    expect(debt.totalInitialDebt).toBe(563910);
-    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(2976.52, 1);
-    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(1879.7, 1);
+    expect(debt.totalInitialDebt).toBe(523910);
+    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(2765.39, 1);
+    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(1746.37, 1);
     expect(debt.totalRemainingDebt).toBe(0);
   });
 
@@ -173,9 +176,10 @@ describe("calculation pipeline", () => {
     expect(result.capitalNeed.closingCosts).toBe(40870);
     expect(result.capitalNeed.mortgageRegistrationFee).toBe(8040);
     expect(result.capitalNeed.renovations).toBe(0);
+    expect(result.capitalNeed.legalFoundingCosts).toBe(0);
     expect(result.capitalNeed.initialReserve).toBe(30000);
     expect(result.capitalNeed.totalProjectNeed).toBe(748910);
-    expect(result.capitalNeed.debtPrincipal).toBe(563910);
+    expect(result.capitalNeed.debtPrincipal).toBe(523910);
   });
 
   it("reconciles capital need, cashflow signs, and month-zero liquidity", () => {
@@ -232,7 +236,7 @@ describe("calculation pipeline", () => {
       result.contributions.recurringContributions[0]?.contributions[0];
 
     expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
-      3506.05,
+      2867.23,
       1
     );
     expect(firstOwner?.baseMonthlyObligation).toBeGreaterThan(0);
@@ -252,7 +256,7 @@ describe("calculation pipeline", () => {
     expect(result.contributions.requiredMonthlyContribution).toBe(0);
   });
 
-  it("calculates blended point shares and sample night costs", () => {
+  it("calculates usage point shares and sample night costs", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
     });
@@ -260,22 +264,22 @@ describe("calculation pipeline", () => {
 
     expect(points.capacity).toBe(8);
     expect(points.annualPointPool).toBe(2920);
-    expect(points.shareMode).toBe("blended");
+    expect(points.shareMode).toBe("usage");
     expect(points.owners[0]).toEqual(
       expect.objectContaining({
         ownerId: "phil",
-        tierSharePct: 18.1818,
-        equitySharePct: 21.6216,
-        pointSharePct: 19.9017,
-        annualPoints: 581,
-        affordableNightsAverage: 44
+        usageSharePct: 15.3846,
+        companySharePct: 17.7778,
+        pointSharePct: 15.3846,
+        annualPoints: 449,
+        affordableNightsAverage: 34
       })
     );
     expect(points.owners[8]).toEqual(
       expect.objectContaining({
         ownerId: "jens",
-        pointSharePct: 8.5995,
-        annualPoints: 251
+        pointSharePct: 7.6923,
+        annualPoints: 225
       })
     );
     expect(nightPoints(new Date(2026, 3, 8), snapshot)).toBe(8);
@@ -318,7 +322,8 @@ describe("calculation pipeline", () => {
     const project = projectFixture();
     project.ownership.data.owners = project.ownership.data.owners.map((owner) => ({
       ...owner,
-      equityContribution: 0
+      equityContribution: 0,
+      startEquityContribution: 0
     }));
 
     const result = calculateAll(

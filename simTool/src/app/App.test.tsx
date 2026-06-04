@@ -16,6 +16,7 @@ describe("App shell", () => {
     ).not.toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Finanzierung" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Strategie" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Hausvergleich" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
@@ -43,6 +44,12 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Mein Anteil" }));
     expect(screen.getByText("Projektionsjahre")).toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole("tab", { name: "Belegung" }));
+    expect(screen.getByText("Belegungsdruck")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Hausvergleich" }));
+    expect(screen.getByText("Punktplot")).toBeInTheDocument();
+
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -57,13 +64,13 @@ describe("App shell", () => {
   it("updates calculations when direct numeric inputs change", () => {
     render(<App />);
 
-    fireEvent.change(screen.getAllByLabelText("Eigenkapital")[0], {
+    fireEvent.change(screen.getAllByLabelText("Start-EK")[0], {
       target: { value: "100000" }
     });
 
     fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
 
-    expect(screen.getAllByText(/245\.000/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/285\.000/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Monatlich gesamt")).toBeInTheDocument();
   });
 
@@ -86,9 +93,9 @@ describe("App shell", () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("button", { name: "Eigner hinzufuegen" }));
-    expect(screen.getByDisplayValue("Eigner 10")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Eigner 12")).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: "Loeschen" }).at(-1)!);
-    expect(screen.queryByDisplayValue("Eigner 10")).not.toBeInTheDocument();
+    expect(screen.queryByDisplayValue("Eigner 12")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     fireEvent.click(screen.getByRole("button", { name: "Hinzufuegen" }));

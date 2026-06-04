@@ -25,7 +25,7 @@ describe("module validation contracts", () => {
     expect(parsed.version).toBe(1);
     expect(parsed.id).toBeTruthy();
     expect(parsed.name).toBeTruthy();
-    expect(parsed.data.owners).toHaveLength(9);
+    expect(parsed.data.owners).toHaveLength(11);
   });
 
   it("validates the financing template envelope", () => {
