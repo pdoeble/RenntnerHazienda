@@ -11,6 +11,13 @@ import {
   serializeJsonFile
 } from "../persistence/jsonFiles";
 import {
+  getStoredGithubToken,
+  githubProjectConfig,
+  loadGithubProject,
+  saveGithubProject,
+  setStoredGithubToken
+} from "../persistence/githubProject";
+import {
   defaultProjectState,
   initialDirtyState,
   type DirtyState,
@@ -39,6 +46,7 @@ export function App() {
   const [selectedInput, setSelectedInput] = useState<TemplateKind>("ownership");
   const [selectedVisualization, setSelectedVisualization] =
     useState<VisualizationTab>("dashboard");
+  const [githubToken, setGithubToken] = useState(() => getStoredGithubToken() ?? "");
   const snapshot = useMemo(() => buildProjectSnapshot(projectState), [projectState]);
   const result = useMemo(() => calculateAll(snapshot), [snapshot]);
   const diagnostics = useMemo(
@@ -98,6 +106,50 @@ export function App() {
     setDirtyState(initialDirtyState);
     setPersistenceDiagnostics([]);
     setPersistenceMessage("Projekt als JSON heruntergeladen");
+  }
+
+  async function loadProjectFromGithub() {
+    try {
+      const githubFile = await loadGithubProject(githubToken || null);
+      if (!githubFile) {
+        setPersistenceMessage("Kein GitHub-Projekt gefunden; Demo bleibt aktiv");
+        return;
+      }
+
+      const loaded = loadProjectFromJson(githubFile.content);
+      setPersistenceDiagnostics(loaded.diagnostics);
+      if (!loaded.ok) {
+        setPersistenceMessage("GitHub-Projekt konnte nicht geladen werden");
+        return;
+      }
+
+      setProjectState(loaded.value);
+      setDirtyState(initialDirtyState);
+      setPersistenceMessage("GitHub-Projekt geladen");
+    } catch (error) {
+      setPersistenceMessage(githubErrorMessage(error, "GitHub-Projekt laden fehlgeschlagen"));
+    }
+  }
+
+  async function saveProjectToGithub() {
+    try {
+      if (!githubToken.trim()) {
+        setPersistenceMessage("GitHub-Token fehlt");
+        return;
+      }
+
+      setStoredGithubToken(githubToken);
+      const currentManifest = createProjectManifest(
+        projectState,
+        new Date().toISOString()
+      );
+      await saveGithubProject(serializeJsonFile(currentManifest), githubToken);
+      setDirtyState(initialDirtyState);
+      setPersistenceDiagnostics([]);
+      setPersistenceMessage("Projekt nach GitHub geschrieben");
+    } catch (error) {
+      setPersistenceMessage(githubErrorMessage(error, "GitHub-Speichern fehlgeschlagen"));
+    }
   }
 
   async function loadTemplate(kind: TemplateKind) {
@@ -160,6 +212,36 @@ export function App() {
             onClick={() => saveProject("projekt-portable")}
           />
         </div>
+        <div className="github-row">
+          <label className="text-field github-token-field">
+            <span>GitHub Token</span>
+            <input
+              aria-label="GitHub Token"
+              type="password"
+              value={githubToken}
+              placeholder="ghp_..."
+              onChange={(event) => setGithubToken(event.currentTarget.value)}
+              onBlur={() => setStoredGithubToken(githubToken)}
+            />
+          </label>
+          <button
+            className="icon-button"
+            type="button"
+            onClick={() => void loadProjectFromGithub()}
+          >
+            GitHub laden
+          </button>
+          <button
+            className="icon-button"
+            type="button"
+            onClick={() => void saveProjectToGithub()}
+          >
+            GitHub speichern
+          </button>
+          <span className="muted">
+            {githubProjectConfig().owner}/{githubProjectConfig().repo}:{githubProjectConfig().path}
+          </span>
+        </div>
       </header>
 
       <TwoColumnLayout
@@ -187,6 +269,20 @@ export function App() {
       />
     </div>
   );
+}
+
+function githubErrorMessage(error: unknown, fallback: string): string {
+  if (error instanceof Error && "status" in error) {
+    const status = (error as Error & { status: number }).status;
+    if (status === 401 || status === 403) {
+      return "GitHub-Token hat keine Berechtigung oder ist ungueltig";
+    }
+    if (status === 409) {
+      return "GitHub-Konflikt: Projekt wurde zwischenzeitlich geaendert";
+    }
+    return `${fallback}: HTTP ${status}`;
+  }
+  return error instanceof Error ? error.message : fallback;
 }
 
 function ProjectLoadSelect({
