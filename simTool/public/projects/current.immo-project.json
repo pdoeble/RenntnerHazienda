@@ -3,8 +3,8 @@
   "version": 1,
   "id": "project-demo-vertical-core",
   "name": "Demo Projekt",
-  "createdAt": "2026-06-05T19:54:50.388Z",
-  "updatedAt": "2026-06-05T19:54:50.388Z",
+  "createdAt": "2026-06-05T20:00:19.719Z",
+  "updatedAt": "2026-06-05T20:00:19.719Z",
   "templateRefs": {
     "ownership": {
       "kind": "ownership",
@@ -369,6 +369,21 @@
           "otherCosts": []
         },
         "renovationItems": [],
+        "pointRules": {
+          "basePointsPerBedPerYear": 365,
+          "basePerBedPerNight": 6,
+          "weekendMultipliers": {
+            "monThu": 1,
+            "fri": 1.2,
+            "satSun": 1.5
+          },
+          "seasonMultipliers": {
+            "winterSki": 1.8,
+            "summer": 1.4,
+            "spring": 1,
+            "autumn": 1
+          }
+        },
         "activeHouseId": "IS24AT-69f2ef",
         "guestNightsPerYear": 60,
         "candidateHouses": [
@@ -1071,21 +1086,6 @@
           "status": "fallback",
           "message": "Excel-Fallbackwerte aus immobilienvergleich_ferienhaus_tirol.xlsx"
         },
-        "pointRules": {
-          "basePointsPerBedPerYear": 365,
-          "basePerBedPerNight": 6,
-          "weekendMultipliers": {
-            "monThu": 1,
-            "fri": 1.2,
-            "satSun": 1.5
-          },
-          "seasonMultipliers": {
-            "winterSki": 1.8,
-            "summer": 1.4,
-            "spring": 1,
-            "autumn": 1
-          }
-        },
         "notes": "Demo-Szenario mit konkretem Objekt. Nutzungszulassung, USt, Abgaben, Gemeindeauskunft und Bankfaehigkeit sind separat zu pruefen."
       }
     },
@@ -1119,9 +1119,9 @@
             "id": "opex-001",
             "label": "Instandhaltungsruecklage",
             "amount": 6000,
-            "annualAmount": 18,
-            "annualCostMode": "rentableArea",
             "period": "yearly",
+            "annualCostMode": "rentableArea",
+            "annualAmount": 18,
             "inflationPct": 2,
             "recoverableFromTenants": false,
             "category": "reserve"
@@ -1130,9 +1130,9 @@
             "id": "opex-002",
             "label": "Versicherung",
             "amount": 1200,
-            "annualAmount": 1200,
-            "annualCostMode": "fixed",
             "period": "yearly",
+            "annualCostMode": "fixed",
+            "annualAmount": 1200,
             "inflationPct": 2,
             "recoverableFromTenants": false,
             "category": "insurance"
