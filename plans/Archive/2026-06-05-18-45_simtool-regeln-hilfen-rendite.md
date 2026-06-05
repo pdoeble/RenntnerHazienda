@@ -36,9 +36,9 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 - [x] (2026-06-05 18:45) Diagramme fuer Bankkonto, Beitraege und Punkte umbauen.
 - [x] (2026-06-05 18:45) Wiki und Audit aktualisieren.
 - [x] (2026-06-05 18:45) Tests ergaenzen/anpassen.
-- [ ] (2026-06-05 18:45) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausfuehren.
-- [ ] (2026-06-05 18:45) Sinnvolle Einzelcommits erstellen.
-- [ ] (2026-06-05 18:45) Move this file to `plans/Archive/2026-06-05-18-45_simtool-regeln-hilfen-rendite.md` as final completion step.
+- [x] (2026-06-05 18:45) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausfuehren.
+- [x] (2026-06-05 18:45) Sinnvolle Einzelcommits erstellen.
+- [x] (2026-06-05 18:45) Move this file to `plans/Archive/2026-06-05-18-45_simtool-regeln-hilfen-rendite.md` as final completion step.
 
 ## Surprises & Discoveries
 - Observation:
@@ -86,11 +86,18 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 
 ## Outcomes & Retrospective
 - Achieved:
-  - Noch offen.
+  - PID `768` wurde beendet und Dev-Server-Logs wurden entfernt.
+  - Tab `Regeln` buendelt Punkt-, Anteil-, Wert- und Belegungsregeln.
+  - Default-Basispreis je Zimmernacht ist `6 EUR`; Default-Monatsnettoeinkommen je Eigner ist `2.900 EUR`.
+  - Eingabefelder haben deutlich mehr Fragezeichen-Hilfen mit Formeln.
+  - `Mein Anteil` zeigt eine 25-Jahres-Wert- und Renditebetrachtung.
+  - Rechtsformprofile enthalten Kurzbeschreibungen, Kostenannahmen, Quellenstatus und Uebernahme-Button.
+  - Diagramme trennen Einmal- und laufende Werte besser und `Punkte` zeigt Nutzungs-/Unternehmensanteile als Kreisdiagramme.
+  - Wiki und Audit dokumentieren die neuen Regeln, Formeln und Kostenannahmen.
 - Open:
-  - Umsetzung und Verifikation.
+  - Bundlegroessen-Warnung im Vite-Build bleibt als technischer Optimierungspunkt offen.
 - Improve next time:
-  - Nach jedem Subsystem pruefen, ob UI-Begriffe deutsch und Formeln erklaert sind.
+  - Recharts-Visualisierungen koennten spaeter mit gezieltem Code-Splitting aus dem Hauptbundle geloest werden.
 
 ## Context and Orientation
 - Repo root:
@@ -162,11 +169,11 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
   - Bei fachlicher Unsicherheit Diagnose/Wiki-Hinweis statt stillschweigender Beratungsaussage.
 
 ### No-Behavior-Change Guard
-- [ ] Projektmanifest bleibt kompatibel.
-- [ ] Positive manuelle Monatsnettoeinkommen bleiben unveraendert.
-- [ ] Kostenprofile ueberschreiben aktive Werte nur per Button.
-- [ ] Rechtsformvergleich bleibt neutral.
-- [ ] Keine automatische Rechtsformempfehlung.
+- [x] Projektmanifest bleibt kompatibel.
+- [x] Positive manuelle Monatsnettoeinkommen bleiben unveraendert.
+- [x] Kostenprofile ueberschreiben aktive Werte nur per Button.
+- [x] Rechtsformvergleich bleibt neutral.
+- [x] Keine automatische Rechtsformempfehlung.
 
 ## Minimal Blocking Decisions
 1) Copy-back scope:
