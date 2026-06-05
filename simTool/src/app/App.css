@@ -557,6 +557,23 @@ button:disabled {
   padding: 12px 10px 8px;
 }
 
+.pie-chart-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.pie-chart-card {
+  border: 1px solid #dbe2e8;
+  border-radius: 6px;
+  min-width: 0;
+  padding: 12px 10px 8px;
+}
+
+.pie-chart-card h3 {
+  margin: 0 0 8px;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -661,6 +678,10 @@ th {
   }
 
   .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pie-chart-grid {
     grid-template-columns: 1fr;
   }
 }

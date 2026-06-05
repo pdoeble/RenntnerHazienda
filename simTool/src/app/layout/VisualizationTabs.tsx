@@ -3,8 +3,11 @@ import {
   BarChart,
   CartesianGrid,
   ComposedChart,
+  Cell,
   Legend,
   Line,
+  Pie,
+  PieChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -86,10 +89,15 @@ function VisualizationBody({
 }
 
 function PointsView({ result }: { result: CalculationResult }) {
-  const chartData = result.points.owners.map((owner) => ({
-    owner: owner.ownerName,
-    budget: owner.annualUsageBudget,
-    zimmernaechte: owner.affordableNightsAverage
+  const usageShareData = result.points.owners.map((owner, index) => ({
+    name: owner.ownerName,
+    value: owner.usageSharePct,
+    color: ownerColor(index)
+  }));
+  const companyShareData = result.points.owners.map((owner, index) => ({
+    name: owner.ownerName,
+    value: owner.companySharePct,
+    color: ownerColor(index)
   }));
 
   return (
@@ -104,19 +112,10 @@ function PointsView({ result }: { result: CalculationResult }) {
           ["Nutzungslogik", "EUR-Beitrag -> Zimmernacht-Punkte"]
         ]}
       />
-      <ChartFrame>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="owner" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="budget" name="Jahres-Nutzungsbudget" fill="#0f766e" />
-            <Bar dataKey="zimmernaechte" name="Leistbare Zimmernaechte" fill="#2563eb" />
-          </BarChart>
-        </ResponsiveContainer>
-      </ChartFrame>
+      <div className="pie-chart-grid">
+        <SharePieChart title="Nutzungsanteil" data={usageShareData} />
+        <SharePieChart title="Unternehmensanteil" data={companyShareData} />
+      </div>
       <DataTable
         headers={[
           "Eigner",
@@ -606,17 +605,43 @@ function ContributionsView({ result }: { result: CalculationResult }) {
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="owner" />
-            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <YAxis
+              yAxisId="monthly"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
+            <YAxis
+              yAxisId="equity"
+              orientation="right"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="startEk" name="Start-EK" fill="#0f766e" />
-            <Bar dataKey="kosten" name="Kostenbeitrag mtl." fill="#b45309" />
             <Bar
+              yAxisId="equity"
+              dataKey="startEk"
+              name="Start-EK einmalig"
+              fill="#0f766e"
+            />
+            <Bar
+              yAxisId="monthly"
+              dataKey="kosten"
+              name="Kostenbeitrag mtl."
+              fill="#b45309"
+            />
+            <Bar
+              yAxisId="monthly"
               dataKey="kapital"
               name="Kapitalruecklage / Anlage mtl."
               fill="#7c3aed"
             />
-            <Bar dataKey="nutzung" name="Nutzungsentgelt mtl." fill="#2563eb" />
+            <Bar
+              yAxisId="monthly"
+              dataKey="nutzung"
+              name="Nutzungsentgelt mtl."
+              fill="#2563eb"
+            />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
@@ -706,19 +731,32 @@ function CashflowView({ result }: { result: CalculationResult }) {
     : 0;
   const chartData = clampItems(result.cashflow.bankAccountYearly, 10).map((year) => ({
     year: year.year,
-    startEk: year.startEquity,
-    kostenbeitraege: year.costContributions,
-    kapitalruecklagen: year.capitalContributions,
-    nutzungsentgelte: year.usageContributions,
-    reservebeitraege: year.reserveContributions,
-    darlehen: year.debtDrawdown,
-    miete: year.rentalIncome,
-    erstattung: year.vatRefund,
-    kauf: year.acquisition,
-    renovierung: year.renovation,
-    opex: year.opex,
-    zins: year.interest,
-    tilgung: year.principalRepayment,
+    startEkJahr1: year.year === 1 ? year.startEquity : 0,
+    kostenbeitraegeJahr1: year.year === 1 ? year.costContributions : 0,
+    kapitalruecklagenJahr1: year.year === 1 ? year.capitalContributions : 0,
+    nutzungsentgelteJahr1: year.year === 1 ? year.usageContributions : 0,
+    reservebeitraegeJahr1: year.year === 1 ? year.reserveContributions : 0,
+    darlehenJahr1: year.year === 1 ? year.debtDrawdown : 0,
+    mieteJahr1: year.year === 1 ? year.rentalIncome : 0,
+    erstattungJahr1: year.year === 1 ? year.vatRefund : 0,
+    kaufJahr1: year.year === 1 ? year.acquisition : 0,
+    renovierungJahr1: year.year === 1 ? year.renovation : 0,
+    opexJahr1: year.year === 1 ? year.opex : 0,
+    zinsJahr1: year.year === 1 ? year.interest : 0,
+    tilgungJahr1: year.year === 1 ? year.principalRepayment : 0,
+    startEkFolgejahre: year.year === 1 ? 0 : year.startEquity,
+    kostenbeitraegeFolgejahre: year.year === 1 ? 0 : year.costContributions,
+    kapitalruecklagenFolgejahre: year.year === 1 ? 0 : year.capitalContributions,
+    nutzungsentgelteFolgejahre: year.year === 1 ? 0 : year.usageContributions,
+    reservebeitraegeFolgejahre: year.year === 1 ? 0 : year.reserveContributions,
+    darlehenFolgejahre: year.year === 1 ? 0 : year.debtDrawdown,
+    mieteFolgejahre: year.year === 1 ? 0 : year.rentalIncome,
+    erstattungFolgejahre: year.year === 1 ? 0 : year.vatRefund,
+    kaufFolgejahre: year.year === 1 ? 0 : year.acquisition,
+    renovierungFolgejahre: year.year === 1 ? 0 : year.renovation,
+    opexFolgejahre: year.year === 1 ? 0 : year.opex,
+    zinsFolgejahre: year.year === 1 ? 0 : year.interest,
+    tilgungFolgejahre: year.year === 1 ? 0 : year.principalRepayment,
     kontostand: year.closingBalance
   }));
 
@@ -749,32 +787,201 @@ function CashflowView({ result }: { result: CalculationResult }) {
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" />
-            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <YAxis
+              yAxisId="jahr1"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
+            <YAxis
+              yAxisId="folgejahre"
+              orientation="right"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="startEk" name="Start-EK" stackId="einnahmen" fill="#0f766e" />
-            <Bar dataKey="kostenbeitraege" name="Kostenbeitrag" stackId="einnahmen" fill="#14b8a6" />
             <Bar
-              dataKey="kapitalruecklagen"
-              name="Kapitalruecklage / Anlage"
-              stackId="einnahmen"
+              yAxisId="jahr1"
+              dataKey="startEkJahr1"
+              name="Start-EK Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#0f766e"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="kostenbeitraegeJahr1"
+              name="Kostenbeitrag Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#14b8a6"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="kapitalruecklagenJahr1"
+              name="Kapitalruecklage Jahr 1"
+              stackId="einnahmenJahr1"
               fill="#7c3aed"
             />
             <Bar
-              dataKey="nutzungsentgelte"
-              name="Nutzungsentgelt"
-              stackId="einnahmen"
+              yAxisId="jahr1"
+              dataKey="nutzungsentgelteJahr1"
+              name="Nutzungsentgelt Jahr 1"
+              stackId="einnahmenJahr1"
               fill="#2563eb"
             />
-            <Bar dataKey="reservebeitraege" name="Liquiditaetsreserve" stackId="einnahmen" fill="#64748b" />
-            <Bar dataKey="darlehen" name="Darlehen" stackId="einnahmen" fill="#0891b2" />
-            <Bar dataKey="miete" name="Miete" stackId="einnahmen" fill="#22c55e" />
-            <Bar dataKey="erstattung" name="Erstattung" stackId="einnahmen" fill="#84cc16" />
-            <Bar dataKey="kauf" name="Kauf/Nebenkosten" stackId="ausgaben" fill="#991b1b" />
-            <Bar dataKey="renovierung" name="Renovierung" stackId="ausgaben" fill="#dc2626" />
-            <Bar dataKey="opex" name="Betriebskosten" stackId="ausgaben" fill="#b45309" />
-            <Bar dataKey="zins" name="Zins" stackId="ausgaben" fill="#f97316" />
-            <Bar dataKey="tilgung" name="Tilgung" stackId="ausgaben" fill="#6d28d9" />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="reservebeitraegeJahr1"
+              name="Liquiditaetsreserve Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#64748b"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="darlehenJahr1"
+              name="Darlehen Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#0891b2"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="mieteJahr1"
+              name="Miete Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#22c55e"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="erstattungJahr1"
+              name="Erstattung Jahr 1"
+              stackId="einnahmenJahr1"
+              fill="#84cc16"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="kaufJahr1"
+              name="Kauf/Nebenkosten Jahr 1"
+              stackId="ausgabenJahr1"
+              fill="#991b1b"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="renovierungJahr1"
+              name="Renovierung Jahr 1"
+              stackId="ausgabenJahr1"
+              fill="#dc2626"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="opexJahr1"
+              name="Betriebskosten Jahr 1"
+              stackId="ausgabenJahr1"
+              fill="#b45309"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="zinsJahr1"
+              name="Zins Jahr 1"
+              stackId="ausgabenJahr1"
+              fill="#f97316"
+            />
+            <Bar
+              yAxisId="jahr1"
+              dataKey="tilgungJahr1"
+              name="Tilgung Jahr 1"
+              stackId="ausgabenJahr1"
+              fill="#6d28d9"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="startEkFolgejahre"
+              name="Start-EK Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#0f766e"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="kostenbeitraegeFolgejahre"
+              name="Kostenbeitrag Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#14b8a6"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="kapitalruecklagenFolgejahre"
+              name="Kapitalruecklage Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#7c3aed"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="nutzungsentgelteFolgejahre"
+              name="Nutzungsentgelt Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#2563eb"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="reservebeitraegeFolgejahre"
+              name="Liquiditaetsreserve Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#64748b"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="darlehenFolgejahre"
+              name="Darlehen Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#0891b2"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="mieteFolgejahre"
+              name="Miete Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#22c55e"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="erstattungFolgejahre"
+              name="Erstattung Folgejahre"
+              stackId="einnahmenFolgejahre"
+              fill="#84cc16"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="kaufFolgejahre"
+              name="Kauf/Nebenkosten Folgejahre"
+              stackId="ausgabenFolgejahre"
+              fill="#991b1b"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="renovierungFolgejahre"
+              name="Renovierung Folgejahre"
+              stackId="ausgabenFolgejahre"
+              fill="#dc2626"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="opexFolgejahre"
+              name="Betriebskosten Folgejahre"
+              stackId="ausgabenFolgejahre"
+              fill="#b45309"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="zinsFolgejahre"
+              name="Zins Folgejahre"
+              stackId="ausgabenFolgejahre"
+              fill="#f97316"
+            />
+            <Bar
+              yAxisId="folgejahre"
+              dataKey="tilgungFolgejahre"
+              name="Tilgung Folgejahre"
+              stackId="ausgabenFolgejahre"
+              fill="#6d28d9"
+            />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
@@ -1161,6 +1368,71 @@ function SectionHeading({ label }: { label: string }) {
       ) : null}
     </h3>
   );
+}
+
+type SharePieDatum = {
+  name: string;
+  value: number;
+  color: string;
+};
+
+const OWNER_COLORS = [
+  "#0f766e",
+  "#2563eb",
+  "#7c3aed",
+  "#b45309",
+  "#dc2626",
+  "#0891b2",
+  "#65a30d",
+  "#be185d",
+  "#475569",
+  "#9333ea",
+  "#ea580c",
+  "#16a34a"
+];
+
+function ownerColor(index: number): string {
+  return OWNER_COLORS[index % OWNER_COLORS.length]!;
+}
+
+function SharePieChart({
+  title,
+  data
+}: {
+  title: string;
+  data: SharePieDatum[];
+}) {
+  return (
+    <div className="pie-chart-card">
+      <h3>{title}</h3>
+      <ResponsiveContainer width="100%" height={260}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            outerRadius={92}
+            label={sharePieLabel}
+          >
+            {data.map((entry) => (
+              <Cell key={`${title}-${entry.name}`} fill={entry.color} />
+            ))}
+          </Pie>
+          <Tooltip
+            formatter={(value) => `${Number(value).toFixed(2)}%`}
+          />
+          <Legend />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function sharePieLabel(entry: { name?: string; value?: number }): string {
+  if (!entry.name || entry.value === undefined) {
+    return "";
+  }
+  return `${entry.name} ${entry.value.toFixed(1)}%`;
 }
 
 const HELP_TEXTS: Record<string, string> = {
