@@ -12,18 +12,18 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 
 ## Progress
 - [x] (2026-06-05 10:36) ExecPlan-Datei unter `plans/2026-06-05-10-36_simtool-beitragsstruktur-cashflow.md` anlegen.
-- [ ] (2026-06-05 10:36) Jonas' Punktelogik final mit bestehender `simTool`-Logik abgleichen.
-- [ ] (2026-06-05 10:36) Einheitliches Begriffsmodell in Types, Berechnungen und UI einfuehren.
-- [ ] (2026-06-05 10:36) Nutzungsbeitrag als EUR/Monat mit separaten Punkteregeln umsetzen.
-- [ ] (2026-06-05 10:36) Belegung auf Zimmernaechte und Wochenendmodell umbauen.
-- [ ] (2026-06-05 10:36) Projekt-/GitHub-Topbar in linken Tab `Projekt` verschieben.
-- [ ] (2026-06-05 10:36) Darlehensplot mit zweiter Y-Achse fuer Zins und Tilgung erweitern.
-- [ ] (2026-06-05 10:36) Cashflow als Bankkonto-Ansicht mit gestapelten Einnahmen/Ausgaben und Liquiditaetslinie neu bauen.
-- [ ] (2026-06-05 10:36) Tests ergaenzen/anpassen.
-- [ ] (2026-06-05 10:36) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausfuehren.
-- [ ] (2026-06-05 10:36) Sinnvolle Einzelcommits erstellen.
+- [x] (2026-06-05 11:06) Jonas' Punktelogik final mit bestehender `simTool`-Logik abgleichen.
+- [x] (2026-06-05 11:06) Einheitliches Begriffsmodell in Types, Berechnungen und UI einfuehren.
+- [x] (2026-06-05 11:06) Nutzungsbeitrag als EUR/Monat mit separaten Punkteregeln umsetzen.
+- [x] (2026-06-05 11:06) Belegung auf Zimmernaechte und Wochenendmodell umbauen.
+- [x] (2026-06-05 11:06) Projekt-/GitHub-Topbar in linken Tab `Projekt` verschieben.
+- [x] (2026-06-05 11:06) Darlehensplot mit zweiter Y-Achse fuer Zins und Tilgung erweitern.
+- [x] (2026-06-05 11:06) Cashflow als Bankkonto-Ansicht mit gestapelten Einnahmen/Ausgaben und Liquiditaetslinie neu bauen.
+- [x] (2026-06-05 11:06) Tests ergaenzen/anpassen.
+- [x] (2026-06-05 11:06) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausfuehren.
+- [x] (2026-06-05 11:06) Sinnvolle Einzelcommits erstellen.
 - [ ] (2026-06-05 10:36) Push auf `origin main`, wenn alle Pruefungen erfolgreich sind.
-- [ ] (2026-06-05 10:36) Move this file to `plans/Archive/2026-06-05-10-36_simtool-beitragsstruktur-cashflow.md` as final completion step.
+- [x] (2026-06-05 11:06) Move this file to `plans/Archive/2026-06-05-10-36_simtool-beitragsstruktur-cashflow.md` as final completion step.
 
 ## Surprises & Discoveries
 - Observation: `usagePointBudget = 100` wird aktuell als relatives Gewicht interpretiert und auf einen Jahrespunktpool hochskaliert.
@@ -45,9 +45,9 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 - Date/Author: 2026-06-05 / User.
 
 ## Outcomes & Retrospective
-- Achieved:
-- Open:
-- Improve next time:
+- Achieved: Beitragsbegriffe, EUR-Nutzungsbeitrag, Zimmernachtbelegung, Projekt-Tab, Darlehens-Zweitachse und Bankkonto-Cashflow wurden umgesetzt und getestet.
+- Open: Push auf `origin main` erfolgt nach Archivierungscommit.
+- Improve next time: Sehr grosse UI-Dateien frueher in kleinere Komponenten zerlegen, damit fachliche und visuelle Aenderungen leichter getrennt commitbar sind.
 
 ## Context and Orientation
 - Repo root: `c:\Users\Doebler\Documents\Modelle\RenntnerHazienda`
