@@ -1,0 +1,1227 @@
+{
+  "schema": "immo-finance.project",
+  "version": 1,
+  "id": "project-demo-vertical-core",
+  "name": "Demo Projekt",
+  "createdAt": "2026-06-05T20:00:19.719Z",
+  "updatedAt": "2026-06-05T20:00:19.719Z",
+  "templateRefs": {
+    "ownership": {
+      "kind": "ownership",
+      "id": "ownership-waldchalet-pfunds-demo",
+      "name": "Demo Eignerschaft Waldchalet Pfunds",
+      "storageMode": "embedded"
+    },
+    "legalForm": {
+      "kind": "legalForm",
+      "id": "legal-form-demo-gbr",
+      "name": "Demo Gesellschaftsform",
+      "storageMode": "embedded"
+    },
+    "capex": {
+      "kind": "capex",
+      "id": "capex-demo-renovation",
+      "name": "Demo Capex",
+      "storageMode": "embedded"
+    },
+    "property": {
+      "kind": "property",
+      "id": "property-waldchalet-pfunds-demo",
+      "name": "Waldchalet Pfunds Demo",
+      "storageMode": "embedded"
+    },
+    "closingCosts": {
+      "kind": "closingCosts",
+      "id": "closing-costs-demo-at",
+      "name": "Demo Nebenkosten",
+      "storageMode": "embedded"
+    },
+    "opex": {
+      "kind": "opex",
+      "id": "opex-demo-standard",
+      "name": "Demo Betriebskosten",
+      "storageMode": "embedded"
+    },
+    "financing": {
+      "kind": "financing",
+      "id": "financing-demo-annuity",
+      "name": "Demo Finanzierung",
+      "storageMode": "embedded"
+    },
+    "strategy": {
+      "kind": "strategy",
+      "id": "strategy-demo-liquiditaet",
+      "name": "Demo Strategie",
+      "storageMode": "embedded"
+    }
+  },
+  "embeddedSnapshots": {
+    "ownership": {
+      "schema": "immo-finance.ownership",
+      "version": 1,
+      "id": "ownership-waldchalet-pfunds-demo",
+      "name": "Demo Eignerschaft Waldchalet Pfunds",
+      "description": "Demo-Szenario aus Jonas' Entwurf mit konkreten Beteiligten.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "owners": [
+          {
+            "id": "phil",
+            "displayName": "Phil",
+            "type": "person",
+            "participationTier": 200,
+            "equityContribution": 40000,
+            "startEquityContribution": 40000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 200,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 200,
+            "ownershipSharePct": 17.77777777777778,
+            "companySharePct": 17.77777777777778,
+            "homeLocationId": "esslingen"
+          },
+          {
+            "id": "jonas",
+            "displayName": "Jonas",
+            "type": "person",
+            "participationTier": 100,
+            "equityContribution": 40000,
+            "startEquityContribution": 40000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 100,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 100,
+            "ownershipSharePct": 17.77777777777778,
+            "companySharePct": 17.77777777777778,
+            "homeLocationId": "muenchen"
+          },
+          {
+            "id": "margarele",
+            "displayName": "Margerle",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "neuburg"
+          },
+          {
+            "id": "manu",
+            "displayName": "Manu",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "neuburg"
+          },
+          {
+            "id": "niels",
+            "displayName": "Niels",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "hinwil"
+          },
+          {
+            "id": "nils",
+            "displayName": "Nils",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "hinwil"
+          },
+          {
+            "id": "kai",
+            "displayName": "Kai",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "innsbruck"
+          },
+          {
+            "id": "stressi",
+            "displayName": "Stressi",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "esslingen"
+          },
+          {
+            "id": "jens",
+            "displayName": "Jens",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 15000,
+            "startEquityContribution": 15000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 6.666666666666667,
+            "companySharePct": 6.666666666666667,
+            "homeLocationId": "muenchen"
+          },
+          {
+            "id": "michael",
+            "displayName": "Michael",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 20000,
+            "startEquityContribution": 20000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 8.88888888888889,
+            "companySharePct": 8.88888888888889,
+            "homeLocationId": "muenchen"
+          },
+          {
+            "id": "rieke",
+            "displayName": "Rieke",
+            "type": "person",
+            "participationTier": 50,
+            "equityContribution": 20000,
+            "startEquityContribution": 20000,
+            "monthlyCapitalContribution": 0,
+            "monthlyUsageContribution": 50,
+            "monthlyNetIncomeAmount": 2900,
+            "usagePointBudget": 50,
+            "ownershipSharePct": 8.88888888888889,
+            "companySharePct": 8.88888888888889,
+            "homeLocationId": "esslingen"
+          }
+        ],
+        "contributionRules": [
+          {
+            "id": "rule-ownership",
+            "name": "Nach Eigentumsanteil",
+            "basis": "ownershipShare"
+          }
+        ]
+      }
+    },
+    "legalForm": {
+      "schema": "immo-finance.legal-form",
+      "version": 1,
+      "id": "legal-form-demo-gbr",
+      "name": "Demo Gesellschaftsform",
+      "description": "Neutrale Annahme zur Gesellschaftsform.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "legalForm": "coOwnership",
+        "liabilityModel": "mixed",
+        "taxModel": "transparent",
+        "votingModel": "ownershipShare",
+        "foundingCostAmount": 0,
+        "annualAccountingCostAmount": 0,
+        "annualAdministrationCostAmount": 0,
+        "annualComplianceCostAmount": 0,
+        "costStatus": "missing",
+        "sourceRefs": [
+          {
+            "label": "Wiki Rechtsformen",
+            "url": "wiki/04_ownership.md",
+            "publisher": "Projekt-Wiki",
+            "retrievedAt": "2026-05-15",
+            "scope": "Oesterreich"
+          }
+        ],
+        "notes": "Annahme nur zur Modellierung. Kosten muessen mit Notar, Steuerberatung und Bank konkretisiert werden."
+      }
+    },
+    "capex": {
+      "schema": "immo-finance.capex",
+      "version": 1,
+      "id": "capex-demo-renovation",
+      "name": "Demo Capex",
+      "description": "Neutrales Beispiel fuer einmalige Investitionen.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "items": [
+          {
+            "id": "capex-001",
+            "label": "Renovierung",
+            "category": "renovation",
+            "amount": 50000,
+            "timingMonth": 0,
+            "financing": "equity"
+          }
+        ]
+      }
+    },
+    "property": {
+      "schema": "immo-finance.property",
+      "version": 1,
+      "id": "property-waldchalet-pfunds-demo",
+      "name": "Waldchalet Pfunds Demo",
+      "description": "Konkretes Demo-Szenario aus Jonas' Entwurf; kein objektneutraler Wiki-Inhalt.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "objektkennung": "objekt-waldchalet-pfunds-demo",
+        "title": "Waldchalet Pfunds - provisionsfrei - inmitten der atemberaubenden Berglandschaft Tirols",
+        "sourceUrl": "https://www.immobilienscout24.at/expose/69f2efdc897bd2a11f553783",
+        "sourcePortal": "immobilienscout24",
+        "commissionFree": true,
+        "pricePerM2Eur": 2392.86,
+        "purchasePrice": 670000,
+        "country": "AT",
+        "federalState": "T",
+        "municipality": "Pfunds",
+        "addressData": {
+          "postalCode": "6542",
+          "place": "Pfunds",
+          "region": "Tirol",
+          "country": "AT"
+        },
+        "useType": "mixedUse",
+        "rentableAreaSqm": 280,
+        "plotAreaSqm": 1940,
+        "gardenAreaSqm": 635,
+        "units": 1,
+        "rooms": 6,
+        "bedrooms": 5,
+        "beds": 8,
+        "bathrooms": 2,
+        "toilets": 2,
+        "guestWc": true,
+        "kitchens": 1,
+        "garage": true,
+        "parkingSpaces": 1,
+        "yearBuilt": 1974,
+        "condition": "gepflegt",
+        "constructionType": "Holzbauweise",
+        "availableFrom": "sofort",
+        "heating": [
+          "Oel",
+          "Zentralheizung",
+          "Ofenheizung"
+        ],
+        "energy": {
+          "hwb": 269,
+          "fgee": 2.69
+        },
+        "features": [
+          "Garten",
+          "Kamin",
+          "Swimmingpool",
+          "Garage",
+          "Provisionsfrei",
+          "Holzbauweise"
+        ],
+        "expectedMonthlyRent": 0,
+        "vacancyRatePct": 0,
+        "purchaseMonth": 0,
+        "reserveMonths": 3,
+        "tourismFeeAnnualAmount": 0,
+        "vatRatePct": 0,
+        "vatRecoverablePct": 0,
+        "vatRefundMonth": 12,
+        "mortgageRegistrationFeePct": 1.2,
+        "closingCosts": {
+          "realEstateTransferTaxPct": 3.5,
+          "notaryPct": 1.5,
+          "landRegistryPct": 1.1,
+          "brokerPct": 0,
+          "otherCosts": []
+        },
+        "renovationItems": [],
+        "pointRules": {
+          "basePointsPerBedPerYear": 365,
+          "basePerBedPerNight": 6,
+          "weekendMultipliers": {
+            "monThu": 1,
+            "fri": 1.2,
+            "satSun": 1.5
+          },
+          "seasonMultipliers": {
+            "winterSki": 1.8,
+            "summer": 1.4,
+            "spring": 1,
+            "autumn": 1
+          }
+        },
+        "activeHouseId": "IS24AT-69f2ef",
+        "guestNightsPerYear": 60,
+        "candidateHouses": [
+          {
+            "id": "IS24-165475678",
+            "title": "Luxurioeses Traumhaus in Tirol (Neustift / Kampl)",
+            "place": "Telfes im Stubai / Stubaital",
+            "postalCode": "6167",
+            "federalState": "Tirol",
+            "purchasePrice": 1250000,
+            "rentableAreaSqm": 347.31,
+            "plotAreaSqm": 475,
+            "pricePerSqm": 3599.09,
+            "rooms": 8,
+            "bathrooms": 4,
+            "toilets": 4,
+            "yearBuilt": 2009,
+            "propertyType": "Einfamilienhaus, freistehend",
+            "condition": "Gepflegt",
+            "floors": 3,
+            "parking": "2 Stellplaetze",
+            "energy": "EA in Auftrag / keine Werte im Expose",
+            "heating": "nicht angegeben",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 1375000,
+            "averageDriveMinutes": 149.4,
+            "nearestSkiArea": "Serlesbahnen Mieders",
+            "nearestSkiMinutes": 6,
+            "tourismStatus": "Potenzial, nicht rechtsverbindlich bestaetigt",
+            "holidayUseNotes": "Zwei Einliegerwohnungen als Ferienwohnungen erwaehnt; Bewilligung offen.",
+            "unitsAndUse": "Haupthaus + 2 kleine Einliegerwohnungen",
+            "highlights": "Sehr gross; 4 Baeder; getrennte Einliegerwohnungen; Stubaital.",
+            "risks": "Hoher Kaufpreis; Energieausweis fehlt; touristische Nutzung pruefen.",
+            "sourceUrl": "https://www.immobilienscout24.de/expose/165475678",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 230,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Telfes+im+Stubai+%2F+Stubaital%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 105,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Telfes+im+Stubai+%2F+Stubaital%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 165,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Telfes+im+Stubai+%2F+Stubaital%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 230,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Telfes+im+Stubai+%2F+Stubaital%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 17,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Telfes+im+Stubai+%2F+Stubaital%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "serlesbahnen-mieders",
+                "name": "Serlesbahnen Mieders",
+                "distanceKm": 4,
+                "driveMinutes": 6,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Serlesbahnen+Mieders&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24-167388287",
+            "title": "Mehr-Generationenhaus mit viel Platz fuer Familien",
+            "place": "Flaurling",
+            "postalCode": "6403",
+            "federalState": "Tirol",
+            "purchasePrice": 850000,
+            "rentableAreaSqm": 602.66,
+            "plotAreaSqm": 0,
+            "pricePerSqm": 1410.41,
+            "propertyType": "Mehrfamilienhaus",
+            "condition": "Gepflegt",
+            "floors": 3,
+            "parking": "nicht angegeben",
+            "energy": "Energieausweis nicht vorgelegt",
+            "heating": "Zentralheizung, Oel",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 935000,
+            "averageDriveMinutes": 150,
+            "nearestSkiArea": "Rangger Koepfl",
+            "nearestSkiMinutes": 25,
+            "tourismStatus": "Nicht ersichtlich / pruefen",
+            "holidayUseNotes": "Keine Ferienwohnungszulassung ersichtlich; abgetrennte Wohnung vorhanden.",
+            "unitsAndUse": "Mehrere Nutzungsoptionen, abgetrennte 2-Zimmerwohnung",
+            "highlights": "Sehr viel Flaeche; Garten laut Text; Dorfkernlage.",
+            "risks": "Grundstueck mit 0 qm klaeren; Energieausweis fehlt; Zimmerzahl offen.",
+            "sourceUrl": "https://www.immobilienscout24.de/expose/167388287",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 220,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Flaurling%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 115,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Flaurling%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 175,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Flaurling%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 215,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Flaurling%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 25,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Flaurling%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "rangger-koepfl",
+                "name": "Rangger Koepfl",
+                "distanceKm": 16,
+                "driveMinutes": 25,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Rangger+Koepfl&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-685e564",
+            "title": "Haus in Omes/Axams mit Garten, Garage und Bergblick",
+            "place": "Omes / Axams",
+            "postalCode": "6094",
+            "federalState": "Tirol",
+            "purchasePrice": 690000,
+            "rentableAreaSqm": 180,
+            "plotAreaSqm": 594,
+            "pricePerSqm": 3833.33,
+            "rooms": 9,
+            "bathrooms": 3,
+            "toilets": 4,
+            "yearBuilt": 1988,
+            "propertyType": "Einfamilienhaus, Altbau",
+            "condition": "Renovierungsbeduerftig",
+            "floors": 3,
+            "parking": "1 Garage / Tiefgarage, 1 Parkmoeglichkeit",
+            "energy": "HWB 118,2 kWh/(m2a) E; fGEE 1,85 D",
+            "heating": "Ofenheizung, Fussbodenheizung, Oel",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 759000,
+            "averageDriveMinutes": 150,
+            "nearestSkiArea": "Axamer Lizum",
+            "nearestSkiMinutes": 18,
+            "tourismStatus": "Nicht ersichtlich / pruefen",
+            "holidayUseNotes": "Skifahren im Umfeld erwaehnt; Zulassung offen.",
+            "unitsAndUse": "Einfamilienhaus, unterkellert",
+            "highlights": "Nahe Innsbruck; 9 Zimmer; Bergblick.",
+            "risks": "Renovierungsbeduerftig; Oel; Preisangaben im Inserat widerspruechlich.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/685e564ad73668656ae2eabc",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 225,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Omes+%2F+Axams%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 110,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Omes+%2F+Axams%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 170,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Omes+%2F+Axams%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 225,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Omes+%2F+Axams%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 20,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Omes+%2F+Axams%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "axamer-lizum",
+                "name": "Axamer Lizum",
+                "distanceKm": 11,
+                "driveMinutes": 18,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Axamer+Lizum&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-69f8a3",
+            "title": "Einfamilienhaus in Faggen - Wohnen mit Charme und Ausblick",
+            "place": "Faggen",
+            "postalCode": "6525",
+            "federalState": "Tirol",
+            "purchasePrice": 389000,
+            "rentableAreaSqm": 110,
+            "plotAreaSqm": 199,
+            "pricePerSqm": 3536.36,
+            "rooms": 4,
+            "bedrooms": 3,
+            "bathrooms": 2,
+            "toilets": 1,
+            "yearBuilt": 1982,
+            "propertyType": "Einfamilienhaus",
+            "condition": "nicht angegeben",
+            "parking": "3 Parkplaetze, 3 Garagen / Carport",
+            "energy": "HWB 135 kWh/(m2a) D; fGEE 1,27 C",
+            "heating": "Zentralheizung, Ofenheizung, Oel",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 427900,
+            "averageDriveMinutes": 163,
+            "nearestSkiArea": "Serfaus-Fiss-Ladis / Fiss-Ladis Talstation",
+            "nearestSkiMinutes": 20,
+            "tourismStatus": "Nicht ersichtlich / pruefen",
+            "holidayUseNotes": "Keine Ferienhauszulassung ersichtlich.",
+            "unitsAndUse": "Einfamilienhaus",
+            "highlights": "Niedriger Kaufpreis; 3 Schlafzimmer; viele Stellplaetze.",
+            "risks": "Kleines Grundstueck; Oel; fuer viele Eigner eher klein.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/69f8a3a6897bd2a11f62cafa",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 230,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Faggen%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 155,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Faggen%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 205,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Faggen%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 165,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Faggen%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 60,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Faggen%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "serfaus-fiss-ladis",
+                "name": "Serfaus-Fiss-Ladis / Fiss-Ladis Talstation",
+                "distanceKm": 15,
+                "driveMinutes": 20,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Serfaus-Fiss-Ladis+%2F+Fiss-Ladis+Talstation&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-69f2ef",
+            "title": "Waldchalet Pfunds - provisionsfrei",
+            "place": "Pfunds",
+            "postalCode": "6542",
+            "federalState": "Tirol",
+            "purchasePrice": 670000,
+            "rentableAreaSqm": 280,
+            "plotAreaSqm": 1940,
+            "pricePerSqm": 2392.86,
+            "rooms": 6,
+            "bedrooms": 5,
+            "beds": 8,
+            "bathrooms": 2,
+            "toilets": 2,
+            "yearBuilt": 1974,
+            "propertyType": "Chalet / Sonstige",
+            "condition": "Gepflegt",
+            "parking": "Garage, 1 Parkmoeglichkeit",
+            "energy": "HWB 269 kWh/(m2a) G; fGEE 2,69 E",
+            "heating": "Ofenheizung, Zentralheizung, Oel; Warmwasser-Waermepumpe",
+            "brokerPct": 0,
+            "closingCostsPctRough": 6.4,
+            "totalCostRough": 712880,
+            "averageDriveMinutes": 170,
+            "nearestSkiArea": "Nauders / Bergkastelbahn",
+            "nearestSkiMinutes": 20,
+            "tourismStatus": "Gute Grundlage, rechtlich pruefen",
+            "holidayUseNotes": "Mischgebiet - Tourismusgebiet laut Expose; Detailpruefung erforderlich.",
+            "unitsAndUse": "Chalet mit UG/EG/OG, Garage, Pool, grossem Grundstueck",
+            "highlights": "Provisionsfrei; grosses Grundstueck; Tourismusgebiet-Widmung.",
+            "risks": "Schlechter Energiekennwert; Oel; Baujahr 1974.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/69f2efdc897bd2a11f553783",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 240,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Pfunds%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 170,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Pfunds%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 220,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Pfunds%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 150,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Pfunds%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 70,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Pfunds%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "nauders-bergkastel",
+                "name": "Nauders / Bergkastelbahn",
+                "distanceKm": 15,
+                "driveMinutes": 20,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Nauders+%2F+Bergkastelbahn&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-68025d",
+            "title": "Ueber den Daechern von Oetz - Haus mit traumhafter Aussicht",
+            "place": "Oetz / Oetz",
+            "postalCode": "6433",
+            "federalState": "Tirol",
+            "purchasePrice": 420000,
+            "rentableAreaSqm": 114,
+            "plotAreaSqm": 823,
+            "pricePerSqm": 3684.21,
+            "rooms": 4,
+            "bathrooms": 2,
+            "toilets": 2,
+            "yearBuilt": 1955,
+            "propertyType": "Einfamilienhaus, 2 Wohneinheiten",
+            "condition": "Gepflegt / laufend saniert",
+            "parking": "nicht angegeben",
+            "energy": "Energieausweis in Arbeit",
+            "heating": "Zentralheizung, Ofenheizung, Gas",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 462000,
+            "averageDriveMinutes": 151,
+            "nearestSkiArea": "Hochoetz / Acherkogelbahn",
+            "nearestSkiMinutes": 4,
+            "tourismStatus": "Potenzial, pruefen",
+            "holidayUseNotes": "Eine Wohnung wird als Ferienwohnung vermietet; Bewilligung pruefen.",
+            "unitsAndUse": "2 Wohneinheiten ca. 52 qm und 62 qm",
+            "highlights": "Niedriger Preis; grosser Grund; zwei Einheiten; Naehe Hochoetz.",
+            "risks": "Nur 114 qm Wohnflaeche; Baujahr 1955; Energieausweis offen.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/68025de59f5f64b9788cf711",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 205,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Oetz+%2F+Oetz%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 135,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Oetz+%2F+Oetz%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 185,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Oetz+%2F+Oetz%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 190,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Oetz+%2F+Oetz%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 40,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Oetz+%2F+Oetz%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "hochoetz-acherkogel",
+                "name": "Hochoetz / Acherkogelbahn",
+                "distanceKm": 2,
+                "driveMinutes": 4,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Hochoetz+%2F+Acherkogelbahn&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-68d0d9",
+            "title": "Familienglueck mit Panoramablick - Haus im vorderen Oetztal",
+            "place": "Oetz / Taxegg",
+            "postalCode": "6433",
+            "federalState": "Tirol",
+            "purchasePrice": 599000,
+            "rentableAreaSqm": 166.01,
+            "plotAreaSqm": 348,
+            "pricePerSqm": 3608.22,
+            "rooms": 5,
+            "bedrooms": 4,
+            "bathrooms": 2,
+            "toilets": 2,
+            "yearBuilt": 1996,
+            "propertyType": "Doppelhaushaelfte",
+            "condition": "Gepflegt",
+            "floors": 3,
+            "parking": "4 Parkplaetze, 1 Garage, 5 Parkmoeglichkeiten",
+            "energy": "HWB 128 kWh/(m2a) D; fGEE 1,28 C",
+            "heating": "Zentralheizung, Ofen, Fussbodenheizung, Oel, Solar",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 658900,
+            "averageDriveMinutes": 151,
+            "nearestSkiArea": "Hochoetz / Acherkogelbahn",
+            "nearestSkiMinutes": 8,
+            "tourismStatus": "Nicht ersichtlich / pruefen",
+            "holidayUseNotes": "Keine explizite Ferienwohnungszulassung ersichtlich.",
+            "unitsAndUse": "Doppelhaushaelfte, Keller, 3 Etagen",
+            "highlights": "4 Schlafzimmer; ordentliche Stellplatzsituation; Naehe Hochoetz.",
+            "risks": "Doppelhaushaelfte; kleines Grundstueck; Oel.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/68d0d9ebf233102b247ca274",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 205,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Oetz+%2F+Taxegg%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 135,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Oetz+%2F+Taxegg%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 185,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Oetz+%2F+Taxegg%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 190,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Oetz+%2F+Taxegg%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 40,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Oetz+%2F+Taxegg%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "hochoetz-acherkogel-taxegg",
+                "name": "Hochoetz / Acherkogelbahn",
+                "distanceKm": 5,
+                "driveMinutes": 8,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Hochoetz+%2F+Acherkogelbahn&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          },
+          {
+            "id": "IS24AT-669a65",
+            "title": "Wohnhaus am Eingang des Oetztals",
+            "place": "Sautens",
+            "postalCode": "6432",
+            "federalState": "Tirol",
+            "purchasePrice": 595000,
+            "rentableAreaSqm": 235,
+            "plotAreaSqm": 865,
+            "pricePerSqm": 2531.91,
+            "rooms": 10,
+            "bedrooms": 3,
+            "bathrooms": 3,
+            "toilets": 3,
+            "propertyType": "Einfamilienhaus / 3 Wohneinheiten",
+            "condition": "Gepflegt / laufend saniert",
+            "floors": 3,
+            "parking": "1 Garage, 1 Parkmoeglichkeit; Text: Doppelgarage",
+            "energy": "Energieausweis in Arbeit",
+            "heating": "Zentralheizung, Pellet",
+            "brokerPct": 3.6,
+            "closingCostsPctRough": 10,
+            "totalCostRough": 654500,
+            "averageDriveMinutes": 146,
+            "nearestSkiArea": "Hochoetz / Acherkogelbahn",
+            "nearestSkiMinutes": 8,
+            "tourismStatus": "Potenzial, pruefen",
+            "holidayUseNotes": "Vermietung von Ferienwohnungen erwaehnt; Wohnrecht im 2. OG.",
+            "unitsAndUse": "3 Wohneinheiten: EG ca. 100 qm, 1. OG ca. 70 qm, 2. OG ca. 65 qm",
+            "highlights": "235 qm; 10 Zimmer; 3 Einheiten; Pelletheizung; Vermietungspotenzial.",
+            "risks": "Wohnrecht im 2. OG; Stellplatzangaben widerspruechlich; Energieausweis offen.",
+            "sourceUrl": "https://www.immobilienscout24.at/expose/669a6591f711f5bf07edbac8",
+            "guestNightsPerYear": 60,
+            "travelTimes": [
+              {
+                "originId": "esslingen",
+                "originLabel": "Esslingen am Neckar",
+                "minutes": 200,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Esslingen+am+Neckar&destination=Sautens%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "muenchen",
+                "originLabel": "Muenchen",
+                "minutes": 130,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Muenchen&destination=Sautens%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "neuburg",
+                "originLabel": "Neuburg an der Donau",
+                "minutes": 180,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Neuburg+an+der+Donau&destination=Sautens%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "hinwil",
+                "originLabel": "Hinwil CH",
+                "minutes": 185,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Hinwil+CH&destination=Sautens%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              },
+              {
+                "originId": "innsbruck",
+                "originLabel": "Innsbruck",
+                "minutes": 35,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Innsbruck&destination=Sautens%2C+Oesterreich&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ],
+            "skiAreas": [
+              {
+                "id": "hochoetz-acherkogel-sautens",
+                "name": "Hochoetz / Acherkogelbahn",
+                "distanceKm": 5,
+                "driveMinutes": 8,
+                "mapsUrl": "https://www.google.com/maps/dir/?api=1&origin=Haus&destination=Hochoetz+%2F+Acherkogelbahn&travelmode=driving",
+                "provider": "excel",
+                "dataQuality": "excelFallback"
+              }
+            ]
+          }
+        ],
+        "mapEnrichment": {
+          "provider": "excel",
+          "status": "fallback",
+          "message": "Excel-Fallbackwerte aus immobilienvergleich_ferienhaus_tirol.xlsx"
+        },
+        "notes": "Demo-Szenario mit konkretem Objekt. Nutzungszulassung, USt, Abgaben, Gemeindeauskunft und Bankfaehigkeit sind separat zu pruefen."
+      }
+    },
+    "closingCosts": {
+      "schema": "immo-finance.closing-costs",
+      "version": 1,
+      "id": "closing-costs-demo-at",
+      "name": "Demo Nebenkosten",
+      "description": "Oesterreichische Beispielwerte fuer Erwerbsnebenkosten.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "realEstateTransferTaxPct": 3.5,
+        "notaryPct": 1.5,
+        "landRegistryPct": 1.1,
+        "brokerPct": 0,
+        "otherCosts": []
+      }
+    },
+    "opex": {
+      "schema": "immo-finance.opex",
+      "version": 1,
+      "id": "opex-demo-standard",
+      "name": "Demo Betriebskosten",
+      "description": "Neutrale Beispielwerte fuer laufende Kosten.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "recurringItems": [
+          {
+            "id": "opex-001",
+            "label": "Instandhaltungsruecklage",
+            "amount": 6000,
+            "period": "yearly",
+            "annualCostMode": "rentableArea",
+            "annualAmount": 18,
+            "inflationPct": 2,
+            "recoverableFromTenants": false,
+            "category": "reserve"
+          },
+          {
+            "id": "opex-002",
+            "label": "Versicherung",
+            "amount": 1200,
+            "period": "yearly",
+            "annualCostMode": "fixed",
+            "annualAmount": 1200,
+            "inflationPct": 2,
+            "recoverableFromTenants": false,
+            "category": "insurance"
+          }
+        ]
+      }
+    },
+    "financing": {
+      "schema": "immo-finance.financing",
+      "version": 1,
+      "id": "financing-demo-annuity",
+      "name": "Demo Finanzierung",
+      "description": "20% Eigenkapital, 80% Annuitaetendarlehen ueber 25 Jahre.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "loanName": "Annuitaetendarlehen",
+        "equitySharePct": 20,
+        "annualInterestRatePct": 4,
+        "termYears": 25,
+        "startMonth": 0,
+        "additionalMonthlyRepayment": 0,
+        "bankdarlehenModus": "automatischSaldieren",
+        "mittelherkunft": [],
+        "mittelverwendung": []
+      }
+    },
+    "strategy": {
+      "schema": "immo-finance.strategy",
+      "version": 1,
+      "id": "strategy-demo-liquiditaet",
+      "name": "Demo Strategie",
+      "description": "Liquiditaets- und Entscheidungsziele fuer das Demo-Projekt.",
+      "createdAt": "2026-05-15T00:00:00.000Z",
+      "updatedAt": "2026-05-15T00:00:00.000Z",
+      "data": {
+        "fallkennung": "fall-waldchalet-pfunds-basis",
+        "szenariokennung": "szenario-demo-basis",
+        "annahmenquelle": "Demo-/Szenario-Daten, keine Beratung",
+        "reserveMonths": 3,
+        "minimumLiquidityAmount": 15000,
+        "targetLiquidityAmount": 30000,
+        "contributionPolicy": "minimumObligationPlusReserveTopUp",
+        "rentOffsetsOwnerContributions": false,
+        "targetEquityRatioPct": 20,
+        "pointShareMode": "usage",
+        "pointTierWeight": 50,
+        "pointEquityWeight": 50,
+        "capitalShareMode": "scheduledPrincipal",
+        "scheduledPrincipalAffectsCompanyShare": true,
+        "manualCapitalContributionsAffectCompanyShare": true,
+        "capitalValuationInterestPct": 2,
+        "appreciationPercentPerYear": 2,
+        "ownerWeekendUsagePct": 80,
+        "guestWeekendUsagePct": 50,
+        "externalOccupancyRatePct": 35,
+        "averageGrossPricePerExternalRoomNight": 120,
+        "ownerUseDisplacementFactorPct": 50,
+        "variableCostPerRoomNightAmount": 25,
+        "reservePerRoomNightAmount": 15,
+        "goNoGoChecks": [
+          {
+            "id": "check-leisure-residence",
+            "label": "Freizeitwohnsitz / Nutzung",
+            "status": "open"
+          },
+          {
+            "id": "check-touristic-rental",
+            "label": "Touristische Vermietung",
+            "status": "open"
+          },
+          {
+            "id": "check-bank-documents",
+            "label": "Bankunterlagen",
+            "status": "open"
+          },
+          {
+            "id": "check-insurance",
+            "label": "Versicherung",
+            "status": "open"
+          }
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "appVersion": "0.1.0",
+    "currency": "EUR",
+    "locale": "de-DE",
+    "timeHorizonMonths": 360
+  }
+}
