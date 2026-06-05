@@ -56,7 +56,7 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - [x] (2026-06-05 17:20) Banksicht mit Beleihungsauslauf, Kapitaldienstdeckungsgrad, persoenlicher Belastungsquote und Stressfaellen ergaenzt.
 - [x] (2026-06-05 17:05) Umsatzsteuer-Matrix und Vorsteuer-Konsistenzpruefungen ergaenzt.
 - [x] (2026-06-05 17:05) Rechtsformvergleich neutral mit Pruefgattern ausgebaut.
-- [ ] (2026-06-05 15:45) Kennzahlenregister, Sensitivitaeten und rote Diagnosen ergaenzen.
+- [x] (2026-06-05 18:25) Kennzahlenregister, Sensitivitaeten und rote Identitaetsdiagnosen ergaenzt.
 - [x] (2026-06-05 16:35) Klickbare Fragezeichen-Hilfen im Grundmodell eingebaut.
 - [x] (2026-06-05 16:35) Wiki mit den neuen Kernlogiken aktualisiert; einzelne Rechtsform-/USt-Detailpruefungen bleiben offen.
 - [x] (2026-06-05 16:35) Beraterdokument begrifflich aktualisiert.
@@ -111,7 +111,7 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - Wiki und Beraterdokument auf diese Kernlogiken aktualisiert.
 - `npm run lint`, `npm run typecheck` und `npm test` erfolgreich.
 - Offen:
-  - Kennzahlenregister, Build/Sync und Abschlussarchivierung.
+  - Build/Sync und Abschlussarchivierung.
 - Beim naechsten Mal verbessern:
   - Nach jedem Commit dokumentieren, welche App-, Test- und Wiki-Bereiche geaendert wurden.
 
@@ -292,9 +292,9 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 
 ### Meilenstein 14 - Kennzahlen und rote Diagnosen
 
-- [ ] Kennzahlenregister ergaenzen.
-- [ ] Harte Identitaetsdiagnosen ergaenzen.
-- [ ] Rote Warnungen fuer Bank, Liquiditaet, Umsatzsteuer, Nutzung und Rechtsform.
+- [x] Kennzahlenregister ergaenzen.
+- [x] Harte Identitaetsdiagnosen ergaenzen.
+- [x] Rote Warnungen fuer Bank, Liquiditaet, Umsatzsteuer, Nutzung und Rechtsform.
 
 ### Meilenstein 15 - Navigation und Visualisierungen
 

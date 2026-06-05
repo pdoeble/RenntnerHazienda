@@ -36,6 +36,7 @@ describe("App shell", () => {
       "aria-selected",
       "true"
     );
+    expect(screen.getByText("Kennzahlenregister")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Beitraege / Nutzung" }));
     expect(screen.getByText("Monatszahlung gesamt")).toBeInTheDocument();

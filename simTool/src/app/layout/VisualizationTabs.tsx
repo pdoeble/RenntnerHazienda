@@ -411,6 +411,11 @@ function DashboardView({ result }: { result: CalculationResult }) {
           ]
         ]}
       />
+      <SectionHeading label="Kennzahlenregister" />
+      <DataTable
+        headers={["Kennzahl", "Berechnung / Grundlage", "Status", "Hinweis"]}
+        rows={keyMetricRows(result)}
+      />
     </div>
   );
 }
@@ -1150,7 +1155,9 @@ const HELP_TEXTS: Record<string, string> = {
   "Anteilswirksamer Kapitalwert":
     "Dieser Wert ist die aufgezinste Kapitalbasis, die in der App tatsaechlich den Unternehmensanteil bestimmt.",
   "Nicht verwaessernder Kapitalwert":
-    "Dieser Wert zeigt Kapitalzufuehrungen, die wirtschaftlich sichtbar sind, aber die Unternehmensanteile nicht veraendern."
+    "Dieser Wert zeigt Kapitalzufuehrungen, die wirtschaftlich sichtbar sind, aber die Unternehmensanteile nicht veraendern.",
+  "Kennzahlenregister":
+    "Das Kennzahlenregister sammelt die wichtigsten Pruefwerte aus Objekt-, Rechtstraeger-, Mitglieder- und Banksicht."
 };
 
 function ChartFrame({ children }: { children: ReactNode }) {
@@ -1296,6 +1303,83 @@ function readableTaxStatus(value: string): string {
 
 function formatOptionalPercent(value: number | null): string {
   return value === null ? "offen" : `${value.toFixed(1)}%`;
+}
+
+function keyMetricRows(result: CalculationResult): string[][] {
+  const fundingGap = result.capitalNeed.funding.finanzierungsluecke;
+  const minimumBankAccount = result.liquidity.minimumLiquidity;
+  const weekendPressure = result.occupancy.weekendOccupancyPct;
+  const vatWarnings = result.umsatzsteuer.diagnostics.length;
+  const legalWarnings = result.diagnostics.filter(
+    (diagnostic) => diagnostic.domain === "legalForm"
+  ).length;
+  const criticalStressCases = result.bank.stressfaelle.filter(
+    (stressfall) => stressfall.status === "kritisch"
+  ).length;
+
+  return [
+    [
+      "Finanzierungsluecke",
+      "Mittelverwendung minus Mittelherkunft",
+      fundingGap <= 0 ? "ok" : "kritisch",
+      formatMoney(fundingGap)
+    ],
+    [
+      "Kapitaldienstdeckungsgrad",
+      "Bankpruefungs-Zahlungsfluss / Kapitaldienst",
+      result.bank.kapitaldienstdeckungsgrad >= 1.1 ? "ok" : "kritisch",
+      result.bank.kapitaldienstdeckungsgrad.toFixed(2)
+    ],
+    [
+      "Beleihungsauslauf",
+      "Bankdarlehen / Wertbasis",
+      result.bank.beleihungsauslaufPct <= result.bank.zielBeleihungsauslaufPct
+        ? "ok"
+        : "kritisch",
+      `${result.bank.beleihungsauslaufPct.toFixed(1)}%`
+    ],
+    [
+      "Persoenliche Belastungsquote",
+      "Monatszahlungen / Monatsnettoeinkommen",
+      result.bank.persoenlicheBelastungsquotePct === null
+        ? "offen"
+        : result.bank.persoenlicheBelastungsquotePct <=
+            result.bank.fmaBelastungsquoteRichtwertPct
+          ? "ok"
+          : "kritisch",
+      formatOptionalPercent(result.bank.persoenlicheBelastungsquotePct)
+    ],
+    [
+      "Mindestliquiditaet",
+      "niedrigster Bankkonto-Kontostand",
+      minimumBankAccount >= 0 ? "ok" : "kritisch",
+      formatMoney(minimumBankAccount)
+    ],
+    [
+      "Wochenenddruck",
+      "Wochenend-Zimmernaechte belegt / verfuegbar",
+      weekendPressure <= 85 ? "ok" : "kritisch",
+      `${weekendPressure.toFixed(1)}%`
+    ],
+    [
+      "Umsatzsteuer-Pruefungen",
+      "offene Leistungsarten und Vorsteuerannahmen",
+      vatWarnings === 0 ? "ok" : "offen / pruefen",
+      `${vatWarnings} Hinweise`
+    ],
+    [
+      "Rechtsform-Pruefungen",
+      "Kosten, Zweck, Haftung und Struktur",
+      legalWarnings === 0 ? "ok" : "offen / pruefen",
+      `${legalWarnings} Hinweise`
+    ],
+    [
+      "Stressfaelle",
+      "Zins, Fremderloes, Betriebskosten, Ausfall",
+      criticalStressCases === 0 ? "ok" : "kritisch",
+      `${criticalStressCases} kritisch`
+    ]
+  ];
 }
 
 function looksLikeHtml(text: string): boolean {

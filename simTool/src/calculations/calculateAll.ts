@@ -1,4 +1,4 @@
-import { hasBlockingDiagnostics } from "../validation/diagnostics";
+import { diagnostic, hasBlockingDiagnostics } from "../validation/diagnostics";
 import {
   calculateBankAccountCashflow,
   calculateCashflow
@@ -67,6 +67,7 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     capitalNeed,
     contributions
   );
+  const identityDiagnostics = collectIdentityDiagnostics(cashflow);
   const buchungslogik = calculateBuchungslogik(capitalNeed);
   const umsatzsteuer = calculateUmsatzsteuer(snapshot);
   const sichten = calculateSichten(
@@ -110,6 +111,7 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       ...debt.diagnostics,
       ...cashflow.diagnostics,
       ...bank.diagnostics,
+      ...identityDiagnostics,
       ...buchungslogik.diagnostics,
       ...umsatzsteuer.diagnostics,
       ...liquidity.diagnostics,
@@ -119,6 +121,56 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       ...houseComparison.diagnostics
     ]
   };
+}
+
+function collectIdentityDiagnostics(
+  cashflow: CalculationResult["cashflow"]
+): CalculationResult["diagnostics"] {
+  const diagnostics = [];
+  let previousClosingBalance = 0;
+
+  for (const month of cashflow.bankAccountMonthly) {
+    const expectedClosingBalance =
+      month.month === 0
+        ? month.netMovement
+        : previousClosingBalance + month.netMovement;
+    if (Math.abs(expectedClosingBalance - month.closingBalance) > 0.02) {
+      diagnostics.push(
+        diagnostic(
+          `identity.bank-account.${month.month}`,
+          "error",
+          "cashflow",
+          `Bankkonto-Identitaet stimmt in Monat ${
+            month.month + 1
+          } nicht: erwarteter Kontostand ${expectedClosingBalance.toLocaleString(
+            "de-DE"
+          )} EUR, modellierter Kontostand ${month.closingBalance.toLocaleString(
+            "de-DE"
+          )} EUR.`
+        )
+      );
+      break;
+    }
+    previousClosingBalance = month.closingBalance;
+  }
+
+  for (const year of cashflow.vermoegensuebersichtYearly) {
+    if (Math.abs(year.saldendifferenz) > 0.02) {
+      diagnostics.push(
+        diagnostic(
+          `identity.balance-sheet.${year.year}`,
+          "error",
+          "cashflow",
+          `Vermoegensidentitaet stimmt in Jahr ${year.year} nicht: Differenz ${year.saldendifferenz.toLocaleString(
+            "de-DE"
+          )} EUR.`
+        )
+      );
+      break;
+    }
+  }
+
+  return diagnostics;
 }
 
 function emptyCalculationResult(

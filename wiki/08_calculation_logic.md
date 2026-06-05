@@ -616,6 +616,35 @@ Die App berechnet vier Stressfälle:
 
 Jeder Stressfall bekommt einen Kapitaldienstdeckungsgrad und den Status `tragfähig`, `angespannt` oder `kritisch`.
 
+## 22a. Kennzahlenregister und Identitätsdiagnosen
+
+### Kernaussage
+Die Übersicht enthält ein Kennzahlenregister. Es bündelt Finanzierungslücke, Kapitaldienstdeckungsgrad, Beleihungsauslauf, persönliche Belastungsquote, Mindestliquidität, Wochenenddruck, Umsatzsteuer-Prüfungen, Rechtsform-Prüfungen und Stressfälle.
+
+Zusätzlich erzeugt die App harte Diagnosen, wenn interne Identitäten nicht aufgehen:
+
+```text
+Bankkonto-Kontostand Monat n =
+  Bankkonto-Kontostand Monat n-1
+  + Netto-Bewegung Monat n
+
+Vermögen =
+  Verbindlichkeiten
+  + Eigenkapital
+```
+
+Bei Abweichungen über der Rundungstoleranz wird eine rote Diagnose erzeugt.
+
+### Quelle
+- Quelle: Kennzahlen- und Identitätsberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculateAll.ts
+- Link: ../simTool/src/app/layout/VisualizationTabs.tsx
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
 ### Quelle
 - Quelle: Banksicht-Berechnung
 - Herausgeber: Projektteam RenntnerHazienda

@@ -43,7 +43,8 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | `f425ed2` | Deutsche App-Begriffe, Mittelherkunft/-verwendung, Bankkonto-Zahlungsfluss, Banksicht, Eigennutzungswert, Hilfepopover und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 | `f208636` | Buchungslogik, Umsatzsteuer-Matrix und Rechtsform-Pruefgatter in App und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 | `6aab03c` | Persoenliche Belastungsquote, Banksicht-Stressfaelle und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
-| naechster Commit | Anteilsschalter fuer Tilgung und Kapitalruecklage mit getrenntem nicht verwaessernden Kapitalwert | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| `7f4309e` | Anteilsschalter fuer Tilgung und Kapitalruecklage mit getrenntem nicht verwaessernden Kapitalwert | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| naechster Commit | Kennzahlenregister, harte Identitaetsdiagnosen und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 
 ## Arbeitsregel
 

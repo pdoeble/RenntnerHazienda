@@ -573,6 +573,11 @@ describe("calculation pipeline", () => {
       firstYear.totalIncome - firstYear.totalExpenses,
       2
     );
+    expect(
+      result.diagnostics.some((diagnostic) =>
+        diagnostic.id.startsWith("identity.")
+      )
+    ).toBe(false);
   });
 
   it("calculates annual recurring contributions so liquidity stays above reserve", () => {
