@@ -426,7 +426,7 @@ Für in Deutschland oder der Schweiz steuerlich ansässige Beteiligte ist die An
 ### Arbeitsregel
 Für das Wiki genügt als konservative Grundregel: österreichische Steuer- bzw. Erklärungspflichten sind bei Einkünften aus einer österreichischen Immobilie sehr wahrscheinlich; zusätzliche Erklärungspflichten oder Entlastungsmechanismen in Deutschland oder der Schweiz sind je Beteiligtem zu prüfen.
 
-## 15. tax_scenarios
+## 15. Steuerszenarien
 
 ### Kernaussage
 Die Szenarien dienen als steuerliche Arbeitsmatrix. Sie ersetzen keine Steuerberatung und sind bei Standort, Rechtsform und Nutzungsprofil zu aktualisieren.
@@ -447,10 +447,10 @@ Die Szenarien dienen als steuerliche Arbeitsmatrix. Sie ersetzen keine Steuerber
 | Gemischt privat + unternehmerisch | 20 % beim Kauf möglich, aber heikel | Mischsatz / Mischleistungen | hohes Kürzungs- und Berichtigungsrisiko über 20 Jahre | Freizeitwohnsitzthemen möglich | steuerlich anspruchsvollste Variante |
 | Tiroler Freizeitwohnsitz mit touristischer Vermietung | wie oben | wie oben | private Nutzung erschwert Vorsteuer | Aufenthaltsabgaben, Freizeitwohnsitzpauschale und Freizeitwohnsitzabgabe möglich | nur nach sauberem Landes- und Gemeindecheck sinnvoll |
 
-## 16. Steuerliche Warnhinweise für Nutzungsbeitrag und Nutzungspunkte
+## 16. Steuerliche Warnhinweise für Nutzungsentgelt und Nutzungspunkte
 
 ### Kernaussage
-Nutzungsbeitrag und Nutzungspunkte sollten ausschließlich interne Nutzungsrechte an Zimmernächten steuern. Sie dürfen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder verdeckte Mietzahlungen ersetzen. Bei Personengesellschaften können Vergütungen an Gesellschafter für Mitarbeit oder die Überlassung von Wirtschaftsgütern eigene steuerliche Folgen haben.
+Nutzungsentgelt und Nutzungspunkte sollten ausschließlich interne Nutzungsrechte an Zimmernächten steuern. Sie dürfen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder verdeckte Mietzahlungen ersetzen. Bei Personengesellschaften können Vergütungen an Gesellschafter für Mitarbeit oder die Überlassung von Wirtschaftsgütern eigene steuerliche Folgen haben.
 
 ### Geltungsbereich
 - Land: Österreich
@@ -469,8 +469,41 @@ Nutzungsbeitrag und Nutzungspunkte sollten ausschließlich interne Nutzungsrecht
 
 ### Prüfpunkte
 - Werden Nutzungspunkte nur für die interne Zimmernachtverteilung genutzt oder wirtschaftlich vergütet?
-- Sind Start-EK, Anlagebeitrag, Kostenbeitrag und Nutzungsbeitrag getrennt dokumentiert?
+- Sind Start-EK, Kapitalruecklage / Anlage, Kostenbeitrag und Nutzungsentgelt getrennt dokumentiert?
 - Gibt es Caps und Genehmigungsregeln für Arbeitsleistungen?
 - Gibt es fremdübliche Dokumentation und Genehmigung?
 - Ist die Exit-Bewertung unabhängig von subjektiven Arbeitsleistungen?
 - Sind Sondervergütungen steuerlich erfasst?
+
+## 17. Umsatzsteuer-Matrix als App-Pflichtprüfung
+
+### Kernaussage
+Die App darf Umsatzsteuer nicht als eine globale Projekteinstellung behandeln. Jede Leistungsart braucht eine eigene Einordnung: private Eigennutzung, Nutzungsentgelt von Beteiligten, Drittvermietung, Beherbergung mit Nebenleistungen, reine Kostenumlage, Parkplatz/Garage und Nutzung durch nahestehende Unternehmen. Bei steuerfreier Vermietung darf das Modell nicht zugleich ungeprüft Vorsteuer aus denselben Kosten abziehen.
+
+### Mindestfelder
+| Feld | Zweck |
+|---|---|
+| Leistungsart | trennt Wohnraum, Beherbergung, kurzfristige Nutzung, Parkplatz/Garage und Kostenumlage |
+| angenommener USt-Satz | Modellannahme, nicht Rechtsentscheidung |
+| steuerbar / steuerpflichtig / steuerfrei / offen | zwingt zur Dokumentation der Annahme |
+| Vorsteuerbezug | verhindert verdeckte Vermischung von steuerfreien und steuerpflichtigen Bereichen |
+| Rechnungs- und Nachweispflichten | Grundlage für Steuerberatung und Buchhaltung |
+| Quellenstatus | zeigt, ob die Annahme geprüft oder offen ist |
+
+### Quelle
+- Quelle: Vermietung und Verpachtung in der Umsatzsteuer
+- Herausgeber: Bundesministerium für Finanzen
+- Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/vermietung-und-verpachtung-in-der-umsatzsteuer.html
+- Stand/Veröffentlichungsdatum: Website laufend, geprüft am 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, Umsatzsteuer bei Vermietung/Verpachtung
+- Stabilität: mittel, Einzelfall und Leistungsinhalt bleiben entscheidend
+
+### Weitere Quelle
+- Quelle: Tiefenrecherchebericht 2
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../references/260605-deep-research-report_2.md
+- Stand/Veröffentlichungsdatum: 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: interne App-Anforderungen
+- Stabilität: niedrig

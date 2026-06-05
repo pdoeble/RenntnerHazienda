@@ -142,7 +142,7 @@ Die Wahl des Kreditnehmers ist eine zentrale Strukturfrage. Kreditnehmer können
 ## 5. Bankensicht
 
 ### Kernaussage
-Banken bewerten nicht nur Objektwert, sondern auch Verwertbarkeit, Nutzungserlaubnis, Bonität, Cashflow, rechtliche Struktur und Sicherheiten.
+Banken bewerten nicht nur Objektwert, sondern auch Verwertbarkeit, Nutzungserlaubnis, Bonität, Zahlungsfluss, rechtliche Struktur und Sicherheiten.
 
 ### Geltungsbereich
 - Land: Österreich
@@ -316,7 +316,7 @@ Nebenkosten, Einrichtung, Instandsetzung, Reserven, Pfandrecht, USt-Liquidität 
 ## 11. Bank-szenario zur Liquidität
 
 ### Kernaussage
-Die folgende Tabelle ist eine Arbeitsannahme für das Wiki. Annahmen: 70 % LTV auf den Bruttokaufpreis, Erwerbsnebenkosten typisiert mit 3,5 % GrESt + 1,1 % Eigentumseintragung + 1,8 % Vertrag/Treuhand + 3,6 % Makler = 10,0 % des Bruttokaufpreises; zusätzlich 1,2 % Pfandrechtsgebühr auf den Darlehensbetrag. Das ist weder Mindest- noch Höchstwert, sondern ein konservativer Standardfall.
+Die folgende Tabelle ist eine Arbeitsannahme für das Wiki. Annahmen: 70 % Beleihungsauslauf auf den Bruttokaufpreis, Erwerbsnebenkosten typisiert mit 3,5 % GrESt + 1,1 % Eigentumseintragung + 1,8 % Vertrag/Treuhand + 3,6 % Makler = 10,0 % des Bruttokaufpreises; zusätzlich 1,2 % Pfandrechtsgebühr auf den Darlehensbetrag. Das ist weder Mindest- noch Höchstwert, sondern ein konservativer Standardfall.
 
 ### Quelle
 - Quelle: Nebenkosten beim Wohnungs- und Grundstückskauf / Bemessungsgrundlage / USt-Sätze / Vorsteuerberichtigung
@@ -367,7 +367,7 @@ Für Bankgespräche sollte die Eigentümergruppe ein einheitliches Paket vorbere
 - Vermögensstatus und Eigenmittelnachweise
 - Eigentümerliste mit Beteiligungsquoten
 - Entwurf Gesellschafts-, Syndikats- oder Miteigentümervertrag
-- Nutzungsregelwerk mit Nutzungsbeitrag, Nutzungspunkten und Zimmernachtmodell
+- Nutzungsregelwerk mit Nutzungsentgelt, Nutzungspunkten und Zimmernachtmodell
 - Exit- und Aufgriffsregeln
 - Nachschussmechanismus
 - Budget- und Liquiditätsplanung
@@ -399,3 +399,53 @@ Die Finanzierungsprüfung sollte mindestens drei Stressachsen simulieren: Zinsan
 | USt-Vorsteuer nicht verfügbar | Eigenkapitalbedarf, Liquiditätslücke |
 | Nutzungsbeschränkung durch Gemeinde | Vermietungsausfall, Exit, Werthaltigkeit |
 | Ausfall eines Eigentümers | Nachschüsse, Stimmrechte, Aufgriff, Bankzustimmung |
+
+## 14. Mittelherkunft, Mittelverwendung und Banksicht
+
+### Kernaussage
+Die Finanzierung ist nur prüfbar, wenn Mittelherkunft und Mittelverwendung saldieren. Kaufpreis, Erwerbsnebenkosten, Pfandrecht, Gründung, Ausbau, Einrichtung, Anfangsreserve und Liquiditätspuffer sind Mittelverwendungen. Start-EK, Kapitalrücklagen, Gesellschafterdarlehen, Bankdarlehen, Verkäuferfinanzierung und Förderungen sind Mittelherkünfte.
+
+### App-Regel
+```text
+Gesamtmittelverwendung =
+  Kaufpreis
+  + Erwerbsnebenkosten
+  + Pfandrecht / Eintragung
+  + Gründung
+  + Ausbau / Einrichtung
+  + Anfangsrücklage
+  + Anfangsliquidität
+
+Gesamtmittelherkunft =
+  Start-EK
+  + Kapitalrücklagen
+  + Gesellschafterdarlehen
+  + Bankdarlehen
+  + weitere Finanzierungsquellen
+
+Finanzierungslücke =
+  max(0, Gesamtmittelverwendung - Gesamtmittelherkunft)
+```
+
+Das Bankdarlehen kann im Modell automatisch als Saldo berechnet oder manuell fixiert werden. Bei manueller Fixierung muss eine Finanzierungslücke oder ein Überschuss sichtbar werden.
+
+### Banksicht
+Die Banksicht nutzt nicht den Bruttoumsatz, sondern den Bankprüfungs-Zahlungsfluss vor Kapitaldienst. Daraus leitet die App den Kapitaldienstdeckungsgrad ab. Zusätzlich zeigt sie Beleihungsauslauf und Laufzeit gegen die FMA-Leitplanken als Richtwerte.
+
+### Quelle
+- Quelle: FMA erwartet nach Auslaufen der KIM-V solide Wohnkreditvergabe
+- Herausgeber: Finanzmarktaufsicht Österreich
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Stand/Veröffentlichungsdatum: 26.06.2025
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, private Wohnimmobilienkredite
+- Stabilität: mittel
+
+### Weitere Quelle
+- Quelle: Nebenkosten beim Wohnungs- und Grundstückskauf
+- Herausgeber: oesterreich.gv.at / Bundesministerium für Justiz
+- Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
+- Stand/Veröffentlichungsdatum: letzte Aktualisierung 01.01.2026
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, Immobilienkauf
+- Stabilität: mittel

@@ -39,12 +39,12 @@ Die Finanzierungslogik trennt vier Zahlungsarten:
 | Zahlungsart | Zweck | Geplante wirtschaftliche Wirkung |
 |---|---|---|
 | Start-EK | einmalige Einlage bei Projektstart | zählt zum Unternehmens-/Wiederverkaufsanteil |
-| Anlagebeitrag | laufender Vermögensaufbau, im Default als Tilgungsanteil | zählt zum Unternehmens-/Wiederverkaufsanteil |
+| Kapitalruecklage / Anlage | laufender Vermögensaufbau, im Default als Tilgungsanteil | zählt nur bei ausdrücklich definierter Beteiligungswirkung zum Unternehmens-/Wiederverkaufsanteil |
 | Kostenbeitrag | Zinsen, laufende Kosten, Verwaltung, Buchhaltung, nicht aktivierungsfähige Kosten | zählt nicht zum Unternehmensanteil |
-| Nutzungsbeitrag | laufender EUR-Beitrag für Nutzungsrechte/Zimmernächte | zählt nicht zum Unternehmensanteil |
+| Nutzungsentgelt | laufender EUR-Beitrag für Nutzungsrechte/Zimmernächte | zählt nicht zum Unternehmensanteil |
 | Liquiditätsreserve | Bankkonto-Puffer und zweckgebundene Reserve | zählt nicht automatisch zum Unternehmensanteil |
 
-Im aktuellen Default-Modell wird die Banktilgung als Anlagebeitrag behandelt. Die Zinsen und laufenden Kosten werden als Kostenbeitrag behandelt. Der Nutzungsbeitrag ist ein Nutzungsentgelt im Modell und wird in interne Nutzungspunkte bzw. Zimmernächte umgerechnet. Eine Nutzungspunkt-Nacht entspricht einer Zimmernacht, nicht einer ganzen Hausnacht.
+Im aktuellen Default-Modell wird die Banktilgung als Kapitalwirkung behandelt. Die Zinsen und laufenden Kosten werden als Kostenbeitrag behandelt. Das Nutzungsentgelt wird in interne Nutzungspunkte bzw. Zimmernächte umgerechnet. Eine Nutzungspunkt-Nacht entspricht einer Zimmernacht, nicht einer ganzen Hausnacht.
 
 ### Quelle
 - Quelle: Beitrags-, Kapitalanteils- und Punkteberechnung
@@ -105,12 +105,12 @@ Wichtig: Die App berechnet die Pfandrecht-/Eintragungsannahme derzeit mit `Kaufp
 
 ## 4. Bankkonto- und Liquiditätslogik
 
-Das Modell betrachtet das Projektkonto als zentrale Liquiditätsebene. Einzahlungen sind Start-EK, laufende Eigentümerbeiträge, Nutzungsbeiträge, Darlehensauszahlung, Vermietungserträge und ggf. USt-Erstattung. Auszahlungen sind Kaufpreis, Nebenkosten, Renovierungen, Opex, Zinsen und Tilgung.
+Das Modell betrachtet das Projektkonto als zentrale Liquiditätsebene. Einzahlungen sind Start-EK, laufende Eigentümerbeiträge, Nutzungsentgelte, Darlehensauszahlung, Vermietungserträge und ggf. USt-Erstattung. Auszahlungen sind Kaufpreis, Nebenkosten, Renovierungen, Betriebskosten, Zinsen und Tilgung.
 
 Die interne Reservezuführung wird nicht als Geldabfluss an Dritte behandelt. Sie bleibt im Modell auf dem Bankkonto und erhöht den Kontostand, bis tatsächliche Reparaturen, Renovierungen oder andere Zahlungen erfasst werden.
 
 ### Quelle
-- Quelle: Liquiditäts- und Bankkonto-Cashflow
+- Quelle: Liquiditäts- und Bankkonto-Zahlungsfluss
 - Herausgeber: Projektteam RenntnerHazienda
 - Link: [calculateLiquidity.ts](../simTool/src/calculations/calculateLiquidity.ts)
 - Link: [calculateCashflow.ts](../simTool/src/calculations/calculateCashflow.ts)
@@ -145,7 +145,7 @@ Die interne Reservezuführung wird nicht als Geldabfluss an Dritte behandelt. Si
 2. Führt Eigennutzung zu Eigenverbrauch, verdeckten Vorteilen, fremdüblichen Entgelten oder Vorsteuerkorrekturen?
 3. Ist kurzfristige Fremdvermietung als Beherbergung, Vermietung oder gemischte Nutzung einzuordnen?
 4. Kann Vorsteuer aus Kauf, Renovierung, Ausstattung oder laufenden Kosten geltend gemacht werden?
-5. Wie werden Zinsen, Opex, Buchhaltung, Verwaltung, Versicherung und Instandhaltung steuerlich behandelt?
+5. Wie werden Zinsen, Betriebskosten, Buchhaltung, Verwaltung, Versicherung und Instandhaltung steuerlich behandelt?
 6. Wie soll die interne Rücklage dokumentiert werden?
 7. Wie werden Start-EK, Anlagebeiträge und Tilgungsanteile gesellschaftsrechtlich und steuerlich auf Kapitalkonten abgebildet?
 8. Welche Dokumentation ist erforderlich, damit Nutzungsnächte, Zimmernächte, Fremdgäste und Eigennutzung nachvollziehbar bleiben?
@@ -197,12 +197,12 @@ Zu klären sind insbesondere:
 
 Für einen belastbaren Beratungstermin sollten vorbereitet werden:
 
-- Eigentümerliste mit Start-EK, geplantem Anlagebeitrag, geplantem Nutzungsbeitrag und Wohnsitzland
+- Eigentümerliste mit Start-EK, geplanter Kapitalruecklage / Anlage, geplantem Nutzungsentgelt und Wohnsitzland
 - Entwurf der Beteiligungs- und Nutzungslogik
 - Objektunterlagen, Grundbuchsauszug, Widmung, Energieausweis, Pläne und Inseratsdaten
 - Kapitalbedarfsrechnung inklusive Nebenkosten, Pfandrecht, Reserven und Renovierungen
 - Darlehensszenario mit Zins, Laufzeit, Tilgung und Stressvarianten
-- Cashflow- und Bankkonto-Simulation mit jährlichem Kontostand
+- Zahlungsfluss- und Bankkonto-Simulation mit jährlichem Kontostand
 - Belegungsmodell auf Zimmernachtbasis
 - Vermietungsannahmen und konservatives Szenario ohne Vermietungsertrag
 - Rechtsformvergleich mit offenen Kostenannahmen

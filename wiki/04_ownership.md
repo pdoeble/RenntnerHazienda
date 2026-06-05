@@ -473,3 +473,36 @@ Der Verein ist für eine eigentumsnahe Ferienhausstruktur mit privaten Nutzungsv
 - Werden Gewinne oder Nutzungsvorteile vereinszweckwidrig an Mitglieder verteilt?
 - Liegt eine selbständige, regelmäßige Tätigkeit mit Gewinnabsicht vor, die eine Gewerbeberechtigung erfordert?
 - Ist eine Bankfinanzierung eines Vereinsvehikels realistisch?
+
+## 14. Rechtsform-Prüfgatter für die App
+
+### Kernaussage
+Der Rechtsformvergleich soll neutral bleiben, aber jede Rechtsform braucht fachliche Prüfgatter. Ein Verein darf nicht mit derselben Beteiligungs- und Ausschüttungssprache dargestellt werden wie eine GmbH oder GmbH & Co KG. Eine Genossenschaft braucht andere Eingaben als ein geschlossenes Beteiligungsvehikel.
+
+### Prüfgatter
+| Rechtsformfamilie | App-Prüfung |
+|---|---|
+| Verein | ideeller Zweck, Statuten, Zweckbindung, keine vorrangige private Gewinn-/Exit-Logik, Warnung bei Ausschüttungs- oder Beteiligungsversprechen |
+| GmbH / FlexCo | Stammkapital, Beteiligungstabelle, Übertragungsregeln, Nachschuss-/Kapitalrücklagenlogik, Beschlussregeln |
+| KG / GmbH & Co KG | Kapitalkonten, Darlehenskonten, Ergebnisverteilung, Haftungs- und Vertretungslogik, Transparenz der steuerlichen Zurechnung |
+| Genossenschaft | Förderzweck, Aufnahme/Austritt, Mitgliedernutzung, Organe, Revisions-/Verwaltungsaufwand |
+| Direktes Miteigentum | Benützungsvereinbarung, Exit, Aufgriff, Bankhaftung, Teilungsversteigerungs- und Konfliktrisiken |
+
+### Quelle
+- Quelle: Vereinswesen
+- Herausgeber: Bundesministerium für Inneres
+- Link: https://www.bmi.gv.at/609/grundsaetzliches.html
+- Stand/Veröffentlichungsdatum: Website laufend, geprüft am 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, Vereinsrecht allgemein
+- Stabilität: mittel
+
+### Weitere Quelle
+- Quelle: Tiefenrechercheberichte 1 und 2
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../references/260605-deep-research-report.md
+- Link: ../references/260605-deep-research-report_2.md
+- Stand/Veröffentlichungsdatum: 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: interne Strukturprüfung
+- Stabilität: niedrig

@@ -5,7 +5,7 @@
 ## 1. Zweck und Status
 
 ### Kernaussage
-Dieses Kapitel dokumentiert die aktuelle interne Berechnungslogik des `simTool`. Es beschreibt, wie aus Projekt-, Immobilien-, Finanzierungs-, Eigner-, Rechtsform-, Opex- und Strategiedaten die Ansichten Kapitalbedarf, Darlehen, Beiträge, Unternehmensanteile, Nutzungsrechte, Belegung, Cashflow, Bankkonto-Liquidität und Hausvergleich entstehen.
+Dieses Kapitel dokumentiert die aktuelle interne Berechnungslogik des `simTool`. Es beschreibt, wie aus Projekt-, Immobilien-, Finanzierungs-, Eigner-, Rechtsform-, Betriebskosten- und Strategiedaten die Ansichten Mittelherkunft / Mittelverwendung, Darlehen, Beiträge, Unternehmensanteile, Nutzungsrechte, Belegung, Bankkonto-Zahlungsfluss, Bankkonto-Liquidität, Banksicht und Hausvergleich entstehen.
 
 Die Logik ist ein Planungsmodell. Sie ersetzt keine rechtliche, steuerliche, notarielle oder bankseitige Prüfung. Steuerliche Behandlungen, Kreditfähigkeit, Grundverkehr, Freizeitwohnsitz-/Widmungsfragen, Umsatzsteuer, Tourismusabgaben und zivilrechtliche Vertragsgestaltung müssen im Einzelfall geprüft werden.
 
@@ -34,10 +34,10 @@ Die App berechnet nicht jede Ansicht isoliert. Die Ergebnisse entstehen in einer
 2. Start-EK und initiale Beiträge werden aus den Eigner-Daten abgeleitet.
 3. Der Darlehensbetrag wird aus Kapitalbedarf minus Start-EK berechnet.
 4. Der Darlehensplan wird als monatlicher Annuitätenplan berechnet.
-5. Der operative Cashflow wird aus Mietertrag, Leerstand, Opex und Darlehensdienst berechnet.
-6. Laufende Beiträge werden jahresweise aus Kostenbeitrag, Anlagebeitrag, Nutzungsbeitrag und Reservebedarf abgeleitet.
+5. Der operative Zahlungsfluss wird aus Mietertrag, Leerstand, Betriebskosten und Darlehensdienst berechnet.
+6. Laufende Beiträge werden jahresweise aus Kostenbeitrag, Kapitalruecklage / Anlage, Nutzungsentgelt und Reservebedarf abgeleitet.
 7. Die Liquidität wird als monatlicher Bankkonto-Kontostand simuliert.
-8. Der Bankkonto-Cashflow wird in Einnahmen- und Ausgaben-Stacks aufbereitet.
+8. Der Bankkonto-Zahlungsfluss wird in Einnahmen- und Ausgabenstapel aufbereitet.
 9. Kapitalbedarf, Unternehmensanteile, Nutzungspunkte, Belegung, Hausvergleich und Timeline werden berechnet.
 10. Diagnosen aus allen Modulen werden zusammengeführt.
 
@@ -222,22 +222,22 @@ Bei Zinssatz `0 %` teilt das Modell den Darlehensbetrag linear durch die Laufzei
 - Geltungsbereich: Österreich, private Wohnimmobilienkredite
 - Stabilität: mittel
 
-## 7. Start-EK, Anlagebeitrag und Unternehmensanteil
+## 7. Start-EK, Kapitalruecklage / Anlage und Unternehmensanteil
 
 ### Kernaussage
-Das Modell trennt Eigentums-/Unternehmensanteile von Nutzungsrechten. Start-EK und Anlagebeiträge zählen zum Unternehmensanteil. Nutzungsbeiträge zählen nicht zum Unternehmensanteil.
+Das Modell trennt Eigentums-/Unternehmensanteile von Nutzungsrechten. Start-EK und ausdrücklich kapitalwirksame Kapitalruecklagen bzw. Anlagezahlungen können zum Unternehmensanteil zählen. Nutzungsentgelte zählen nicht zum Unternehmensanteil.
 
 ### Begriffe
 | Begriff | Bedeutung im Modell | Wirkung auf Unternehmensanteil |
 |---|---|---|
 | Start-EK | einmalige Einlage zu Projektbeginn | ja |
-| Anlagebeitrag | monatlicher Vermögensaufbau, je nach Modus manuell oder als Tilgungsanteil | ja |
-| Nutzungsbeitrag | monatlicher EUR-Beitrag für Nutzungspunkte/Zimmernächte | nein |
-| Kostenbeitrag | laufender Beitrag für Zins, Opex, Verwaltung und sonstige Kosten | nein |
+| Kapitalruecklage / Anlage | monatlicher Vermögensaufbau, je nach Modus manuell oder als Tilgungsanteil | nur bei ausdrücklich definierter Beteiligungswirkung |
+| Nutzungsentgelt | monatlicher EUR-Beitrag für Nutzungspunkte/Zimmernächte | nein |
+| Kostenbeitrag | laufender Beitrag für Zins, Betriebskosten, Verwaltung und sonstige Kosten | nein |
 | Liquiditätsreserve | Beitrag zum Bankkonto-Puffer | nein, solange nur Bankkonto-Reserve |
 
 ### Modus `scheduledPrincipal`
-Im Default-Modus wird die laufende Tilgung des Bankdarlehens als Anlagebeitrag interpretiert. Die Tilgung wird im Verhältnis der Start-EK-Quoten auf die Eigner verteilt.
+Im Default-Modus wird die laufende Tilgung des Bankdarlehens als Kapitalwirkung interpretiert. Die Tilgung wird im Verhältnis der Start-EK-Quoten auf die Eigner verteilt.
 
 ```text
 Start-EK-Quote Eigner =
@@ -259,7 +259,7 @@ Unternehmensanteil Eigner =
 ```
 
 ### Modus `manualMonthly`
-Im manuellen Modus wird nicht die Banktilgung verteilt. Stattdessen zählt der je Eigner eingetragene monatliche Anlagebeitrag zum Unternehmensanteil.
+Im manuellen Modus wird nicht die Banktilgung verteilt. Stattdessen zählt die je Eigner eingetragene monatliche Kapitalruecklage / Anlage zum Unternehmensanteil, wenn diese Beteiligungswirkung in der Struktur so festgelegt ist.
 
 ### Quelle
 - Quelle: Kapitalanteilsberechnung
@@ -273,7 +273,7 @@ Im manuellen Modus wird nicht die Banktilgung verteilt. Stattdessen zählt der j
 ## 8. Laufende Beiträge
 
 ### Kernaussage
-Die Beitragsrechnung bestimmt, welche monatlichen Zahlungen die Eigner leisten müssen. Die App unterscheidet Kostenbeitrag, Anlagebeitrag, Nutzungsbeitrag und Liquiditätsreserve.
+Die Beitragsrechnung bestimmt, welche monatlichen Zahlungen die Eigner leisten müssen. Die App unterscheidet Kostenbeitrag, Kapitalruecklage / Anlage, Nutzungsentgelt und Liquiditätsreserve.
 
 ### Jahresweise Berechnung
 Die App bildet für jedes Projektjahr eine durchschnittliche Monatsbasis. Dafür werden die Monatswerte des jeweiligen Jahres aggregiert.
@@ -282,9 +282,9 @@ Im Modus `scheduledPrincipal` gilt:
 ```text
 Kostenbasis =
   Zins
-  + Opex
+  + Betriebskosten
   - anrechenbare Mieterträge, falls aktiviert
-  - Summe Nutzungsbeiträge
+  - Summe Nutzungsentgelte
 
 Anlagebasis =
   Tilgung
@@ -295,19 +295,19 @@ Im Modus `manualMonthly` gilt:
 Kostenbasis =
   Zins
   + Tilgung
-  + Opex
+  + Betriebskosten
   - anrechenbare Mieterträge, falls aktiviert
-  - Summe Nutzungsbeiträge
-  - Summe manuelle Anlagebeiträge
+  - Summe Nutzungsentgelte
+  - Summe manuelle Kapitalruecklagen / Anlagezahlungen
 
 Anlagebasis =
-  Summe manuelle Anlagebeiträge
+  Summe manuelle Kapitalruecklagen / Anlagezahlungen
 ```
 
-Negative Kostenbasis wird auf `0` begrenzt. Der Nutzungsbeitrag reduziert die zu verteilende Kostenbasis, weil er als Zahlung an das Projektkonto modelliert wird. Er erhöht aber nicht den Unternehmensanteil.
+Negative Kostenbasis wird auf `0` begrenzt. Das Nutzungsentgelt reduziert die zu verteilende Kostenbasis, weil es als Zahlung an das Projektkonto modelliert wird. Es erhöht aber nicht den Unternehmensanteil.
 
 ### Verteilung auf Eigner
-Im Default-Modus werden Kostenbeitrag, Tilgungs-/Anlagebasis und Reservebedarf nach Start-EK-Quote verteilt. Der Nutzungsbeitrag wird dagegen direkt aus dem je Eigner eingetragenen monatlichen Nutzungsbeitrag übernommen.
+Im Default-Modus werden Kostenbeitrag, Tilgungs-/Anlagebasis und Reservebedarf nach Start-EK-Quote verteilt. Das Nutzungsentgelt wird dagegen direkt aus dem je Eigner eingetragenen monatlichen Nutzungsentgelt übernommen.
 
 ### Liquiditätsreserve
 Die App prüft für jedes Jahr, ob die laufenden Beiträge ausreichen, um den eingestellten Reserve-Zielwert zu halten. Wenn nicht, wird ein monatlicher Reservebeitrag ergänzt.
@@ -326,12 +326,12 @@ Reserveziel =
 - Geltungsbereich: internes App-Modell
 - Stabilität: niedrig
 
-## 9. Opex und laufende Rechtsformkosten
+## 9. Betriebskosten und laufende Rechtsformkosten
 
 ### Kernaussage
-Opex-Positionen können als fixe Jahreskosten, als Kosten je vermietbarer Fläche, als Kosten je Grundstücksfläche oder als Prozentsatz des Immobilienwerts modelliert werden. Laufende Buchhaltungs-, Verwaltungs- und Compliancekosten der Rechtsform werden zusätzlich als monatliche Opex in den Cashflow aufgenommen.
+Betriebskosten-Positionen können als fixe Jahreskosten, als Kosten je vermietbarer Fläche, als Kosten je Grundstücksfläche oder als Prozentsatz des Immobilienwerts modelliert werden. Laufende Buchhaltungs-, Verwaltungs- und Compliancekosten der Rechtsform werden zusätzlich als monatliche Betriebskosten in den Zahlungsfluss aufgenommen.
 
-### Opex-Berechnung
+### Betriebskosten-Berechnung
 ```text
 bei period = monthly: Jahresbetrag = Betrag * 12
 bei period = quarterly: Jahresbetrag = Betrag * 4
@@ -354,10 +354,10 @@ Monatsbetrag =
 ```
 
 ### Rücklagenpositionen
-Opex-Positionen mit Kategorie `reserve` werden im operativen Cashflow nicht als laufender Abfluss behandelt. Die Logik folgt der Annahme, dass eine interne Instandhaltungsrücklage auf dem Bankkonto bleibt und damit Liquidität bzw. zweckgebundene Reserve ist. Echte Zahlungen an Dritte, Reparaturen oder Renovierungen müssen als konkrete Opex- oder Renovierungspositionen erfasst werden.
+Betriebskosten-Positionen mit Kategorie `reserve` werden im operativen Zahlungsfluss nicht als laufender Abfluss behandelt. Die Logik folgt der Annahme, dass eine interne Instandhaltungsrücklage auf dem Bankkonto bleibt und damit Liquidität bzw. zweckgebundene Reserve ist. Echte Zahlungen an Dritte, Reparaturen oder Renovierungen müssen als konkrete Betriebskosten- oder Renovierungspositionen erfasst werden.
 
 ### Quelle
-- Quelle: Cashflow- und Opex-Berechnung
+- Quelle: Zahlungsfluss- und Betriebskosten-Berechnung
 - Herausgeber: Projektteam RenntnerHazienda
 - Link: [calculateCashflow.ts](../simTool/src/calculations/calculateCashflow.ts)
 - Link: [financialInputs.ts](../simTool/src/calculations/financialInputs.ts)
@@ -367,10 +367,10 @@ Opex-Positionen mit Kategorie `reserve` werden im operativen Cashflow nicht als 
 - Geltungsbereich: internes App-Modell
 - Stabilität: niedrig
 
-## 10. Operativer Cashflow
+## 10. Operativer Zahlungsfluss
 
 ### Kernaussage
-Der operative Cashflow zeigt das Ergebnis aus Vermietungsertrag, Leerstand, Opex und Darlehensdienst vor den Eigentümerbeiträgen.
+Der operative Zahlungsfluss zeigt das Ergebnis aus Vermietungsertrag, Leerstand, Betriebskosten und Darlehensdienst vor den Eigentümerbeiträgen.
 
 ### App-Formel
 ```text
@@ -382,19 +382,19 @@ Effektiver Mietertrag =
 
 Operatives Ergebnis =
   effektiver Mietertrag
-  - umlagefähige Opex
-  - nicht umlagefähige Opex
+  - umlagefähige Betriebskosten
+  - nicht umlagefähige Betriebskosten
 
-Netto-Cashflow nach Darlehensdienst =
+Netto-Zahlungsfluss nach Darlehensdienst =
   operatives Ergebnis
   - Zins
   - Tilgung
 ```
 
-Die App führt umlagefähige und nicht umlagefähige Opex getrennt. Ob eine Kostenposition tatsächlich umlagefähig, steuerlich abzugsfähig oder umsatzsteuerlich relevant ist, wird dadurch nicht rechtlich entschieden.
+Die App führt umlagefähige und nicht umlagefähige Betriebskosten getrennt. Ob eine Kostenposition tatsächlich umlagefähig, steuerlich abzugsfähig oder umsatzsteuerlich relevant ist, wird dadurch nicht rechtlich entschieden.
 
 ### Quelle
-- Quelle: Cashflow-Berechnung
+- Quelle: Zahlungsfluss-Berechnung
 - Herausgeber: Projektteam RenntnerHazienda
 - Link: [calculateCashflow.ts](../simTool/src/calculations/calculateCashflow.ts)
 - Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
@@ -402,10 +402,10 @@ Die App führt umlagefähige und nicht umlagefähige Opex getrennt. Ob eine Kost
 - Geltungsbereich: internes App-Modell
 - Stabilität: niedrig
 
-## 11. Bankkonto-Cashflow und Liquidität
+## 11. Bankkonto-Zahlungsfluss und Liquidität
 
 ### Kernaussage
-Der Cashflow-Tab zeigt zusätzlich eine Bankkonto-Sicht. Dort werden tatsächliche modellierte Einzahlungen und Auszahlungen gruppiert. Der jährliche Kontostand ist der Endstand des letzten Monats im jeweiligen Jahr.
+Der Tab `Bankkonto-Zahlungsfluss` zeigt eine Bankkonto-Sicht. Dort werden tatsächliche modellierte Einzahlungen und Auszahlungen gruppiert. Der jährliche Kontostand ist der Endstand des letzten Monats im jeweiligen Jahr.
 
 ### Einnahmen-Stack
 ```text
@@ -413,7 +413,7 @@ Einnahmen =
   Start-EK
   + Kostenbeiträge
   + Anlagebeiträge
-  + Nutzungsbeiträge
+  + Nutzungsentgelte
   + Reservebeiträge
   + Darlehensauszahlung
   + effektive Mieterträge
@@ -428,7 +428,7 @@ Ausgaben =
   + Erwerbsnebenkosten
   + Pfandrecht-/Eintragungsannahme
   + Renovierungen
-  + Opex
+  + Betriebskosten
   + Zins
   + Tilgung
 ```
@@ -447,7 +447,7 @@ Wenn ein Monat negativ wird, erzeugt die App eine Liquiditätswarnung. Die Bankk
 Reservebeiträge sind in der Bankkonto-Sicht Einzahlungen. Sie erhöhen den Kontostand, solange keine tatsächliche Ausgabe dagegensteht. Die Zuführung in eine interne Rücklage ist daher nicht automatisch "weg", sondern zunächst Liquidität mit Zweckbindung. Erst eine Reparatur-, Renovierungs- oder andere Drittzahlung reduziert den Bankkontostand als Ausgabe.
 
 ### Quelle
-- Quelle: Liquiditäts- und Bankkonto-Cashflow
+- Quelle: Liquiditäts- und Bankkonto-Zahlungsfluss
 - Herausgeber: Projektteam RenntnerHazienda
 - Link: [calculateLiquidity.ts](../simTool/src/calculations/calculateLiquidity.ts)
 - Link: [calculateCashflow.ts](../simTool/src/calculations/calculateCashflow.ts)
@@ -497,15 +497,149 @@ USt-Erstattung fließt im eingestellten Erstattungsmonat in das Bankkonto.
 - Geltungsbereich: Österreich, Umsatzsteuer
 - Stabilität: mittel
 
-## 13. Nutzungsbeitrag, Nutzungspunkte und Zimmernächte
+## 19. Aktuelle Erweiterung: vier Sichten und Kennungen
 
 ### Kernaussage
-Der Nutzungsbeitrag ist ein monatlicher EUR-Betrag. Daraus entsteht ein Jahres-Nutzungsbudget. Dieses Budget wird in interne Nutzungspunkte bzw. leistbare Zimmernächte umgerechnet. Eine Nutzungspunkt-Nacht entspricht einer Zimmernacht, nicht einer ganzen Hausnacht.
+Die aktuelle App ergänzt das Projektmodell um Objektkennung, Fallkennung, Szenariokennung und Annahmenquelle. Die Auswertung fasst die Ergebnisse zusätzlich in vier Sichten zusammen: Objektsicht, Rechtsträgersicht, Mitgliedersicht und Banksicht.
+
+### App-Felder
+```text
+Objektkennung = property.data.objektkennung
+Fallkennung = strategy.data.fallkennung
+Szenariokennung = strategy.data.szenariokennung
+Annahmenquelle = strategy.data.annahmenquelle
+```
+
+### Quelle
+- Quelle: Sichtenzusammenfassung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculateSichten.ts
+- Link: ../simTool/src/modules/property/schema.ts
+- Link: ../simTool/src/modules/strategy/schema.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 20. Aktuelle Erweiterung: saldierte Mittelherkunft und Mittelverwendung
+
+### Kernaussage
+Die Darlehenshöhe entsteht jetzt aus saldierter Mittelherkunft und Mittelverwendung. Im automatischen Modus wird das Bankdarlehen als Restgröße berechnet. Im manuellen Modus erzeugt ein zu niedriges oder zu hohes Bankdarlehen eine Finanzierungslücke oder einen Überschuss.
+
+### App-Formeln
+```text
+Gesamtmittelverwendung =
+  Summe Bruttobeträge aller Mittelverwendungen
+
+Nicht-Bank-Mittelherkunft =
+  Summe Mittelherkunft ohne Zahlungsklasse Bankdarlehen
+
+Automatisch saldiertes Bankdarlehen =
+  max(0, Gesamtmittelverwendung - Nicht-Bank-Mittelherkunft)
+
+Finanzierungslücke =
+  max(0, Gesamtmittelverwendung - Gesamtmittelherkunft)
+```
+
+### Quelle
+- Quelle: Mittelherkunft-/Mittelverwendungsberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/financialInputs.ts
+- Link: ../simTool/src/modules/financing/schema.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 21. Aktuelle Erweiterung: operativer Wasserfall, Ergebnisrechnung und Vermögensübersicht
+
+### Kernaussage
+Der Bankkonto-Zahlungsfluss bleibt eine Liquiditätssicht. Zusätzlich werden operative Wasserfälle, Ergebnisrechnung und Vermögensübersicht berechnet, damit Bank, Steuerberatung und Beteiligte unterschiedliche Fragen prüfen können.
+
+### App-Logik
+```text
+Bankprüfungs-Zahlungsfluss =
+  operative Einzahlungen
+  - variable Betriebskosten
+  - fixe Betriebskosten
+  - Instandhaltungs- und Ausbaureserve
+  - Verwaltung / Recht / Buchhaltung
+
+Ergebnis vor Steuern =
+  Erlöse
+  - Betriebskosten
+  - Abschreibung
+  - Zinsaufwand
+
+Eigenkapital laut Vermögensübersicht =
+  Vermögen
+  - Verbindlichkeiten
+```
+
+### Quelle
+- Quelle: Bankkonto- und Jahresauswertungen
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculateCashflow.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 22. Aktuelle Erweiterung: Banksicht
+
+### Kernaussage
+Die Banksicht berechnet Beleihungsauslauf, Kapitaldienst, Kapitaldienstdeckungsgrad und Laufzeit. Die FMA-Leitplanken werden als Richtwerte angezeigt, nicht als automatisches Rechtsurteil.
+
+### App-Formeln
+```text
+Beleihungsauslauf =
+  Bankdarlehen / Wertbasis der Bank * 100
+
+Kapitaldienstdeckungsgrad =
+  Bankprüfungs-Zahlungsfluss Jahr 1 / Kapitaldienst Jahr 1
+```
+
+### Quelle
+- Quelle: Banksicht-Berechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculateBankView.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+### Externe Quelle
+- Quelle: FMA erwartet nach Auslaufen der KIM-V solide Wohnkreditvergabe
+- Herausgeber: Finanzmarktaufsicht Österreich
+- Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
+- Stand/Veröffentlichungsdatum: 26.06.2025
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, private Wohnimmobilienkredite
+- Stabilität: mittel
+
+## 23. Aktuelle Erweiterung: Eigennutzungswert und Fremdvermietung
+
+### Kernaussage
+Die Belegungsrechnung trennt Eigennutzung und Fremdvermietung. Eigennutzung wird über Marktwertverdrängung und Kostenuntergrenze bewertet; der höhere Wert ist der wirtschaftliche Eigennutzungswert. Fremdgastnächte sind Zimmernächte.
+
+### Quelle
+- Quelle: Belegungsberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculateOccupancy.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 13. Nutzungsentgelt, Nutzungspunkte und Zimmernächte
+
+### Kernaussage
+Das Nutzungsentgelt ist ein monatlicher EUR-Betrag. Daraus entsteht ein Jahres-Nutzungsbudget. Dieses Budget wird in interne Nutzungspunkte bzw. leistbare Zimmernächte umgerechnet. Eine Nutzungspunkt-Nacht entspricht einer Zimmernacht, nicht einer ganzen Hausnacht.
 
 ### App-Formel
 ```text
 Jahres-Nutzungsbudget Eigner =
-  monatlicher Nutzungsbeitrag * 12
+  monatliches Nutzungsentgelt * 12
 
 Nutzungsquote Eigner =
   Jahres-Nutzungsbudget Eigner / Summe Jahres-Nutzungsbudgets * 100
@@ -652,7 +786,7 @@ monatliche laufende Rechtsformkosten =
   laufende Rechtsformkosten pro Jahr / 12
 ```
 
-Die Gründungskosten erhöhen den Kapitalbedarf. Laufende Kosten gehen in den operativen Cashflow ein.
+Die Gründungskosten erhöhen den Kapitalbedarf. Laufende Kosten gehen in den operativen Zahlungsfluss ein.
 
 ### Quelle
 - Quelle: Rechtsform-Default und Finanzinput
@@ -716,7 +850,7 @@ Die App kann rechnerische Zusammenhänge sichtbar machen, aber sie ersetzt keine
 - Ist USt beim Kauf relevant und ist Vorsteuerabzug realistisch?
 - Sind Nutzungsbeiträge steuerlich als Entgelt, Umlage, Privatnutzung oder anders zu behandeln?
 - Sind Mieteinnahmen konservativ genug angesetzt?
-- Sind Opex-Positionen vollständig und realistisch?
+- Sind Betriebskosten-Positionen vollständig und realistisch?
 - Wird die interne Rücklage tatsächlich auf dem Bankkonto gehalten?
 - Sind Sonderumlagen, Ausfall eines Eigners und größere Reparaturen abbildbar?
 - Passt die Darlehensrate zur Bankprüfung der Beteiligten?

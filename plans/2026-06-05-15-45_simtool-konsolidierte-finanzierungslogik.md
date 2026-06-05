@@ -37,31 +37,31 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 ## Fortschritt
 
 - [x] (2026-06-05 15:45) Konsolidierten Plan als Datei angelegt.
-- [ ] (2026-06-05 15:45) Erstplan `plans/2026-06-05-15-05_erster_plan.md` als Grundlage dokumentieren.
-- [ ] (2026-06-05 15:45) `references/260605-deep-research-report.md` inventarisieren.
-- [ ] (2026-06-05 15:45) `references/260605-deep-research-report_2.md` inventarisieren.
-- [ ] (2026-06-05 15:45) Bericht 1, Bericht 2 und aktuellen App-Stand in einer Audit-Tabelle zusammenfuehren.
-- [ ] (2026-06-05 15:45) Sichtbare englische Fachbegriffe in App und Wiki erfassen.
-- [ ] (2026-06-05 15:45) Deutsches Begriffsregister und Hilfetextregister festlegen.
-- [ ] (2026-06-05 15:45) Vier-Sichten-Modell in Datenmodell, Berechnung und UI einfuehren.
-- [ ] (2026-06-05 15:45) Objektkennung, Fallkennung und Szenariokennung migrationssicher ergaenzen.
-- [ ] (2026-06-05 15:45) Mittelherkunft und Mittelverwendung modellieren.
-- [ ] (2026-06-05 15:45) Erwerbskostenmodell fuer Oesterreich erweitern.
+- [x] (2026-06-05 16:35) Erstplan `plans/2026-06-05-15-05_erster_plan.md` als Grundlage dokumentiert.
+- [x] (2026-06-05 16:35) `references/260605-deep-research-report.md` inventarisiert.
+- [x] (2026-06-05 16:35) `references/260605-deep-research-report_2.md` inventarisiert.
+- [x] (2026-06-05 16:35) Bericht 1, Bericht 2 und aktuellen App-Stand in einer Audit-Tabelle zusammengefuehrt.
+- [x] (2026-06-05 16:35) Sichtbare englische Fachbegriffe in App und Wiki erfasst und produktive Treffer bereinigt.
+- [x] (2026-06-05 16:35) Deutsches Begriffsregister und Hilfetextregister im Grundmodell festgelegt.
+- [x] (2026-06-05 16:35) Vier-Sichten-Modell in Datenmodell, Berechnung und UI eingefuehrt.
+- [x] (2026-06-05 16:35) Objektkennung, Fallkennung und Szenariokennung migrationssicher ergaenzt.
+- [x] (2026-06-05 16:35) Mittelherkunft und Mittelverwendung modelliert.
+- [x] (2026-06-05 16:35) Erwerbskostenmodell fuer Oesterreich in die Mittelverwendung ueberfuehrt.
 - [ ] (2026-06-05 15:45) Zahlungsklassen und Buchungslogik ergaenzen.
 - [ ] (2026-06-05 15:45) Unternehmensanteile von Nutzungsentgelt, Kostenumlage und Darlehen trennen.
 - [ ] (2026-06-05 15:45) Beitraege und `Mein Anteil` fachlich umbauen.
-- [ ] (2026-06-05 15:45) Belegung auf Zimmernaechte, Eigennutzung und Fremdvermietung umbauen.
-- [ ] (2026-06-05 15:45) Eigennutzungswert mit Kostenuntergrenze, Marktwertverdraengung und Hybridregel ergaenzen.
-- [ ] (2026-06-05 15:45) Bankkonto-Zahlungsfluss, Ergebnisrechnung und Vermoegensuebersicht trennen.
+- [x] (2026-06-05 16:35) Belegung auf Zimmernaechte, Eigennutzung und Fremdvermietung im Grundmodell umgebaut.
+- [x] (2026-06-05 16:35) Eigennutzungswert mit Kostenuntergrenze, Marktwertverdraengung und Hybridregel ergaenzt.
+- [x] (2026-06-05 16:35) Bankkonto-Zahlungsfluss, Ergebnisrechnung und Vermoegensuebersicht getrennt.
 - [ ] (2026-06-05 15:45) Banksicht mit Beleihungsauslauf, Kapitaldienstdeckungsgrad und Stressfaellen ergaenzen.
 - [ ] (2026-06-05 15:45) Umsatzsteuer-Matrix und Vorsteuer-Konsistenzpruefungen ergaenzen.
 - [ ] (2026-06-05 15:45) Rechtsformvergleich neutral mit Pruefgattern ausbauen.
 - [ ] (2026-06-05 15:45) Kennzahlenregister und rote Diagnosen ergaenzen.
-- [ ] (2026-06-05 15:45) Klickbare Fragezeichen-Hilfen einbauen.
-- [ ] (2026-06-05 15:45) Wiki vollstaendig aktualisieren.
-- [ ] (2026-06-05 15:45) Beraterdokument aktualisieren.
-- [ ] (2026-06-05 15:45) Tests ergaenzen und Vollpruefung ausfuehren.
-- [ ] (2026-06-05 15:45) Aenderungen regelmaessig in sinnvollen Abschnitten committen.
+- [x] (2026-06-05 16:35) Klickbare Fragezeichen-Hilfen im Grundmodell eingebaut.
+- [x] (2026-06-05 16:35) Wiki mit den neuen Kernlogiken aktualisiert; einzelne Rechtsform-/USt-Detailpruefungen bleiben offen.
+- [x] (2026-06-05 16:35) Beraterdokument begrifflich aktualisiert.
+- [x] (2026-06-05 16:35) Tests ergaenzt; `lint`, `typecheck` und `test` erfolgreich.
+- [x] (2026-06-05 16:35) Aenderungen in ersten sinnvollen Abschnitten committed.
 - [ ] (2026-06-05 15:45) Kein Push ohne separate Beauftragung.
 - [ ] (2026-06-05 15:45) Plan nach Abschluss nach `plans/Archive/2026-06-05-15-45_simtool-konsolidierte-finanzierungslogik.md` verschieben.
 
@@ -107,8 +107,11 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 
 - Erreicht:
   - Plan-Datei angelegt.
+- App-Grundmodell fuer deutsche Begriffe, Mittelherkunft/-verwendung, Bankkonto-Zahlungsfluss, Banksicht, Eigennutzungswert und Hilfepopover umgesetzt.
+- Wiki und Beraterdokument auf diese Kernlogiken aktualisiert.
+- `npm run lint`, `npm run typecheck` und `npm test` erfolgreich.
 - Offen:
-  - Umsetzung der App-, Test- und Wiki-Aenderungen.
+  - Buchungsvorlagen, vollstaendige Umsatzsteuer-Matrix in der App, Rechtsform-Pruefgatter in der App, Sensitivitaeten/Stressfaelle, persoenliche Belastungsquote, Build/Sync und Abschlussarchivierung.
 - Beim naechsten Mal verbessern:
   - Nach jedem Commit dokumentieren, welche App-, Test- und Wiki-Bereiche geaendert wurden.
 

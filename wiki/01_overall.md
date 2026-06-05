@@ -57,11 +57,11 @@ Konkrete Entscheidungen zu Kauf, Finanzierung, Umsatzsteuer, Rechtsform oder Nut
 | Miteigentum | mehrere Personen sind anteilig Eigentümer einer Liegenschaft | Grundbuch, Nutzungsvereinbarung, Finanzierung |
 | Gesellschaftsform | rechtlicher Rahmen für Besitz, Nutzung, Finanzierung und Vermietung | Haftung, Steuer, Bankfähigkeit |
 | Start-EK | einmalige Einlage zum Projektstart | Kapitalnachweis, Unternehmensanteil, Exit-Bewertung |
-| Anlagebeitrag | laufender Beitrag mit Vermögensaufbaucharakter, etwa Tilgungsanteil | Unternehmensanteil, Bankunterlagen, Abgrenzung von Kosten |
-| Kostenbeitrag | laufender Beitrag für Zins, Opex, Verwaltung und sonstige Ausgaben ohne Eigentumszuwachs | Liquiditätsplanung, Nachschussmechanik |
-| Nutzungsbeitrag | laufender EUR-Beitrag für Nutzungsrechte | Umsatzsteuer-/Mietzinsprüfung, klare Trennung vom Kapital |
+| Kapitalruecklage / Anlage | laufender Beitrag mit Vermögensaufbaucharakter, etwa Tilgungsanteil | Unternehmensanteil nur bei definierter Beteiligungswirkung, Bankunterlagen, Abgrenzung von Kosten |
+| Kostenbeitrag | laufender Beitrag für Zins, Betriebskosten, Verwaltung und sonstige Ausgaben ohne Eigentumszuwachs | Liquiditätsplanung, Nachschussmechanik |
+| Nutzungsentgelt | laufender EUR-Beitrag für Nutzungsrechte | Umsatzsteuer-/Mietzinsprüfung, klare Trennung vom Kapital |
 | Zimmernacht | ein Schlafzimmer oder Zimmer für eine Nacht | Buchungslogik, Nutzungspunkte, Belegungsdruck |
-| Bankkonto-Cashflow | modellierte Einzahlungen und Auszahlungen des Projektkontos | Liquiditätsreserve, Bankfähigkeit, Rücklagenlogik |
+| Bankkonto-Zahlungsfluss | modellierte Einzahlungen und Auszahlungen des Projektkontos | Liquiditätsreserve, Bankfähigkeit, Rücklagenlogik |
 
 ### Quelle
 - Quelle: Quellenregister dieses Wikis; Begriffsverwendung aus Rechts-, Steuer- und Tourismusquellen
@@ -237,7 +237,7 @@ Die folgenden Fragen sind Go/No-Go-Fragen. Detailoptimierungen sind erst sinnvol
 4. Akzeptiert die Eigentümergruppe persönliche Haftung oder Bürgschaften, oder soll die Struktur diese gerade begrenzen?
 5. Finanziert eine Bank die gewählte Struktur ohne unerwünschte Vollbesicherung durch Gesellschafter?
 6. Ist der Exit-Mechanismus vollständig geregelt: Bewertung, Aufgriffsrechte, Zahlungsfristen, Tod, Scheidung, Insolvenz und Ausfall eines Eigentümers?
-7. Steuern Nutzungsbeitrag und Nutzungspunkte nur Zimmernächte, oder ersetzen sie faktisch Arbeitsentgelt, Kapitalverzinsung oder verdeckte Mietzahlungen?
+7. Steuern Nutzungsentgelt und Nutzungspunkte nur Zimmernächte, oder ersetzen sie faktisch Arbeitsentgelt, Kapitalverzinsung oder verdeckte Mietzahlungen?
 8. Ist der Hausmeisterfall arbeitsrechtlich lösbar, ohne Dienstleistungsscheck-Missbrauch, Sachbezugsprobleme oder Mischverwendung?
 9. Sind in Deutschland oder der Schweiz steuerlich ansässige Beteiligte bereit, österreichische Steuer- und Erklärungspflichten sowie Folgeerklärungen im Ansässigkeitsstaat zu tragen?
 10. Bleibt das Projekt attraktiv, wenn Fremdvermietung nur moderat funktioniert und die Eigentümer dauerhaft Fixkosten zuschießen müssen?
@@ -296,8 +296,8 @@ timeline
     Woche drei : ownership_matrix finalisieren
                 : Miteigentum, KG und GmbH & Co KG als Kernoptionen vergleichen
     Woche vier : Bankenpaket vorbereiten
-                : Bankkonto-Cashflow und Stressszenarien ergänzen
-    Woche fünf : Nutzungsbeitrag und Zimmernachtmodell frei von versteckten Vergütungen modellieren
+                : Bankkonto-Zahlungsfluss und Stressszenarien ergänzen
+    Woche fünf : Nutzungsentgelt und Zimmernachtmodell frei von versteckten Vergütungen modellieren
                 : Exit- und Bewertungslogik festlegen
     Woche sechs : Hausmeister- und Compliance-Prozesse dokumentieren
                 : Gäste- und Abgaben-Reporting aufsetzen
@@ -336,7 +336,33 @@ Die DeepResearch-Inhalte sind nach Dringlichkeit in die fachlichen Wiki-Dateien 
 | sofort | 02_legal.md | Landes- und Gemeindelogik: Widmung, Bebauung, Freizeitwohnsitz, touristische Nutzung, Tagungsnutzung, Zuständigkeiten, schriftliche Bestätigungen |
 | sofort | 03_tax.md | Kauf-USt-Entscheidungsbaum, Vorsteuerfähigkeit, 20-Jahres-Berichtigung, USt-Sätze je Leistung, GrESt, Grundsteuer, Aufenthaltsabgaben, DBA-Basislogik |
 | sofort | 04_ownership.md | ownership_matrix, Beteiligungs- und Exit-Regime, Rollenmodell, Beschlussfassungen |
-| hoch | 05_finance.md | Bankanforderungen, Eigenkapitalbedarf, Bürgschaftsfragen, Bankkonto-Cashflow, Stressszenarien |
-| hoch | 06_usage.md | Nutzungsbeitrag, Nutzungspunkte, Zimmernachtmodell, Buchungslogik, Sperrzeiten, Fremdvermietungsfreigaben, owner-affiliated company usage |
+| hoch | 05_finance.md | Bankanforderungen, Eigenkapitalbedarf, Bürgschaftsfragen, Bankkonto-Zahlungsfluss, Stressszenarien |
+| hoch | 06_usage.md | Nutzungsentgelt, Nutzungspunkte, Zimmernachtmodell, Buchungslogik, Sperrzeiten, Fremdvermietungsfreigaben, Nutzung durch nahestehende Unternehmen |
 | hoch | 07_operational.md | Fixkostenmodell, Deckungsbeiträge, Hausmeistervarianten, Compliance-Prozesse, Gästemeldung, Tourismusabgaben |
 | ergänzend | 01_overall.md | Entscheidungsbaum, Definitionen, Projektprämissen, Killer Questions, Quellenbasis |
+
+## 14. Vier-Sichten-Modell für App und Beratung
+
+### Kernaussage
+Die App soll das Projekt nicht als eine einzige Mischrechnung darstellen. Für Beratung und Entscheidung sind vier Sichten getrennt zu halten: Objektsicht, Rechtsträgersicht, Mitgliedersicht und Banksicht. Jede Sicht beantwortet eine andere Frage und muss rechnerisch mit den anderen Sichten zusammenpassen.
+
+| Sicht | Leitfrage | Typische Werte |
+|---|---|---|
+| Objektsicht | Ist das Haus als Objekt tragfähig? | Kaufpreis, Erwerbskosten, Zimmernacht-Kapazität, Fremdvermietung, Betriebskosten |
+| Rechtsträgersicht | Kann das Vehikel Darlehen, Kosten, Rücklagen und Ausschüttungen tragen? | Mittelherkunft, Mittelverwendung, Bankkonto-Zahlungsfluss, Ergebnisrechnung, Vermögensübersicht |
+| Mitgliedersicht | Was zahlt, nutzt, riskiert und erhält eine Person? | Start-EK, Kapitalruecklage / Anlage, Kostenbeitrag, Nutzungsentgelt, Zimmernächte, Unternehmensanteil |
+| Banksicht | Ist die Finanzierung plausibel tragfähig? | Bankprüfungs-Zahlungsfluss, Beleihungsauslauf, Kapitaldienstdeckungsgrad, Laufzeit |
+
+### Arbeitsregel
+Mitgliederzahlungen sind nicht automatisch Ertrag. Eigennutzung ist nicht automatisch kostenlos. Tilgung ist Bankkontoabfluss und reduziert Verbindlichkeiten, aber nicht vollständig periodischer Aufwand. Netto-, Umsatzsteuer- und Bruttowerte müssen getrennt bleiben.
+
+### Quelle
+- Quelle: Tiefenrecherchebericht 2 / aktuelle App-Berechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../references/260605-deep-research-report_2.md
+- Link: ../simTool/src/calculations/calculateSichten.ts
+- Link: ../simTool/src/calculations/calculateBankView.ts
+- Stand/Veröffentlichungsdatum: 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes Planungsmodell, Österreich-Bezug
+- Stabilität: niedrig, weil App-Logik aktiv weiterentwickelt wird

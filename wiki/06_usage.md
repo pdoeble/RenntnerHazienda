@@ -241,10 +241,10 @@ Saison- und Preislogik beeinflussen Wirtschaftlichkeit, Eigennutzungskonflikte u
 - Reinigungsgebühr
 - Kaution
 
-## 8. Nutzungsbeitrag und Nutzungspunkte: Zweck und Steuergrenze
+## 8. Nutzungsentgelt und Nutzungspunkte: Zweck und Steuergrenze
 
 ### Kernaussage
-Der Nutzungsbeitrag ist ein EUR-Beitrag für interne Nutzungsrechte. Nutzungspunkte dokumentieren daraus abgeleitete Berechtigungen für Zimmernächte. Sie sollen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen, Mietzahlungen oder Unternehmensanteile ersetzen. Start-EK, Anlagebeitrag, Kostenbeitrag und Nutzungsbeitrag sind deshalb getrennt zu führen.
+Das Nutzungsentgelt ist ein EUR-Beitrag für interne Nutzungsrechte. Nutzungspunkte dokumentieren daraus abgeleitete Berechtigungen für Zimmernächte. Sie sollen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen, Mietzahlungen oder Unternehmensanteile ersetzen. Start-EK, Kapitalruecklage / Anlage, Kostenbeitrag und Nutzungsentgelt sind deshalb getrennt zu führen.
 
 ### Geltungsbereich
 - Land: Österreich
@@ -262,7 +262,7 @@ Der Nutzungsbeitrag ist ein EUR-Beitrag für interne Nutzungsrechte. Nutzungspun
 - Stabilität: mittel
 
 ### Mindestregeln
-- getrennte Konten für Kapital, laufende Kosten, Nutzungsbeitrag und Nutzungspunkte
+- getrennte Konten für Kapital, laufende Kosten, Nutzungsentgelt und Nutzungspunkte
 - keine automatische Kapital- oder Arbeitsvergütung über Nutzungspunkte ohne steuerliche Prüfung
 - Nutzungspunkte nur als interne Priorisierung oder Bezahl-/Verbrauchseinheit für Zimmernächte
 - dokumentierte Saison-, Feiertags- und Wochenendmultiplikatoren
@@ -286,7 +286,7 @@ Die interne Nutzung sollte als Zimmernachtmodell geführt werden. Eine Zimmernac
 ### Mindestmodell
 | Element | Vorschlag |
 |---|---|
-| Jahres-Nutzungsbudget | monatlicher Nutzungsbeitrag mal zwölf |
+| Jahres-Nutzungsbudget | monatliches Nutzungsentgelt mal zwölf |
 | Grundeinheit | eine Zimmernacht |
 | Preislogik | Basispreis pro Zimmernacht plus Saison-, Feiertags- und Wochenendmultiplikator |
 | Wochenenddruck | gesonderte Kennzahl für Freitag bis Sonntag, weil die Nachfrage dort konzentriert ist |
@@ -298,9 +298,9 @@ Die interne Nutzung sollte als Zimmernachtmodell geführt werden. Eine Zimmernac
 ### Abgrenzung zu Kapital und Arbeit
 | Thema | Nicht über Nutzungspunkte lösen | Separat regeln |
 |---|---|---|
-| Start-EK | keine zusätzlichen Nutzungsrechte ohne Nutzungsbeitrag ableiten | Unternehmensanteil / Kapitalkonto |
-| Anlagebeitrag | keine stille Verzinsung über Nächte | Unternehmensanteil / Tilgungs- oder Anlagekonto |
-| Kostenbeitrag | keine Eigentumsquote aus Opex-Zahlungen | laufende Umlage und Nachschussmechanik |
+| Start-EK | keine zusätzlichen Nutzungsrechte ohne Nutzungsentgelt ableiten | Unternehmensanteil / Kapitalkonto |
+| Kapitalruecklage / Anlage | keine stille Verzinsung über Nächte | Unternehmensanteil / Tilgungs- oder Anlagekonto nur bei definierter Beteiligungswirkung |
+| Kostenbeitrag | keine Eigentumsquote aus Betriebskosten-Zahlungen | laufende Umlage und Nachschussmechanik |
 | Arbeitsleistung | keine verdeckte Vergütung über unbewertete Punkte | Genehmigung, Cap, steuerliche Prüfung, ggf. Dienst- oder Werkvertrag |
 
 ## 10. Buchungslogik und Sperrzeiten
@@ -334,7 +334,7 @@ Bei mehreren Eigentümern muss die Buchungslogik Hochsaison, Nebensaison, privat
 - Sperrung für Wartung, Reinigung und Eigennutzungswechsel
 - Dokumentation jeder Nutzung im Kalender
 
-## 11. Owner-affiliated company usage
+## 11. Nutzung durch nahestehende Unternehmen
 
 ### Kernaussage
 Nutzungen durch Unternehmen, die einem Eigentümer nahestehen, sind nicht automatisch normale Fremdvermietung. Sie sollten wie B2B-Nutzungen dokumentiert und fremdüblich bepreist werden. Zusätzlich sind Leistungsinhalt, Umsatzsteuersatz, Gästemeldung, Aufenthaltsabgabe und Versicherung zu prüfen.
@@ -392,3 +392,35 @@ Fremdvermietung darf die private Zielnutzung nicht unkontrolliert verdrängen, m
 | Pflichtkontingent | jeder Eigentümer gibt anteilig Tage frei | Konflikte bei Hochsaison möglich |
 | Budgetdeckungsmodell | Freigaben richten sich nach Deckungsbeitragsziel | höherer Verwaltungsaufwand |
 | Firmenfenster | definierte Zeitfenster für Firmenbuchungen | USt-/Gewerbe-/Versicherungsthemen sauber trennen |
+
+## 13. Eigennutzungswert und Fremdvermietung
+
+### Kernaussage
+Eigennutzung ist wirtschaftlich nicht kostenlos. Sie kann Fremdvermietung verdrängen und verursacht mindestens variable Kosten, Reinigung, Verschleiß und eine angemessene Rücklage. Das App-Modell soll deshalb drei Werte zeigen: Marktwertverdrängung, Kostenuntergrenze und den höheren Wert als wirtschaftlichen Eigennutzungswert.
+
+### App-Formel
+```text
+Marktwertverdrängung =
+  Eigennutzungs-Zimmernächte
+  * durchschnittlicher Fremdnachtpreis
+  * Verdrängungsfaktor
+
+Kostenuntergrenze =
+  Eigennutzungs-Zimmernächte
+  * (variable Kosten je Zimmernacht + Rücklage je Zimmernacht)
+
+wirtschaftlicher Eigennutzungswert =
+  max(Marktwertverdrängung, Kostenuntergrenze)
+```
+
+Fremdgastnächte sind im Modell Zimmernächte. Mehrere Gruppen können also im selben Haus parallel unterschiedliche Schlafzimmer nutzen, soweit Hausordnung, Versicherung und lokale Regeln das zulassen.
+
+### Quelle
+- Quelle: Tiefenrecherchebericht 2 / Belegungsberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../references/260605-deep-research-report_2.md
+- Link: ../simTool/src/calculations/calculateOccupancy.ts
+- Stand/Veröffentlichungsdatum: 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes Planungsmodell
+- Stabilität: niedrig

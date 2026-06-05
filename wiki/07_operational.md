@@ -163,7 +163,7 @@ Einnahmen können aus touristischer Vermietung, Firmenvermietung, Zusatzleistung
 ## 5. Wirtschaftlichkeitsrechnung
 
 ### Kernaussage
-Eine Wirtschaftlichkeitsrechnung sollte Cashflow, steuerliches Ergebnis und Liquiditätsbedarf getrennt darstellen. Gewinn und Liquidität sind nicht identisch, insbesondere wegen Tilgung, Abschreibung, Umsatzsteuer und Rücklagen.
+Eine Wirtschaftlichkeitsrechnung sollte Zahlungsfluss, steuerliches Ergebnis und Liquiditätsbedarf getrennt darstellen. Gewinn und Liquidität sind nicht identisch, insbesondere wegen Tilgung, Abschreibung, Umsatzsteuer und Rücklagen.
 
 ### Geltungsbereich
 - Land: Österreich
@@ -200,7 +200,7 @@ operatives Ergebnis vor Finanzierung
 - Tilgung
 = Nettoabfluss aus Finanzierung
 
-Bankkonto-Cashflow =
+Bankkonto-Zahlungsfluss =
   Einzahlungen auf das Projektkonto
   - Auszahlungen an Dritte oder Bank
 ```
@@ -216,7 +216,7 @@ Interne Rücklagenzuführungen sind in dieser Bankkonto-Sicht keine Ausgabe an D
 - Fixkosten pro Jahr
 - Break-even-Auslastung
 - Kapitaldienstdeckungsgrad
-- Bankkonto-Cashflow nach Finanzierung
+- Bankkonto-Zahlungsfluss nach Finanzierung
 - Kontostand Jahresende
 - Rücklage pro Jahr
 - Eigenkapitalrendite, falls sinnvoll
@@ -520,3 +520,38 @@ Bei Kapitalgesellschaften und firmenbuchfähigen Personengesellschaften kommen U
 
 ### Relevanz
 Je mehr Nebenvehikel und Sondervereinbarungen genutzt werden, desto höher wird der laufende Dokumentations- und Meldeaufwand. Für das Projekt spricht organisatorisch vieles für wenige klare Strukturen statt paralleler Hilfskonstruktionen.
+
+## 15. Bankkonto, Ergebnisrechnung und Vermögensübersicht
+
+### Kernaussage
+Der operative Betrieb muss in drei Rechensichten dokumentiert werden: Bankkonto-Zahlungsfluss, Ergebnisrechnung und Vermögensübersicht. Ein positiver Kontostand ist nicht automatisch steuerlicher Gewinn. Eine Tilgung ist Bankkontoabfluss und reduziert Verbindlichkeiten, aber sie ist nicht in voller Höhe Ergebnisaufwand. Abschreibung ist Ergebnisaufwand, aber kein unmittelbarer Bankkontoabfluss.
+
+### App-Identitäten
+```text
+Kontostand Ende =
+  Kontostand Anfang
+  + Einzahlungen
+  - Auszahlungen
+
+Ergebnis vor Steuern =
+  Erlöse
+  - Betriebskosten
+  - Abschreibung
+  - Zinsaufwand
+
+Vermögen =
+  Verbindlichkeiten
+  + Eigenkapital
+```
+
+Wenn diese Identitäten nicht aufgehen, muss die App eine Diagnose zeigen und die Zahlen dürfen nicht als belastbare Beratungsvorlage verwendet werden.
+
+### Quelle
+- Quelle: Tiefenrecherchebericht 2 / aktuelle App-Berechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../references/260605-deep-research-report_2.md
+- Link: ../simTool/src/calculations/calculateCashflow.ts
+- Stand/Veröffentlichungsdatum: 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes Planungsmodell
+- Stabilität: niedrig
