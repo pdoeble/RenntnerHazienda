@@ -25,6 +25,7 @@ export const ownerSchema = z
     startEquityContribution: nonNegativeNumberSchema.default(0),
     monthlyCapitalContribution: nonNegativeNumberSchema.default(0),
     monthlyUsageContribution: nonNegativeNumberSchema.default(0),
+    monthlyNetIncomeAmount: nonNegativeNumberSchema.default(0),
     usagePointBudget: nonNegativeNumberSchema.default(0),
     ownershipSharePct: percentSchema,
     companySharePct: percentSchema.optional(),

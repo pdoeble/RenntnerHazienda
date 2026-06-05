@@ -48,6 +48,7 @@ function normalizeOwnership(input: unknown): unknown {
       startEquityContribution,
       equityContribution: startEquityContribution,
       monthlyUsageContribution,
+      monthlyNetIncomeAmount: numberOrZero(record.monthlyNetIncomeAmount),
       usagePointBudget,
       participationTier: usagePointBudget,
       monthlyCapitalContribution: numberOrZero(

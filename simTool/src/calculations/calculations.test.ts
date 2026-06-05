@@ -480,6 +480,35 @@ describe("calculation pipeline", () => {
     expect(result.bank.zielBeleihungsauslaufPct).toBe(90);
     expect(result.bank.fmaBelastungsquoteRichtwertPct).toBe(40);
     expect(result.bank.fmaLaufzeitRichtwertJahre).toBe(35);
+    expect(result.bank.persoenlicheBelastungsquotePct).toBeNull();
+    expect(result.bank.stressfaelle).toHaveLength(4);
+    expect(result.bank.stressfaelle).toContainEqual(
+      expect.objectContaining({
+        id: "zins-plus-zwei",
+        label: "Zins +2 Prozentpunkte"
+      })
+    );
+  });
+
+  it("calculates personal burden from owner income inputs", () => {
+    const project = projectFixture();
+    project.ownership.data.owners = project.ownership.data.owners.map((owner) => ({
+      ...owner,
+      monthlyNetIncomeAmount: 500
+    }));
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+
+    expect(result.bank.persoenlichesMonatsnettoeinkommen).toBe(5500);
+    expect(result.bank.persoenlicheBelastungsquotePct).toBeGreaterThan(40);
+    expect(
+      result.diagnostics.some(
+        (diagnostic) =>
+          diagnostic.id === "bank.persoenliche-belastungsquote-hoch"
+      )
+    ).toBe(true);
   });
 
   it("aggregates bank account cashflow with yearly account balance", () => {

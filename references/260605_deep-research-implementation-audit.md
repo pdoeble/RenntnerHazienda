@@ -22,7 +22,7 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | 5 | Netto-, Umsatzsteuer- und Bruttowerte duerfen nicht vermischt werden. | Bericht 2 | Umsatzsteuer-Matrix, Erwerbskosten | `03_tax.md`, `08_calculation_logic.md` | umgesetzt | Mittelverwendung fuehrt Netto/USt/Brutto; USt-Matrix markiert offene Steuerfragen |
 | 6 | Eigennutzung ist wirtschaftlich zu bewerten. | Bericht 2 | Belegung/Nutzung | `06_usage.md`, `08_calculation_logic.md` | umgesetzt | Hybridregel mit Marktwertverdraengung und Kostenuntergrenze |
 | 7 | Tilgung ist Bankkontoabfluss und Vermoegens-/Schuldenwirkung, nicht voller Ergebnisaufwand. | Bericht 2 | Bankkonto, Ergebnisrechnung, Vermoegensuebersicht | `05_finance.md`, `08_calculation_logic.md` | umgesetzt im Grundmodell | Identitaet Vermoegen = Verbindlichkeiten + Eigenkapital weiter haerten |
-| 8 | Banken sollten Bankpruefungs-Zahlungsfluss, Beleihungsauslauf und Kapitaldienstdeckungsgrad sehen. | Bericht 2 | Banksicht | `05_finance.md` | umgesetzt im Grundmodell | persoenliche Belastungsquote und Stressfaelle noch offen |
+| 8 | Banken sollten Bankpruefungs-Zahlungsfluss, Beleihungsauslauf und Kapitaldienstdeckungsgrad sehen. | Bericht 2 | Banksicht | `05_finance.md` | umgesetzt | persoenliche Belastungsquote bleibt ohne eingetragene Einkommen offen; Stressfaelle sind rechnerische Hinweise |
 | 9 | Verein, GmbH/FlexCo und Genossenschaft brauchen unterschiedliche Pruefgatter. | Bericht 1 und 2 | Rechtsformvergleich | `04_ownership.md` | umgesetzt | keine automatische Empfehlung; App zeigt Pruefgatter und Vergleichsdimensionen |
 | 10 | Kontext-Hilfe soll per Fragezeichen auf Nachfrage erscheinen. | Nutzer / Erstplan | Hilfesystem | `01_overall.md`, `08_calculation_logic.md` | umgesetzt im Grundmodell | Hilfetextabdeckung weiter ausbauen |
 
@@ -41,7 +41,8 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 |---|---|---|
 | `2b311ed` | Konsolidierter Ausfuehrungsplan und Auditstruktur | Dokumentation |
 | `f425ed2` | Deutsche App-Begriffe, Mittelherkunft/-verwendung, Bankkonto-Zahlungsfluss, Banksicht, Eigennutzungswert, Hilfepopover und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
-| naechster Commit | Buchungslogik, Umsatzsteuer-Matrix und Rechtsform-Pruefgatter in App und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| `f208636` | Buchungslogik, Umsatzsteuer-Matrix und Rechtsform-Pruefgatter in App und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| naechster Commit | Persoenliche Belastungsquote, Banksicht-Stressfaelle und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 
 ## Arbeitsregel
 

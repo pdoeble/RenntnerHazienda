@@ -470,10 +470,24 @@ export type BankKennzahlResult = {
   kapitaldienstdeckungsgrad: number;
   beleihungsauslaufPct: number;
   zielBeleihungsauslaufPct: number;
+  persoenlicheMonatszahlungen: number;
+  persoenlichesMonatsnettoeinkommen: number;
+  persoenlicheBelastungsquotePct: number | null;
   laufzeitJahre: number;
   fmaBelastungsquoteRichtwertPct: number;
   fmaLaufzeitRichtwertJahre: number;
+  stressfaelle: BankStressCaseResult[];
   diagnostics: DiagnosticMessage[];
+};
+
+export type BankStressCaseResult = {
+  id: string;
+  label: string;
+  annahme: string;
+  bankpruefungsZahlungsfluss: number;
+  kapitaldienst: number;
+  kapitaldienstdeckungsgrad: number;
+  status: "tragfaehig" | "angespannt" | "kritisch";
 };
 
 export type BuchungRow = {

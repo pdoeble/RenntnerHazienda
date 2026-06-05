@@ -849,6 +849,18 @@ function DebtView({ result }: { result: CalculationResult }) {
             `${result.bank.zielBeleihungsauslaufPct.toFixed(0)}%`
           ],
           [
+            "Persoenliche Belastungsquote",
+            formatOptionalPercent(result.bank.persoenlicheBelastungsquotePct)
+          ],
+          [
+            "Monatszahlungen Beteiligte",
+            formatMoney(result.bank.persoenlicheMonatszahlungen)
+          ],
+          [
+            "Monatsnettoeinkommen modelliert",
+            formatMoney(result.bank.persoenlichesMonatsnettoeinkommen)
+          ],
+          [
             "FMA-Leitplanke Laufzeit",
             `${result.bank.fmaLaufzeitRichtwertJahre} Jahre`
           ]
@@ -903,6 +915,24 @@ function DebtView({ result }: { result: CalculationResult }) {
           formatMoney(year.restschuld),
           formatMoney(year.zins),
           formatMoney(year.tilgung)
+        ])}
+      />
+      <DataTable
+        headers={[
+          "Stressfall",
+          "Annahme",
+          "Bankpruefungs-Zahlungsfluss",
+          "Kapitaldienst",
+          "Kapitaldienstdeckungsgrad",
+          "Status"
+        ]}
+        rows={result.bank.stressfaelle.map((stressfall) => [
+          stressfall.label,
+          stressfall.annahme,
+          formatMoney(stressfall.bankpruefungsZahlungsfluss),
+          formatMoney(stressfall.kapitaldienst),
+          stressfall.kapitaldienstdeckungsgrad.toFixed(2),
+          stressfall.status
         ])}
       />
       <DataTable
@@ -1087,6 +1117,8 @@ const HELP_TEXTS: Record<string, string> = {
     "Der Beleihungsauslauf setzt Bankdarlehen ins Verhaeltnis zur Wertbasis des Objekts.",
   "Kapitaldienstdeckungsgrad":
     "Der Kapitaldienstdeckungsgrad vergleicht Bankpruefungs-Zahlungsfluss mit Zins und Tilgung.",
+  "Persoenliche Belastungsquote":
+    "Die persoenliche Belastungsquote setzt modellierte Monatszahlungen der Beteiligten ins Verhaeltnis zum eingetragenen Monatsnettoeinkommen.",
   "Nutzungsentgelt mtl.":
     "Das Nutzungsentgelt bezahlt Nutzungsrechte oder Zimmernaechte und erzeugt keine Unternehmensanteile.",
   "Kostenbeitrag mtl.":
@@ -1248,6 +1280,10 @@ function readableTaxStatus(value: string): string {
   };
 
   return labels[value] ?? value;
+}
+
+function formatOptionalPercent(value: number | null): string {
+  return value === null ? "offen" : `${value.toFixed(1)}%`;
 }
 
 function looksLikeHtml(text: string): boolean {

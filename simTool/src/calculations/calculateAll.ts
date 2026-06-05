@@ -60,7 +60,13 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   const occupancy = calculateOccupancy(snapshot, points);
   const houseComparison = calculateHouseComparison(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
-  const bank = calculateBankView(snapshot, debt, cashflow, capitalNeed);
+  const bank = calculateBankView(
+    snapshot,
+    debt,
+    cashflow,
+    capitalNeed,
+    contributions
+  );
   const buchungslogik = calculateBuchungslogik(capitalNeed);
   const umsatzsteuer = calculateUmsatzsteuer(snapshot);
   const sichten = calculateSichten(
@@ -190,9 +196,13 @@ function emptyCalculationResult(
       kapitaldienstdeckungsgrad: 0,
       beleihungsauslaufPct: 0,
       zielBeleihungsauslaufPct: 90,
+      persoenlicheMonatszahlungen: 0,
+      persoenlichesMonatsnettoeinkommen: 0,
+      persoenlicheBelastungsquotePct: null,
       laufzeitJahre: snapshot.financing.data.termYears,
       fmaBelastungsquoteRichtwertPct: 40,
       fmaLaufzeitRichtwertJahre: 35,
+      stressfaelle: [],
       diagnostics: []
     },
     buchungslogik: {

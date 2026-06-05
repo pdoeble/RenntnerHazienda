@@ -489,6 +489,23 @@ function OwnershipEditor({
               )
             }
           />
+          <NumberSliderField
+            label="Monatsnettoeinkommen"
+            value={owner.monthlyNetIncomeAmount ?? 0}
+            min={0}
+            max={25000}
+            step={100}
+            unit="EUR"
+            onChange={(monthlyNetIncomeAmount) =>
+              updateOwners(
+                projectState.ownership.data.owners.map((candidate) =>
+                  candidate.id === owner.id
+                    ? { ...candidate, monthlyNetIncomeAmount }
+                    : candidate
+                )
+              )
+            }
+          />
           {projectState.strategy.data.capitalShareMode === "manualMonthly" ? (
             <NumberSliderField
               label="Kapitalruecklage / Anlage mtl."
@@ -535,6 +552,7 @@ function OwnershipEditor({
               startEquityContribution: 0,
               monthlyCapitalContribution: 0,
               monthlyUsageContribution: 50,
+              monthlyNetIncomeAmount: 0,
               usagePointBudget: 50,
               ownershipSharePct: 0,
               companySharePct: 0

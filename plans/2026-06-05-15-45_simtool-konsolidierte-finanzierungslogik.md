@@ -53,7 +53,7 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - [x] (2026-06-05 16:35) Belegung auf Zimmernaechte, Eigennutzung und Fremdvermietung im Grundmodell umgebaut.
 - [x] (2026-06-05 16:35) Eigennutzungswert mit Kostenuntergrenze, Marktwertverdraengung und Hybridregel ergaenzt.
 - [x] (2026-06-05 16:35) Bankkonto-Zahlungsfluss, Ergebnisrechnung und Vermoegensuebersicht getrennt.
-- [ ] (2026-06-05 15:45) Banksicht mit Beleihungsauslauf, Kapitaldienstdeckungsgrad und Stressfaellen ergaenzen.
+- [x] (2026-06-05 17:20) Banksicht mit Beleihungsauslauf, Kapitaldienstdeckungsgrad, persoenlicher Belastungsquote und Stressfaellen ergaenzt.
 - [x] (2026-06-05 17:05) Umsatzsteuer-Matrix und Vorsteuer-Konsistenzpruefungen ergaenzt.
 - [x] (2026-06-05 17:05) Rechtsformvergleich neutral mit Pruefgattern ausgebaut.
 - [ ] (2026-06-05 15:45) Kennzahlenregister, Sensitivitaeten und rote Diagnosen ergaenzen.
@@ -111,7 +111,7 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - Wiki und Beraterdokument auf diese Kernlogiken aktualisiert.
 - `npm run lint`, `npm run typecheck` und `npm test` erfolgreich.
 - Offen:
-  - Sensitivitaeten/Stressfaelle, persoenliche Belastungsquote, vollstaendige Anteilsklassen-Logik aus Zahlungsklassen, Build/Sync und Abschlussarchivierung.
+  - Vollstaendige Anteilsklassen-Logik aus Zahlungsklassen, Kennzahlenregister, Build/Sync und Abschlussarchivierung.
 - Beim naechsten Mal verbessern:
   - Nach jedem Commit dokumentieren, welche App-, Test- und Wiki-Bereiche geaendert wurden.
 
@@ -273,10 +273,10 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 
 ### Meilenstein 11 - Darlehen, Banksicht und Stressfaelle
 
-- [ ] Darlehensprofil mit Restschuld, Zins, Tilgung und Kapitaldienstdeckungsgrad.
-- [ ] Beleihungsauslauf, Kapitaldienstdeckungsgrad, Belastungsquote und Laufzeit pruefen.
-- [ ] FMA-Leitplanken als Richtwerte anzeigen.
-- [ ] Stressfaelle und Sensitivitaeten ergaenzen.
+- [x] Darlehensprofil mit Restschuld, Zins, Tilgung und Kapitaldienstdeckungsgrad.
+- [x] Beleihungsauslauf, Kapitaldienstdeckungsgrad, Belastungsquote und Laufzeit pruefen.
+- [x] FMA-Leitplanken als Richtwerte anzeigen.
+- [x] Stressfaelle und Sensitivitaeten ergaenzen.
 
 ### Meilenstein 12 - Umsatzsteuer-Matrix und Vorsteuerlogik
 

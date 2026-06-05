@@ -47,6 +47,8 @@ describe("App shell", () => {
 
     fireEvent.click(screen.getByRole("tab", { name: "Darlehen / Banksicht" }));
     expect(screen.getByText("Rate Monat 1")).toBeInTheDocument();
+    expect(screen.getByText("Persoenliche Belastungsquote")).toBeInTheDocument();
+    expect(screen.getByText("Zins +2 Prozentpunkte")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Punkte" }));
     expect(screen.getByText("Theoretischer Zimmernacht-Pool")).toBeInTheDocument();

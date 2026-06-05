@@ -588,7 +588,7 @@ Eigenkapital laut Vermögensübersicht =
 ## 22. Aktuelle Erweiterung: Banksicht
 
 ### Kernaussage
-Die Banksicht berechnet Beleihungsauslauf, Kapitaldienst, Kapitaldienstdeckungsgrad und Laufzeit. Die FMA-Leitplanken werden als Richtwerte angezeigt, nicht als automatisches Rechtsurteil.
+Die Banksicht berechnet Beleihungsauslauf, Kapitaldienst, Kapitaldienstdeckungsgrad, persönliche Belastungsquote, Laufzeit und Stressfälle. Die FMA-Leitplanken werden als Richtwerte angezeigt, nicht als automatisches Rechtsurteil. Die persönliche Belastungsquote bleibt `offen`, wenn keine Monatsnettoeinkommen je Beteiligtem eingetragen sind.
 
 ### App-Formeln
 ```text
@@ -597,7 +597,20 @@ Beleihungsauslauf =
 
 Kapitaldienstdeckungsgrad =
   Bankprüfungs-Zahlungsfluss Jahr 1 / Kapitaldienst Jahr 1
+
+Persönliche Belastungsquote =
+  Summe Monatszahlungen Beteiligte / Summe Monatsnettoeinkommen Beteiligte * 100
 ```
+
+### Stressfälle
+Die App berechnet vier Stressfälle:
+
+- `Zins +2 Prozentpunkte`: Annuität wird mit zwei Prozentpunkten höherem Zinssatz neu gerechnet.
+- `Fremderlös -50 %`: Bankprüfungs-Zahlungsfluss wird um 50 % des Fremderlöses reduziert.
+- `Betriebskosten +20 %`: Bankprüfungs-Zahlungsfluss wird um 20 % der Betriebskosten reduziert.
+- `Ausfall größter Beteiligtenbeitrag`: Bankprüfungs-Zahlungsfluss wird um den höchsten Jahresbeitrag eines Beteiligten reduziert.
+
+Jeder Stressfall bekommt einen Kapitaldienstdeckungsgrad und den Status `tragfähig`, `angespannt` oder `kritisch`.
 
 ### Quelle
 - Quelle: Banksicht-Berechnung

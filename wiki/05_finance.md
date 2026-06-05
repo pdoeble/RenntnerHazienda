@@ -432,6 +432,17 @@ Das Bankdarlehen kann im Modell automatisch als Saldo berechnet oder manuell fix
 ### Banksicht
 Die Banksicht nutzt nicht den Bruttoumsatz, sondern den Bankprüfungs-Zahlungsfluss vor Kapitaldienst. Daraus leitet die App den Kapitaldienstdeckungsgrad ab. Zusätzlich zeigt sie Beleihungsauslauf und Laufzeit gegen die FMA-Leitplanken als Richtwerte.
 
+Die App kann zusätzlich eine persönliche Belastungsquote anzeigen, wenn je Beteiligtem ein Monatsnettoeinkommen eingetragen ist. Ohne diese Eingabe bleibt die Kennzahl bewusst `offen`; die App erfindet keine Einkommen. Die Quote ist eine Planungskennzahl und ersetzt keine Haushaltsrechnung der Bank.
+
+Die App bildet außerdem vier Stressfälle als rechnerische Hinweise ab:
+
+| Stressfall | App-Annahme | Zweck |
+|---|---|---|
+| Zins +2 Prozentpunkte | Annuität wird mit zwei Prozentpunkten höherem Zinssatz neu gerechnet | Kapitaldienstpuffer prüfen |
+| Fremderlös -50 % | Fremdvermietungserlös wird im ersten Jahr halbiert | Abhängigkeit von Vermietung prüfen |
+| Betriebskosten +20 % | Betriebskosten werden im ersten Jahr um 20 % erhöht | laufende Kostenrisiken prüfen |
+| Ausfall größter Beteiligtenbeitrag | höchster monatlicher Beteiligtenbeitrag fehlt ein Jahr | Gruppenrisiko und Nachschusspuffer prüfen |
+
 ### Quelle
 - Quelle: FMA erwartet nach Auslaufen der KIM-V solide Wohnkreditvergabe
 - Herausgeber: Finanzmarktaufsicht Österreich
