@@ -18,6 +18,7 @@ describe("App shell", () => {
     expect(screen.getByRole("tab", { name: "Regeln" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Strategie" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Hausvergleich" })).toBeInTheDocument();
+    expect(screen.queryByRole("tab", { name: "Zeitachse" })).not.toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Projekt" })).toHaveAttribute(
       "aria-selected",
       "true"
@@ -66,6 +67,8 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Bankkonto-Zahlungsfluss" }));
     expect(screen.getByText("Bankrate Monat 1")).toBeInTheDocument();
     expect(screen.getByText("Bank Zins")).toBeInTheDocument();
+    expect(screen.getByText("Bankkonto nach Jahren")).toBeInTheDocument();
+    expect(screen.getByText("Monat 1: Zahlungswirksame Kosten")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Darlehen / Banksicht" }));
     expect(screen.getByText("Rate Monat 1")).toBeInTheDocument();
@@ -76,6 +79,7 @@ describe("App shell", () => {
     expect(screen.getByText("Theoretischer Zimmernacht-Pool")).toBeInTheDocument();
     expect(screen.getAllByText("Nutzungsanteil").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Unternehmensanteil").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Phil").length).toBeGreaterThanOrEqual(1);
 
     fireEvent.click(screen.getByRole("tab", { name: "Mein Anteil" }));
     expect(screen.getByText("Projektionsjahre")).toBeInTheDocument();
@@ -86,16 +90,17 @@ describe("App shell", () => {
 
     fireEvent.click(screen.getByRole("tab", { name: "Hausvergleich" }));
     expect(screen.getByText("Punktplot")).toBeInTheDocument();
+    expect(screen.getByText("Schematische Strassenkarte")).toBeInTheDocument();
 
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
         ok: true,
-        text: async () => "# Testwiki"
+        text: async () => "| A | B |\n|---|---|\n| 1 | 2 |"
       })
     );
     fireEvent.click(screen.getByRole("tab", { name: "Wiki" }));
-    await screen.findByRole("heading", { name: "Testwiki" });
+    await screen.findByRole("table");
   });
 
   it("updates calculations when direct numeric inputs change", () => {

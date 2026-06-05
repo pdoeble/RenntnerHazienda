@@ -17,21 +17,21 @@ export const defaultLegalFormTemplate: LegalFormTemplate = {
     liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "ownershipShare",
-    foundingCostAmount: 0,
+    foundingCostAmount: 1500,
     annualAccountingCostAmount: 0,
-    annualAdministrationCostAmount: 0,
+    annualAdministrationCostAmount: 600,
     annualComplianceCostAmount: 0,
-    costStatus: "missing",
+    costStatus: "planningEstimate",
     sourceRefs: [
       {
-        label: "Wiki Rechtsformen",
-        url: "wiki/04_ownership.md",
-        publisher: "Projekt-Wiki",
-        retrievedAt: "2026-05-15",
-        scope: "Oesterreich"
+        label: "WKO Gruendungskosten",
+        url: "https://www.wko.at/gruendung/gruendungskosten",
+        publisher: "Wirtschaftskammer Oesterreich",
+        retrievedAt: "2026-06-05",
+        scope: "Oesterreich, Gruendungskosten nach Rechtsform"
       }
     ],
     notes:
-      "Annahme nur zur Modellierung. Kosten muessen mit Notar, Steuerberatung und Bank konkretisiert werden."
+      "Planungsannahme fuer Miteigentum mit Benutzungs-, Kosten- und Exitvertrag. Kosten muessen mit Notar, Rechtsberatung, Steuerberatung und Bank konkretisiert werden."
   }
 };

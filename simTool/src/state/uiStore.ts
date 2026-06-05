@@ -20,8 +20,7 @@ export type VisualizationTab =
   | "occupancy"
   | "cashflow"
   | "debt"
-  | "wiki"
-  | "timeline";
+  | "wiki";
 
 export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
   "dashboard",
@@ -32,8 +31,7 @@ export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
   "occupancy",
   "cashflow",
   "debt",
-  "wiki",
-  "timeline"
+  "wiki"
 ];
 
 export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
@@ -45,6 +43,5 @@ export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
   occupancy: "Belegung",
   cashflow: "Bankkonto-Zahlungsfluss",
   debt: "Darlehen / Banksicht",
-  wiki: "Wiki",
-  timeline: "Zeitachse"
+  wiki: "Wiki"
 };

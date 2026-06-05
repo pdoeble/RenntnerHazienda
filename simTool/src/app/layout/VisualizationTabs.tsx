@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { useEffect, useState, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { CalculationResult } from "../../calculations/types";
 import {
   VISUALIZATION_LABELS,
@@ -83,8 +84,6 @@ function VisualizationBody({
       return <DebtView result={result} />;
     case "wiki":
       return <WikiView />;
-    case "timeline":
-      return <TimelineView result={result} />;
   }
 }
 
@@ -622,25 +621,25 @@ function ContributionsView({ result }: { result: CalculationResult }) {
               yAxisId="equity"
               dataKey="startEk"
               name="Start-EK einmalig"
-              fill="#0f766e"
+              fill={CONTRIBUTION_COLORS.startEk}
             />
             <Bar
               yAxisId="monthly"
               dataKey="kosten"
               name="Kostenbeitrag mtl."
-              fill="#b45309"
+              fill={CONTRIBUTION_COLORS.kosten}
             />
             <Bar
               yAxisId="monthly"
               dataKey="kapital"
               name="Kapitalruecklage / Anlage mtl."
-              fill="#7c3aed"
+              fill={CONTRIBUTION_COLORS.kapital}
             />
             <Bar
               yAxisId="monthly"
               dataKey="nutzung"
               name="Nutzungsentgelt mtl."
-              fill="#2563eb"
+              fill={CONTRIBUTION_COLORS.nutzung}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -799,192 +798,195 @@ function CashflowView({ result }: { result: CalculationResult }) {
               width={92}
             />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
-            <Legend />
             <Bar
               yAxisId="jahr1"
               dataKey="startEkJahr1"
               name="Start-EK Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#0f766e"
+              fill={BANK_FLOW_COLORS.startEk}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="kostenbeitraegeJahr1"
               name="Kostenbeitrag Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#14b8a6"
+              fill={BANK_FLOW_COLORS.kostenbeitraege}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="kapitalruecklagenJahr1"
               name="Kapitalruecklage Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#7c3aed"
+              fill={BANK_FLOW_COLORS.kapitalruecklagen}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="nutzungsentgelteJahr1"
               name="Nutzungsentgelt Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#2563eb"
+              fill={BANK_FLOW_COLORS.nutzungsentgelte}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="reservebeitraegeJahr1"
               name="Liquiditaetsreserve Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#64748b"
+              fill={BANK_FLOW_COLORS.reservebeitraege}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="darlehenJahr1"
               name="Darlehen Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#0891b2"
+              fill={BANK_FLOW_COLORS.darlehen}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="mieteJahr1"
               name="Miete Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#22c55e"
+              fill={BANK_FLOW_COLORS.miete}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="erstattungJahr1"
               name="Erstattung Jahr 1"
               stackId="einnahmenJahr1"
-              fill="#84cc16"
+              fill={BANK_FLOW_COLORS.erstattung}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="kaufJahr1"
-              name="Kauf/Nebenkosten Jahr 1"
+              name="Kauf/Startkosten Jahr 1"
               stackId="ausgabenJahr1"
-              fill="#991b1b"
+              fill={BANK_FLOW_COLORS.kauf}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="renovierungJahr1"
               name="Renovierung Jahr 1"
               stackId="ausgabenJahr1"
-              fill="#dc2626"
+              fill={BANK_FLOW_COLORS.renovierung}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="opexJahr1"
               name="Betriebskosten Jahr 1"
               stackId="ausgabenJahr1"
-              fill="#b45309"
+              fill={BANK_FLOW_COLORS.opex}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="zinsJahr1"
               name="Zins Jahr 1"
               stackId="ausgabenJahr1"
-              fill="#f97316"
+              fill={BANK_FLOW_COLORS.zins}
             />
             <Bar
               yAxisId="jahr1"
               dataKey="tilgungJahr1"
               name="Tilgung Jahr 1"
               stackId="ausgabenJahr1"
-              fill="#6d28d9"
+              fill={BANK_FLOW_COLORS.tilgung}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="startEkFolgejahre"
               name="Start-EK Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#0f766e"
+              fill={BANK_FLOW_COLORS.startEk}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="kostenbeitraegeFolgejahre"
               name="Kostenbeitrag Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#14b8a6"
+              fill={BANK_FLOW_COLORS.kostenbeitraege}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="kapitalruecklagenFolgejahre"
               name="Kapitalruecklage Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#7c3aed"
+              fill={BANK_FLOW_COLORS.kapitalruecklagen}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="nutzungsentgelteFolgejahre"
               name="Nutzungsentgelt Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#2563eb"
+              fill={BANK_FLOW_COLORS.nutzungsentgelte}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="reservebeitraegeFolgejahre"
               name="Liquiditaetsreserve Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#64748b"
+              fill={BANK_FLOW_COLORS.reservebeitraege}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="darlehenFolgejahre"
               name="Darlehen Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#0891b2"
+              fill={BANK_FLOW_COLORS.darlehen}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="mieteFolgejahre"
               name="Miete Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#22c55e"
+              fill={BANK_FLOW_COLORS.miete}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="erstattungFolgejahre"
               name="Erstattung Folgejahre"
               stackId="einnahmenFolgejahre"
-              fill="#84cc16"
+              fill={BANK_FLOW_COLORS.erstattung}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="kaufFolgejahre"
-              name="Kauf/Nebenkosten Folgejahre"
+              name="Kauf/Startkosten Folgejahre"
               stackId="ausgabenFolgejahre"
-              fill="#991b1b"
+              fill={BANK_FLOW_COLORS.kauf}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="renovierungFolgejahre"
               name="Renovierung Folgejahre"
               stackId="ausgabenFolgejahre"
-              fill="#dc2626"
+              fill={BANK_FLOW_COLORS.renovierung}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="opexFolgejahre"
               name="Betriebskosten Folgejahre"
               stackId="ausgabenFolgejahre"
-              fill="#b45309"
+              fill={BANK_FLOW_COLORS.opex}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="zinsFolgejahre"
               name="Zins Folgejahre"
               stackId="ausgabenFolgejahre"
-              fill="#f97316"
+              fill={BANK_FLOW_COLORS.zins}
             />
             <Bar
               yAxisId="folgejahre"
               dataKey="tilgungFolgejahre"
               name="Tilgung Folgejahre"
               stackId="ausgabenFolgejahre"
-              fill="#6d28d9"
+              fill={BANK_FLOW_COLORS.tilgung}
             />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
+      <CompactChartLegend
+        items={BANK_FLOW_LEGEND}
+        note="Linke Achse skaliert Jahr 1, rechte Achse skaliert die Folgejahre. Der Tooltip zeigt die exakten Euro-Betraege."
+      />
       <ChartFrame>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartData}>
@@ -1005,6 +1007,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
+        title="Bankkonto nach Jahren"
         headers={[
           "Jahr",
           "Einnahmen",
@@ -1021,10 +1024,12 @@ function CashflowView({ result }: { result: CalculationResult }) {
         ])}
       />
       <DataTable
+        title="Monat 1: Zahlungswirksame Kosten"
         headers={["Monat 1 Kostenblock", "Art", "Betrag"]}
         rows={firstMonthCostRows(firstMonth)}
       />
       <DataTable
+        title="Bankpruefungs-Zahlungsfluss"
         headers={[
           "Jahr",
           "Bankpruefungs-Zahlungsfluss",
@@ -1041,6 +1046,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
         ])}
       />
       <DataTable
+        title="Ergebnisrechnung"
         headers={["Jahr", "Erloese", "Betriebskosten", "Abschreibung", "Zinsaufwand", "Ergebnis vor Steuern"]}
         rows={clampItems(result.cashflow.ergebnisrechnungYearly, 10).map((year) => [
           year.year.toString(),
@@ -1052,6 +1058,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
         ])}
       />
       <DataTable
+        title="Vermoegensuebersicht"
         headers={["Jahr", "Vermoegen", "Bankguthaben", "Verbindlichkeiten", "Eigenkapital", "Saldendifferenz"]}
         rows={clampItems(result.cashflow.vermoegensuebersichtYearly, 10).map((year) => [
           year.year.toString(),
@@ -1157,7 +1164,7 @@ function DebtView({ result }: { result: CalculationResult }) {
               type="monotone"
               dataKey="restschuld"
               name="Restschuld"
-              stroke="#7c3aed"
+              stroke={DEBT_COLORS.restschuld}
               strokeWidth={2}
               dot={false}
             />
@@ -1165,13 +1172,13 @@ function DebtView({ result }: { result: CalculationResult }) {
               yAxisId="payment"
               dataKey="zins"
               name="Zins"
-              fill="#b45309"
+              fill={DEBT_COLORS.zins}
             />
             <Bar
               yAxisId="payment"
               dataKey="tilgung"
               name="Tilgung"
-              fill="#2563eb"
+              fill={DEBT_COLORS.tilgung}
             />
           </ComposedChart>
         </ResponsiveContainer>
@@ -1212,39 +1219,6 @@ function DebtView({ result }: { result: CalculationResult }) {
           formatMoney(month.principalRepayment),
           formatMoney(month.remainingDebt)
         ])}
-      />
-    </div>
-  );
-}
-
-function TimelineView({ result }: { result: CalculationResult }) {
-  const rows = result.timeline.map((event) => [
-    `Monat ${event.month}`,
-    event.label,
-    event.kind,
-    formatMoney(event.amount)
-  ]);
-
-  return (
-    <div className="visualization-view">
-      <MetricGrid
-        metrics={[
-          ["Ereignisse", result.timeline.length.toString()],
-          [
-            "Erstes Ereignis",
-            result.timeline[0] ? `Monat ${result.timeline[0].month}` : "kein Wert"
-          ],
-          [
-            "Letztes Ereignis",
-            result.timeline.at(-1)
-              ? `Monat ${result.timeline.at(-1)?.month}`
-              : "kein Wert"
-          ]
-        ]}
-      />
-      <DataTable
-        headers={["Monat", "Ereignis", "Typ", "Betrag"]}
-        rows={rows}
       />
     </div>
   );
@@ -1334,7 +1308,7 @@ function WikiView() {
       {status ? <p className="empty-state">{status}</p> : null}
       {content ? (
         <article className="wiki-document">
-          <ReactMarkdown>{content}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
         </article>
       ) : null}
     </div>
@@ -1377,18 +1351,58 @@ type SharePieDatum = {
 };
 
 const OWNER_COLORS = [
-  "#0f766e",
-  "#2563eb",
-  "#7c3aed",
-  "#b45309",
-  "#dc2626",
-  "#0891b2",
-  "#65a30d",
-  "#be185d",
-  "#475569",
-  "#9333ea",
-  "#ea580c",
-  "#16a34a"
+  "#5b8f8a",
+  "#7aa7c7",
+  "#a58ac9",
+  "#d3a06b",
+  "#d7837f",
+  "#77b7c5",
+  "#9aae73",
+  "#c884a8",
+  "#7b8794",
+  "#b79ad5",
+  "#dda37a",
+  "#7fb38b"
+];
+
+const CONTRIBUTION_COLORS = {
+  startEk: "#6f9c95",
+  kosten: "#d3a06b",
+  kapital: "#a58ac9",
+  nutzung: "#7aa7c7"
+} as const;
+
+const DEBT_COLORS = {
+  restschuld: "#65758b",
+  zins: "#d8a15f",
+  tilgung: "#8bb6d6"
+} as const;
+
+const BANK_FLOW_COLORS = {
+  startEk: "#6f9c95",
+  kostenbeitraege: "#8fbf9f",
+  kapitalruecklagen: "#a58ac9",
+  nutzungsentgelte: "#7aa7c7",
+  reservebeitraege: "#9aa6b2",
+  darlehen: "#75a8b8",
+  miete: "#8fbd7f",
+  erstattung: "#b7c979",
+  kauf: "#c87979",
+  renovierung: "#d69a86",
+  opex: "#d3a06b",
+  zins: "#e2b479",
+  tilgung: "#9d8bc2"
+} as const;
+
+const BANK_FLOW_LEGEND = [
+  { label: "Start-EK", color: BANK_FLOW_COLORS.startEk },
+  { label: "Kostenbeitrag", color: BANK_FLOW_COLORS.kostenbeitraege },
+  { label: "Kapitalruecklage", color: BANK_FLOW_COLORS.kapitalruecklagen },
+  { label: "Nutzungsentgelt", color: BANK_FLOW_COLORS.nutzungsentgelte },
+  { label: "Darlehen", color: BANK_FLOW_COLORS.darlehen },
+  { label: "Miete/Erstattung", color: BANK_FLOW_COLORS.miete },
+  { label: "Kauf/Ausbau", color: BANK_FLOW_COLORS.kauf },
+  { label: "Betrieb/Bank", color: BANK_FLOW_COLORS.opex }
 ];
 
 function ownerColor(index: number): string {
@@ -1405,14 +1419,15 @@ function SharePieChart({
   return (
     <div className="pie-chart-card">
       <h3>{title}</h3>
-      <ResponsiveContainer width="100%" height={260}>
-        <PieChart>
+      <ResponsiveContainer width="100%" height={360}>
+        <PieChart margin={{ top: 24, right: 82, bottom: 24, left: 82 }}>
           <Pie
             data={data}
             dataKey="value"
             nameKey="name"
-            outerRadius={92}
+            outerRadius={88}
             label={sharePieLabel}
+            labelLine
           >
             {data.map((entry) => (
               <Cell key={`${title}-${entry.name}`} fill={entry.color} />
@@ -1421,7 +1436,6 @@ function SharePieChart({
           <Tooltip
             formatter={(value) => `${Number(value).toFixed(2)}%`}
           />
-          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -1496,33 +1510,64 @@ function ChartFrame({ children }: { children: ReactNode }) {
   return <div className="chart-frame">{children}</div>;
 }
 
+function CompactChartLegend({
+  items,
+  note
+}: {
+  items: { label: string; color: string }[];
+  note?: string;
+}) {
+  return (
+    <div className="compact-chart-legend">
+      <div>
+        {items.map((item) => (
+          <span className="legend-chip" key={item.label}>
+            <span
+              className="legend-swatch"
+              style={{ backgroundColor: item.color }}
+              aria-hidden="true"
+            />
+            {item.label}
+          </span>
+        ))}
+      </div>
+      {note ? <p>{note}</p> : null}
+    </div>
+  );
+}
+
 function DataTable({
+  title,
   headers,
   rows
 }: {
+  title?: string;
   headers: string[];
   rows: string[][];
 }) {
   return (
-    <div className="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            {headers.map((header) => (
-              <th key={header}>{header}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={`${rowIndex}-${row.join("|")}`}>
-              {row.map((cell, cellIndex) => (
-                <td key={`${rowIndex}-${cellIndex}`}>{cell}</td>
+    <div className="table-block">
+      {title ? <h3>{title}</h3> : null}
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              {headers.map((header) => (
+                <th key={header}>{header}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr key={`${rowIndex}-${row.join("|")}`}>
+                {row.map((cell, cellIndex) => (
+                  <td key={`${rowIndex}-${cellIndex}`}>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

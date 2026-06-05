@@ -1,6 +1,7 @@
 import { diagnostic } from "../validation/diagnostics";
 import {
   calculateClosingCostsTotal,
+  calculateLegalFoundingCosts,
   calculateMortgageRegistrationFee,
   calculateVatAtPurchase,
   calculateVatRefund
@@ -38,7 +39,8 @@ export function calculateLiquidity(
         ? snapshot.property.data.purchasePrice +
           calculateVatAtPurchase(snapshot) +
           calculateClosingCostsTotal(snapshot) +
-          calculateMortgageRegistrationFee(snapshot)
+          calculateMortgageRegistrationFee(snapshot) +
+          calculateLegalFoundingCosts(snapshot)
         : 0;
     const renovationOutflow = snapshot.property.data.renovationItems
       .filter((item) => item.timingMonth === month)

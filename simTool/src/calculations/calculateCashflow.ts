@@ -3,6 +3,7 @@ import {
   calculateAnnualLegalOngoingCosts,
   calculateClosingCostsTotal,
   calculateFundingBalance,
+  calculateLegalFoundingCosts,
   calculateMortgageRegistrationFee,
   calculateVatAtPurchase,
   calculateVatRefund
@@ -135,7 +136,8 @@ export function calculateBankAccountCashflow(
           ? snapshot.property.data.purchasePrice +
             calculateVatAtPurchase(snapshot) +
             calculateClosingCostsTotal(snapshot) +
-            calculateMortgageRegistrationFee(snapshot)
+            calculateMortgageRegistrationFee(snapshot) +
+            calculateLegalFoundingCosts(snapshot)
           : 0;
       const renovation = snapshot.property.data.renovationItems
         .filter((item) => item.timingMonth === month)

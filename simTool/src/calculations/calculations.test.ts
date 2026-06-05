@@ -149,19 +149,25 @@ describe("calculation pipeline", () => {
         rentalIncome: 0,
         vacancyLoss: 0,
         effectiveIncome: 0,
-        nonRecoverableOpex: 100,
-        operatingResult: -100,
-        netCashflowBeforeContributions: -100
+        nonRecoverableOpex: 150,
+        operatingResult: -150,
+        netCashflowBeforeContributions: -150
       })
     );
-    expect(cashflow.monthly[0]?.opexBreakdown).toEqual([
+    expect(cashflow.monthly[0]?.opexBreakdown).toContainEqual(
       expect.objectContaining({
         label: "Versicherung",
         amount: 100
       })
-    ]);
+    );
+    expect(cashflow.monthly[0]?.opexBreakdown).toContainEqual(
+      expect.objectContaining({
+        label: "Rechtsform/Buchhaltung",
+        amount: 50
+      })
+    );
     expect(cashflow.monthly[0]?.netCashflowAfterDebtService).toBeCloseTo(
-      -2865.39,
+      -2923.31,
       1
     );
     expect(cashflow.yearly[0]?.netCashflowAfterDebtService).toBeLessThan(0);
@@ -173,9 +179,9 @@ describe("calculation pipeline", () => {
     });
     const debt = calculateDebt(snapshot, calculateInitialContributions(snapshot));
 
-    expect(debt.totalInitialDebt).toBe(523910);
-    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(2765.39, 1);
-    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(1746.37, 1);
+    expect(debt.totalInitialDebt).toBe(525410);
+    expect(debt.monthlyDebtService[0]?.totalPayment).toBeCloseTo(2773.31, 1);
+    expect(debt.monthlyDebtService[0]?.interest).toBeCloseTo(1751.37, 1);
     expect(debt.totalRemainingDebt).toBe(0);
   });
 
@@ -188,10 +194,10 @@ describe("calculation pipeline", () => {
     expect(result.capitalNeed.closingCosts).toBe(40870);
     expect(result.capitalNeed.mortgageRegistrationFee).toBe(8040);
     expect(result.capitalNeed.renovations).toBe(0);
-    expect(result.capitalNeed.legalFoundingCosts).toBe(0);
+    expect(result.capitalNeed.legalFoundingCosts).toBe(1500);
     expect(result.capitalNeed.initialReserve).toBe(30000);
-    expect(result.capitalNeed.totalProjectNeed).toBe(748910);
-    expect(result.capitalNeed.debtPrincipal).toBe(523910);
+    expect(result.capitalNeed.totalProjectNeed).toBe(750410);
+    expect(result.capitalNeed.debtPrincipal).toBe(525410);
   });
 
   it("balances Mittelherkunft and Mittelverwendung with an automatic bank loan", () => {
@@ -201,9 +207,9 @@ describe("calculation pipeline", () => {
     const funding = calculateFundingBalance(snapshot);
 
     expect(funding.istSaldierend).toBe(true);
-    expect(funding.gesamtMittelverwendung).toBe(748910);
+    expect(funding.gesamtMittelverwendung).toBe(750410);
     expect(funding.nichtBankMittelherkunft).toBe(225000);
-    expect(funding.bankdarlehen).toBe(523910);
+    expect(funding.bankdarlehen).toBe(525410);
     expect(funding.gesamtMittelherkunft).toBe(funding.gesamtMittelverwendung);
     expect(funding.mittelherkunft).toContainEqual(
       expect.objectContaining({
@@ -311,7 +317,7 @@ describe("calculation pipeline", () => {
     );
 
     expect(result.capitalNeed.funding.istSaldierend).toBe(false);
-    expect(result.capitalNeed.funding.finanzierungsluecke).toBe(423910);
+    expect(result.capitalNeed.funding.finanzierungsluecke).toBe(425410);
     expect(
       result.diagnostics.some(
         (diagnostic) => diagnostic.id === "funding.sources-uses-not-balanced"
@@ -332,7 +338,8 @@ describe("calculation pipeline", () => {
       result.capitalNeed.vatAtPurchase +
       result.capitalNeed.closingCosts +
       result.capitalNeed.mortgageRegistrationFee +
-      result.capitalNeed.renovations;
+      result.capitalNeed.renovations +
+      result.capitalNeed.legalFoundingCosts;
 
     expect(result.capitalNeed.totalProjectNeed).toBe(
       acquisitionOutflow + result.capitalNeed.initialReserve
@@ -373,7 +380,7 @@ describe("calculation pipeline", () => {
       result.contributions.recurringContributions[0]?.contributions[0];
 
     expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
-      2866.29,
+      2924.19,
       1
     );
     expect(firstOwner?.costContributionMonthly).toBeGreaterThan(0);
@@ -441,7 +448,7 @@ describe("calculation pipeline", () => {
     );
 
     expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
-      1687.89,
+      1690.87,
       1
     );
     expect(
@@ -533,7 +540,7 @@ describe("calculation pipeline", () => {
       buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
     );
 
-    expect(result.bank.beleihungsauslaufPct).toBeCloseTo(78.1955, 4);
+    expect(result.bank.beleihungsauslaufPct).toBeCloseTo(78.4194, 4);
     expect(result.bank.kapitaldienstJahr1).toBeGreaterThan(0);
     expect(result.bank.bankpruefungsZahlungsflussJahr1).toBeDefined();
     expect(result.bank.zielBeleihungsauslaufPct).toBe(90);
