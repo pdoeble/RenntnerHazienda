@@ -17,6 +17,10 @@ describe("App shell", () => {
     expect(screen.getByRole("tab", { name: "Finanzierung" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Strategie" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Hausvergleich" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Projekt" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
@@ -28,7 +32,7 @@ describe("App shell", () => {
     );
 
     fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
-    expect(screen.getByText("Monatsbeitrag")).toBeInTheDocument();
+    expect(screen.getByText("Monatszahlung gesamt")).toBeInTheDocument();
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Cashflow" }));
@@ -39,7 +43,7 @@ describe("App shell", () => {
     expect(screen.getByText("Rate Monat 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Punkte" }));
-    expect(screen.getByText("Jahrespunkt-Pool")).toBeInTheDocument();
+    expect(screen.getByText("Theoretischer Zimmernacht-Pool")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Mein Anteil" }));
     expect(screen.getByText("Projektionsjahre")).toBeInTheDocument();
@@ -64,6 +68,7 @@ describe("App shell", () => {
   it("updates calculations when direct numeric inputs change", () => {
     render(<App />);
 
+    fireEvent.click(screen.getByRole("tab", { name: "Eignerschaft" }));
     fireEvent.change(screen.getAllByLabelText("Start-EK")[0], {
       target: { value: "100000" }
     });
@@ -92,6 +97,7 @@ describe("App shell", () => {
   it("adds and deletes owners, renovations, and opex blocks", () => {
     render(<App />);
 
+    fireEvent.click(screen.getByRole("tab", { name: "Eignerschaft" }));
     fireEvent.click(screen.getByRole("button", { name: "Eigner hinzufuegen" }));
     expect(screen.getByDisplayValue("Eigner 12")).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("button", { name: "Loeschen" }).at(-1)!);
@@ -156,8 +162,9 @@ describe("App shell", () => {
     render(<App />);
 
     expect(screen.getByLabelText("Projekt laden")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getAllByLabelText("Laden")[0]).toBeInTheDocument();
-    expect(screen.getAllByText("Upload...").length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText("Upload...").length).toBeGreaterThanOrEqual(1);
     expect(
       screen.queryByText("Schema und Moduldiagnosen sind gueltig.")
     ).not.toBeInTheDocument();

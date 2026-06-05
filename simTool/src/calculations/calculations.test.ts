@@ -236,14 +236,16 @@ describe("calculation pipeline", () => {
       result.contributions.recurringContributions[0]?.contributions[0];
 
     expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
-      2867.23,
+      2866.29,
       1
     );
-    expect(firstOwner?.baseMonthlyObligation).toBeGreaterThan(0);
+    expect(firstOwner?.costContributionMonthly).toBeGreaterThan(0);
+    expect(firstOwner?.capitalContributionMonthly).toBeGreaterThan(0);
+    expect(firstOwner?.usageContributionMonthly).toBe(100);
     expect(firstOwner?.totalMonthlyContribution).toBeGreaterThan(0);
   });
 
-  it("can offset owner obligations with rental income when strategy allows it", () => {
+  it("can offset cost contributions with rental income while keeping principal as investment", () => {
     const project = projectFixture();
     project.property.data.expectedMonthlyRent = 4500;
     project.property.data.vacancyRatePct = 3;
@@ -253,37 +255,84 @@ describe("calculation pipeline", () => {
       buildProjectSnapshot(project, { timeHorizonMonths: 12 })
     );
 
-    expect(result.contributions.requiredMonthlyContribution).toBe(0);
+    expect(result.contributions.requiredMonthlyContribution).toBeCloseTo(
+      1687.89,
+      1
+    );
+    expect(
+      result.contributions.recurringContributions[0]?.contributions[0]
+        ?.costContributionMonthly
+    ).toBe(0);
+    expect(
+      result.contributions.recurringContributions[0]?.contributions[0]
+        ?.capitalContributionMonthly
+    ).toBeGreaterThan(0);
   });
 
-  it("calculates usage point shares and sample night costs", () => {
+  it("calculates EUR usage budgets and sample room-night costs", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
     });
     const points = calculatePoints(snapshot);
 
-    expect(points.capacity).toBe(8);
-    expect(points.annualPointPool).toBe(2920);
+    expect(points.capacity).toBe(5);
+    expect(points.annualPointPool).toBe(1825);
     expect(points.shareMode).toBe("usage");
     expect(points.owners[0]).toEqual(
       expect.objectContaining({
         ownerId: "phil",
+        monthlyUsageContribution: 100,
+        annualUsageBudget: 1200,
         usageSharePct: 15.3846,
         companySharePct: 17.7778,
         pointSharePct: 15.3846,
-        annualPoints: 449,
-        affordableNightsAverage: 34
+        annualPoints: 1200,
+        affordableNightsAverage: 738
       })
     );
     expect(points.owners[8]).toEqual(
       expect.objectContaining({
         ownerId: "jens",
         pointSharePct: 7.6923,
-        annualPoints: 225
+        annualPoints: 600
       })
     );
-    expect(nightPoints(new Date(2026, 3, 8), snapshot)).toBe(8);
-    expect(nightPoints(new Date(2026, 0, 10), snapshot)).toBeCloseTo(21.6);
+    expect(nightPoints(new Date(2026, 3, 8), snapshot)).toBe(1);
+    expect(nightPoints(new Date(2026, 0, 10), snapshot)).toBeCloseTo(2.7);
+  });
+
+  it("calculates occupancy pressure from room-nights and weekend demand", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+
+    expect(result.occupancy.roomCapacity).toBe(5);
+    expect(result.occupancy.roomNightCapacity).toBe(1825);
+    expect(result.occupancy.ownerDemandRoomNights).toBeGreaterThan(
+      result.occupancy.ownerDemandNights / 2
+    );
+    expect(result.occupancy.blockedRoomNights).toBe(
+      result.occupancy.ownerDemandRoomNights + result.occupancy.guestRoomNights
+    );
+    expect(result.occupancy.weekendOccupancyPct).toBeGreaterThan(
+      result.occupancy.weekdayOccupancyPct
+    );
+  });
+
+  it("aggregates bank account cashflow with yearly account balance", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+    const firstYear = result.cashflow.bankAccountYearly[0]!;
+    const liquidityYearEnd = result.liquidity.monthly[11]!;
+
+    expect(firstYear.totalIncome).toBeGreaterThan(0);
+    expect(firstYear.totalExpenses).toBeGreaterThan(0);
+    expect(firstYear.closingBalance).toBe(liquidityYearEnd.closingBalance);
+    expect(firstYear.netMovement).toBeCloseTo(
+      firstYear.totalIncome - firstYear.totalExpenses,
+      2
+    );
   });
 
   it("calculates annual recurring contributions so liquidity stays above reserve", () => {
