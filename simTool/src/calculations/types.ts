@@ -18,8 +18,13 @@ export type OwnerContribution = {
   basis: "ownershipShare" | "equalSplit" | "custom";
   sharePct: number;
   initialEquity?: number;
+  startEquityContribution?: number;
   baseMonthlyObligation?: number;
+  costContributionMonthly?: number;
   reserveTopUp?: number;
+  liquidityReserveMonthly?: number;
+  capitalContributionMonthly?: number;
+  usageContributionMonthly?: number;
   specialAssessment?: number;
   totalMonthlyContribution?: number;
 };
@@ -105,6 +110,7 @@ export type CapitalShareOwnerResult = {
   startEquityContribution: number;
   startEquitySharePct: number;
   monthlyCapitalContribution: number;
+  monthlyUsageContribution: number;
   usagePointBudget: number;
   capitalValueAtLoanEnd: number;
   companySharePct: number;
@@ -147,9 +153,43 @@ export type CashflowYear = Omit<CashflowMonth, "month" | "opexBreakdown"> & {
   year: number;
 };
 
+export type BankAccountStack = {
+  startEquity: number;
+  costContributions: number;
+  capitalContributions: number;
+  usageContributions: number;
+  reserveContributions: number;
+  debtDrawdown: number;
+  rentalIncome: number;
+  vatRefund: number;
+  acquisition: number;
+  renovation: number;
+  opex: number;
+  interest: number;
+  principalRepayment: number;
+};
+
+export type BankAccountMonth = BankAccountStack & {
+  month: number;
+  totalIncome: number;
+  totalExpenses: number;
+  netMovement: number;
+  closingBalance: number;
+};
+
+export type BankAccountYear = BankAccountStack & {
+  year: number;
+  totalIncome: number;
+  totalExpenses: number;
+  netMovement: number;
+  closingBalance: number;
+};
+
 export type CashflowResult = {
   monthly: CashflowMonth[];
   yearly: CashflowYear[];
+  bankAccountMonthly: BankAccountMonth[];
+  bankAccountYearly: BankAccountYear[];
   cumulativeCashflow: number;
   diagnostics: DiagnosticMessage[];
 };
@@ -188,11 +228,14 @@ export type TimelineEvent = {
 export type PointNightType = {
   label: string;
   pointsPerNight: number;
+  roomNightPrice: number;
 };
 
 export type OwnerPointResult = {
   ownerId: string;
   ownerName: string;
+  monthlyUsageContribution: number;
+  annualUsageBudget: number;
   usagePointBudget: number;
   usageSharePct: number;
   companySharePct: number;
@@ -218,12 +261,26 @@ export type OccupancyResult = {
   bedrooms?: number;
   beds?: number;
   capacityPersons: number;
+  roomCapacity: number;
+  roomNightCapacity: number;
+  weekendRoomNightCapacity: number;
+  weekdayRoomNightCapacity: number;
   capacityDataQuality: "bedrooms" | "beds" | "missing";
   ownerCount: number;
   ownerDemandNights: number;
+  ownerDemandRoomNights: number;
   guestNights: number;
+  guestRoomNights: number;
   blockedNights: number;
+  blockedRoomNights: number;
   freeNights: number;
+  freeRoomNights: number;
+  weekendDemandRoomNights: number;
+  weekdayDemandRoomNights: number;
+  weekendFreeRoomNights: number;
+  weekdayFreeRoomNights: number;
+  weekendOccupancyPct: number;
+  weekdayOccupancyPct: number;
   occupancyPct: number;
   pointsPerAvailableNight: number;
   pressureLabel: string;

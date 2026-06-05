@@ -56,6 +56,7 @@ export function calculateCapitalShares(
       startEquityContribution: roundMoney(owner.startEquityContribution),
       startEquitySharePct: roundPct(startEquitySharePct),
       monthlyCapitalContribution: roundMoney(averageMonthlyCapitalContribution),
+      monthlyUsageContribution: roundMoney(owner.monthlyUsageContribution),
       usagePointBudget: owner.usagePointBudget,
       capitalValueAtLoanEnd: roundMoney(
         startEquityFutureValue + monthlyFutureValue

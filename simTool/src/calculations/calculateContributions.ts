@@ -51,8 +51,13 @@ export function calculateInitialContributions(
       basis: "ownershipShare",
       sharePct: roundPct(sharePct),
       initialEquity: roundMoney(owner.startEquityContribution),
+      startEquityContribution: roundMoney(owner.startEquityContribution),
       baseMonthlyObligation: 0,
+      costContributionMonthly: 0,
       reserveTopUp: 0,
+      liquidityReserveMonthly: 0,
+      capitalContributionMonthly: 0,
+      usageContributionMonthly: 0,
       specialAssessment: 0,
       totalMonthlyContribution: 0
     } satisfies OwnerContribution;
@@ -107,14 +112,17 @@ export function calculateRecurringContributions(
       snapshot.metadata.timeHorizonMonths - 1,
       startMonth + 11
     );
+    const monthlyBasis = calculateMonthlyContributionBasisForYear(
+      snapshot,
+      debt,
+      cashflow,
+      startMonth,
+      endMonth
+    );
     const monthlyContribution = roundMoney(
-      calculateBaseMonthlyObligationForYear(
-        snapshot,
-        debt,
-        cashflow,
-        startMonth,
-        endMonth
-      )
+      monthlyBasis.costContributionMonthly +
+        monthlyBasis.capitalContributionMonthly +
+        monthlyBasis.usageContributionMonthly
     );
     const requiredForReserve = roundMoney(
       calculateRequiredMonthlyContributionForYear(
@@ -134,12 +142,21 @@ export function calculateRecurringContributions(
 
     const contributions = owners.map((owner) => {
       const sharePct = calculateOwnerEquitySharePct(snapshot, owner.id);
-      const baseMonthlyObligation = roundMoney(
-        (monthlyContribution * sharePct) / 100
+      const costContributionMonthly = roundMoney(
+        (monthlyBasis.costContributionMonthly * sharePct) / 100
       );
+      const capitalContributionMonthly = roundMoney(
+        snapshot.strategy.data.capitalShareMode === "scheduledPrincipal"
+          ? (monthlyBasis.capitalContributionMonthly * sharePct) / 100
+          : owner.monthlyCapitalContribution
+      );
+      const usageContributionMonthly = roundMoney(owner.monthlyUsageContribution);
       const ownerReserveTopUp = roundMoney((reserveTopUp * sharePct) / 100);
       const amount = roundMoney(
-        (totalMonthlyContribution * sharePct) / 100
+        costContributionMonthly +
+          capitalContributionMonthly +
+          usageContributionMonthly +
+          ownerReserveTopUp
       );
       totalByOwner[owner.id] = roundMoney(
         (totalByOwner[owner.id] ?? 0) + amount * (endMonth - startMonth + 1)
@@ -152,8 +169,13 @@ export function calculateRecurringContributions(
         basis: "ownershipShare" as const,
         sharePct: roundPct(sharePct),
         initialEquity: 0,
-        baseMonthlyObligation,
+        startEquityContribution: 0,
+        baseMonthlyObligation: costContributionMonthly,
+        costContributionMonthly,
         reserveTopUp: ownerReserveTopUp,
+        liquidityReserveMonthly: ownerReserveTopUp,
+        capitalContributionMonthly,
+        usageContributionMonthly,
         specialAssessment: 0,
         totalMonthlyContribution: amount
       };
@@ -212,18 +234,34 @@ function calculateRequiredMonthlyContributionForYear(
   return Math.max(0, requiredMonthlyContribution);
 }
 
-function calculateBaseMonthlyObligationForYear(
+function calculateMonthlyContributionBasisForYear(
   snapshot: ProjectSnapshot,
   debt: DebtResult,
   cashflow: CashflowResult,
   startMonth: number,
   endMonth: number
-): number {
-  let monthlyObligation = 0;
+): {
+  costContributionMonthly: number;
+  capitalContributionMonthly: number;
+  usageContributionMonthly: number;
+} {
+  let costContributionTotal = 0;
+  let capitalContributionTotal = 0;
+  const monthCount = endMonth - startMonth + 1;
+  const usageContributionMonthly = snapshot.ownership.data.owners.reduce(
+    (total, owner) => total + owner.monthlyUsageContribution,
+    0
+  );
+  const manualCapitalMonthly = snapshot.ownership.data.owners.reduce(
+    (total, owner) => total + owner.monthlyCapitalContribution,
+    0
+  );
 
   for (let month = startMonth; month <= endMonth; month += 1) {
     const currentCashflow = cashflow.monthly[month];
-    const debtService = debt.monthlyDebtService[month]?.totalPayment ?? 0;
+    const debtMonth = debt.monthlyDebtService[month];
+    const interest = debtMonth?.interest ?? 0;
+    const principalRepayment = debtMonth?.principalRepayment ?? 0;
     const opex = currentCashflow
       ? currentCashflow.recoverableOpex + currentCashflow.nonRecoverableOpex
       : 0;
@@ -231,13 +269,31 @@ function calculateBaseMonthlyObligationForYear(
       snapshot.strategy.data.rentOffsetsOwnerContributions && currentCashflow
         ? currentCashflow.effectiveIncome
         : 0;
-    monthlyObligation = Math.max(
-      monthlyObligation,
-      Math.max(0, debtService + opex - rentOffset)
-    );
+    const costBase =
+      snapshot.strategy.data.capitalShareMode === "scheduledPrincipal"
+        ? interest + opex - rentOffset - usageContributionMonthly
+        : interest +
+          principalRepayment +
+          opex -
+          rentOffset -
+          usageContributionMonthly -
+          manualCapitalMonthly;
+    const capitalBase =
+      snapshot.strategy.data.capitalShareMode === "scheduledPrincipal"
+        ? principalRepayment
+        : manualCapitalMonthly;
+
+    costContributionTotal += Math.max(0, costBase);
+    capitalContributionTotal += Math.max(0, capitalBase);
   }
 
-  return monthlyObligation;
+  return {
+    costContributionMonthly: roundMoney(costContributionTotal / monthCount),
+    capitalContributionMonthly: roundMoney(
+      capitalContributionTotal / monthCount
+    ),
+    usageContributionMonthly: roundMoney(usageContributionMonthly)
+  };
 }
 
 function calculateNonContributionLiquidityFlow(

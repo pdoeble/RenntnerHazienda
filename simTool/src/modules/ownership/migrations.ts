@@ -39,11 +39,15 @@ function normalizeOwnership(input: unknown): unknown {
     const usagePointBudget = numberOrZero(
       record.usagePointBudget ?? record.participationTier
     );
+    const monthlyUsageContribution = numberOrZero(
+      record.monthlyUsageContribution ?? record.usagePointBudget ?? record.participationTier
+    );
 
     return {
       ...record,
       startEquityContribution,
       equityContribution: startEquityContribution,
+      monthlyUsageContribution,
       usagePointBudget,
       participationTier: usagePointBudget,
       monthlyCapitalContribution: numberOrZero(

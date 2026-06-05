@@ -56,6 +56,8 @@ export const strategyDataSchema = z
     capitalShareMode: capitalShareModeSchema.default("scheduledPrincipal"),
     capitalValuationInterestPct: z.number().finite().default(2),
     appreciationPercentPerYear: z.number().finite().default(2),
+    ownerWeekendUsagePct: percentSchema.default(80),
+    guestWeekendUsagePct: percentSchema.default(50),
     goNoGoChecks: z.array(goNoGoCheckSchema).default([])
   })
   .strict();

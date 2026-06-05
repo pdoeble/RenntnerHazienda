@@ -25,6 +25,8 @@ export const defaultStrategyTemplate: StrategyTemplate = {
     capitalShareMode: "scheduledPrincipal",
     capitalValuationInterestPct: 2,
     appreciationPercentPerYear: 2,
+    ownerWeekendUsagePct: 80,
+    guestWeekendUsagePct: 50,
     goNoGoChecks: [
       {
         id: "check-leisure-residence",

@@ -14,23 +14,12 @@ export function calculatePoints(
   snapshot: ProjectSnapshot,
   capitalShares?: CapitalShareResult
 ): PointsResult {
-  const capacity = Math.max(
-    1,
-    snapshot.property.data.beds ??
-      snapshot.property.data.rooms ??
-      snapshot.property.data.units ??
-      4
-  );
+  const capacity = calculateRoomCapacity(snapshot);
   const annualPointPool = Math.round(
     capacity * snapshot.property.data.pointRules.basePointsPerBedPerYear
   );
   const nightTypes = sampleNightTypes(snapshot);
-  const owners = calculateOwnerPoints(
-    snapshot,
-    annualPointPool,
-    nightTypes,
-    capitalShares
-  );
+  const owners = calculateOwnerPoints(snapshot, nightTypes, capitalShares);
   const diagnostics = [];
 
   if (snapshot.strategy.data.pointShareMode === "blended") {
@@ -52,7 +41,7 @@ export function calculatePoints(
   if (
     snapshot.strategy.data.pointShareMode === "usage" &&
     snapshot.ownership.data.owners.reduce(
-      (total, owner) => total + owner.usagePointBudget,
+      (total, owner) => total + owner.monthlyUsageContribution,
       0
     ) <= 0
   ) {
@@ -61,7 +50,7 @@ export function calculatePoints(
         "points.no-usage-budget",
         "warning",
         "ownership",
-        "Keine Nutzungspunkte hinterlegt; Nutzung kann nicht verteilt werden."
+        "Keine Nutzungsbeitraege hinterlegt; Nutzung kann nicht in Zimmernaechte umgerechnet werden."
       )
     );
   }
@@ -80,47 +69,29 @@ export function calculatePoints(
 
 function calculateOwnerPoints(
   snapshot: ProjectSnapshot,
-  annualPointPool: number,
   nightTypes: PointNightType[],
   capitalShares?: CapitalShareResult
 ): OwnerPointResult[] {
   const usageTotal = snapshot.ownership.data.owners.reduce(
-    (total, owner) => total + owner.usagePointBudget,
+    (total, owner) => total + owner.monthlyUsageContribution * 12,
     0
   );
   const equityTotal = snapshot.ownership.data.owners.reduce(
     (total, owner) => total + owner.startEquityContribution,
     0
   );
-  const weightTotal =
-    snapshot.strategy.data.pointTierWeight +
-    snapshot.strategy.data.pointEquityWeight;
 
   return snapshot.ownership.data.owners.map((owner) => {
+    const annualUsageBudget = owner.monthlyUsageContribution * 12;
     const usageSharePct =
-      usageTotal > 0 ? (owner.usagePointBudget / usageTotal) * 100 : 0;
+      usageTotal > 0 ? (annualUsageBudget / usageTotal) * 100 : 0;
     const equitySharePct =
       equityTotal > 0 ? (owner.startEquityContribution / equityTotal) * 100 : 0;
     const companySharePct =
       capitalShares?.owners.find((candidate) => candidate.ownerId === owner.id)
         ?.companySharePct ?? owner.companySharePct ?? equitySharePct;
-    let pointSharePct = usageSharePct;
-
-    if (snapshot.strategy.data.pointShareMode === "tier") {
-      pointSharePct = usageSharePct;
-    } else if (snapshot.strategy.data.pointShareMode === "equity") {
-      pointSharePct = companySharePct;
-    } else if (
-      snapshot.strategy.data.pointShareMode === "blended" &&
-      weightTotal > 0
-    ) {
-      pointSharePct =
-        (snapshot.strategy.data.pointTierWeight * usageSharePct +
-          snapshot.strategy.data.pointEquityWeight * companySharePct) /
-        weightTotal;
-    }
-
-    const annualPoints = (annualPointPool * pointSharePct) / 100;
+    const pointSharePct = usageSharePct;
+    const annualPoints = annualUsageBudget;
     const affordableNightsAverage = averageAffordableNights(
       annualPoints,
       nightTypes
@@ -129,6 +100,8 @@ function calculateOwnerPoints(
     return {
       ownerId: owner.id,
       ownerName: owner.displayName,
+      monthlyUsageContribution: Math.round(owner.monthlyUsageContribution),
+      annualUsageBudget: Math.round(annualUsageBudget),
       usagePointBudget: owner.usagePointBudget,
       usageSharePct: roundPct(usageSharePct),
       companySharePct: roundPct(companySharePct),
@@ -146,23 +119,19 @@ function sampleNightTypes(snapshot: ProjectSnapshot): PointNightType[] {
     { label: "Wochenende Sommer", date: new Date(2026, 6, 11) }
   ];
 
-  return samples.map(({ label, date }) => ({
-    label,
-    pointsPerNight: Math.round(nightPoints(date, snapshot) * 10) / 10
-  }));
+  return samples.map(({ label, date }) => {
+    const roomNightPrice = Math.round(nightPoints(date, snapshot) * 10) / 10;
+    return {
+      label,
+      pointsPerNight: roomNightPrice,
+      roomNightPrice
+    };
+  });
 }
 
 export function nightPoints(date: Date, snapshot: ProjectSnapshot): number {
-  const capacity = Math.max(
-    1,
-    snapshot.property.data.beds ??
-      snapshot.property.data.rooms ??
-      snapshot.property.data.units ??
-      4
-  );
   const season = seasonFromMonth(date.getMonth() + 1);
   return (
-    capacity *
     snapshot.property.data.pointRules.basePerBedPerNight *
     weekendMultiplier(date, snapshot) *
     snapshot.property.data.pointRules.seasonMultipliers[season]
@@ -212,4 +181,17 @@ function averageAffordableNights(
     ) / nightTypes.length;
 
   return Math.round(average);
+}
+
+function calculateRoomCapacity(snapshot: ProjectSnapshot): number {
+  if (snapshot.property.data.bedrooms && snapshot.property.data.bedrooms > 0) {
+    return snapshot.property.data.bedrooms;
+  }
+  if (snapshot.property.data.beds && snapshot.property.data.beds > 0) {
+    return Math.max(1, Math.ceil(snapshot.property.data.beds / 2));
+  }
+  return Math.max(
+    1,
+    snapshot.property.data.rooms ?? snapshot.property.data.units ?? 1
+  );
 }

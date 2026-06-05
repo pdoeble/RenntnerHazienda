@@ -1,5 +1,8 @@
 import { hasBlockingDiagnostics } from "../validation/diagnostics";
-import { calculateCashflow } from "./calculateCashflow";
+import {
+  calculateBankAccountCashflow,
+  calculateCashflow
+} from "./calculateCashflow";
 import { calculateCapitalShares } from "./calculateCapitalShares";
 import {
   calculateInitialContributions,
@@ -24,14 +27,29 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
 
   const initialContributions = calculateInitialContributions(snapshot);
   const debt = calculateDebt(snapshot, initialContributions);
-  const cashflow = calculateCashflow(snapshot, debt);
+  const operatingCashflow = calculateCashflow(snapshot, debt);
   const contributions = calculateRecurringContributions(
     snapshot,
     debt,
-    cashflow,
+    operatingCashflow,
     initialContributions
   );
-  const liquidity = calculateLiquidity(snapshot, contributions, cashflow, debt);
+  const liquidity = calculateLiquidity(
+    snapshot,
+    contributions,
+    operatingCashflow,
+    debt
+  );
+  const cashflow = {
+    ...operatingCashflow,
+    ...calculateBankAccountCashflow(
+      snapshot,
+      contributions,
+      operatingCashflow,
+      debt,
+      liquidity
+    )
+  };
   const capitalNeed = calculateCapitalNeed(snapshot);
   const capitalShares = calculateCapitalShares(snapshot, debt);
   const points = calculatePoints(snapshot, capitalShares);
@@ -115,12 +133,26 @@ function emptyCalculationResult(
     occupancy: {
       houseTitle: "",
       capacityPersons: 0,
+      roomCapacity: 0,
+      roomNightCapacity: 0,
+      weekendRoomNightCapacity: 0,
+      weekdayRoomNightCapacity: 0,
       capacityDataQuality: "missing",
       ownerCount: 0,
       ownerDemandNights: 0,
+      ownerDemandRoomNights: 0,
       guestNights: 0,
+      guestRoomNights: 0,
       blockedNights: 0,
+      blockedRoomNights: 0,
       freeNights: 0,
+      freeRoomNights: 0,
+      weekendDemandRoomNights: 0,
+      weekdayDemandRoomNights: 0,
+      weekendFreeRoomNights: 0,
+      weekdayFreeRoomNights: 0,
+      weekendOccupancyPct: 0,
+      weekdayOccupancyPct: 0,
       occupancyPct: 0,
       pointsPerAvailableNight: 0,
       pressureLabel: "offen",
@@ -143,6 +175,8 @@ function emptyCalculationResult(
     cashflow: {
       monthly: [],
       yearly: [],
+      bankAccountMonthly: [],
+      bankAccountYearly: [],
       cumulativeCashflow: 0,
       diagnostics: []
     },

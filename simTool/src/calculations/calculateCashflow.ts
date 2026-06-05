@@ -1,12 +1,22 @@
 import type { OpexItem } from "../modules/opex/types";
-import { calculateAnnualLegalOngoingCosts } from "./financialInputs";
+import {
+  calculateAnnualLegalOngoingCosts,
+  calculateClosingCostsTotal,
+  calculateMortgageRegistrationFee,
+  calculateVatAtPurchase,
+  calculateVatRefund
+} from "./financialInputs";
 import { diagnostic } from "../validation/diagnostics";
 import { roundMoney } from "./rounding";
 import type {
   CashflowMonth,
   CashflowResult,
   CashflowYear,
+  BankAccountMonth,
+  BankAccountYear,
+  ContributionResult,
   DebtResult,
+  LiquidityResult,
   OpexBreakdownItem,
   ProjectSnapshot
 } from "./types";
@@ -77,6 +87,8 @@ export function calculateCashflow(
   return {
     monthly,
     yearly: aggregateCashflowYears(monthly),
+    bankAccountMonthly: [],
+    bankAccountYearly: [],
     cumulativeCashflow: roundMoney(
       monthly.reduce(
         (total, month) => total + month.netCashflowAfterDebtService,
@@ -84,6 +96,89 @@ export function calculateCashflow(
       )
     ),
     diagnostics
+  };
+}
+
+export function calculateBankAccountCashflow(
+  snapshot: ProjectSnapshot,
+  contributions: ContributionResult,
+  cashflow: CashflowResult,
+  debt: DebtResult,
+  liquidity: LiquidityResult
+): Pick<CashflowResult, "bankAccountMonthly" | "bankAccountYearly"> {
+  const purchaseMonth = snapshot.property.data.purchaseMonth ?? 0;
+  const initialContributionTotal = contributions.initialContributions.reduce(
+    (total, contribution) => total + contribution.amount,
+    0
+  );
+  const bankAccountMonthly = Array.from(
+    { length: snapshot.metadata.timeHorizonMonths },
+    (_value, month) => {
+      const recurring = getRecurringContributionBreakdown(contributions, month);
+      const cashflowMonth = cashflow.monthly[month];
+      const acquisition =
+        month === purchaseMonth
+          ? snapshot.property.data.purchasePrice +
+            calculateVatAtPurchase(snapshot) +
+            calculateClosingCostsTotal(snapshot) +
+            calculateMortgageRegistrationFee(snapshot)
+          : 0;
+      const renovation = snapshot.property.data.renovationItems
+        .filter((item) => item.timingMonth === month)
+        .reduce((total, item) => total + item.amount, 0);
+      const opex = cashflowMonth
+        ? cashflowMonth.recoverableOpex + cashflowMonth.nonRecoverableOpex
+        : 0;
+      const startEquity = month === 0 ? initialContributionTotal : 0;
+      const debtDrawdown =
+        month === snapshot.financing.data.startMonth ? debt.totalInitialDebt : 0;
+      const rentalIncome = cashflowMonth?.effectiveIncome ?? 0;
+      const vatRefund =
+        month === snapshot.property.data.vatRefundMonth
+          ? calculateVatRefund(snapshot)
+          : 0;
+      const interest = cashflowMonth?.interest ?? 0;
+      const principalRepayment = cashflowMonth?.principalRepayment ?? 0;
+      const totalIncome = roundMoney(
+        startEquity +
+          recurring.costContributions +
+          recurring.capitalContributions +
+          recurring.usageContributions +
+          recurring.reserveContributions +
+          debtDrawdown +
+          rentalIncome +
+          vatRefund
+      );
+      const totalExpenses = roundMoney(
+        acquisition + renovation + opex + interest + principalRepayment
+      );
+
+      return {
+        month,
+        startEquity: roundMoney(startEquity),
+        costContributions: roundMoney(recurring.costContributions),
+        capitalContributions: roundMoney(recurring.capitalContributions),
+        usageContributions: roundMoney(recurring.usageContributions),
+        reserveContributions: roundMoney(recurring.reserveContributions),
+        debtDrawdown: roundMoney(debtDrawdown),
+        rentalIncome: roundMoney(rentalIncome),
+        vatRefund: roundMoney(vatRefund),
+        acquisition: roundMoney(acquisition),
+        renovation: roundMoney(renovation),
+        opex: roundMoney(opex),
+        interest: roundMoney(interest),
+        principalRepayment: roundMoney(principalRepayment),
+        totalIncome,
+        totalExpenses,
+        netMovement: roundMoney(totalIncome - totalExpenses),
+        closingBalance: liquidity.monthly[month]?.closingBalance ?? 0
+      } satisfies BankAccountMonth;
+    }
+  );
+
+  return {
+    bankAccountMonthly,
+    bankAccountYearly: aggregateBankAccountYears(bankAccountMonthly)
   };
 }
 
@@ -222,5 +317,127 @@ function aggregateCashflowYears(monthly: readonly CashflowMonth[]): CashflowYear
       year.netCashflowBeforeContributions
     ),
     netCashflowAfterDebtService: roundMoney(year.netCashflowAfterDebtService)
+  }));
+}
+
+function getRecurringContributionBreakdown(
+  contributions: ContributionResult,
+  month: number
+): {
+  costContributions: number;
+  capitalContributions: number;
+  usageContributions: number;
+  reserveContributions: number;
+} {
+  const activeSchedule = contributions.recurringContributions
+    .filter((schedule) => schedule.month <= month)
+    .at(-1);
+
+  if (!activeSchedule || month >= activeSchedule.month + 12) {
+    return {
+      costContributions: 0,
+      capitalContributions: 0,
+      usageContributions: 0,
+      reserveContributions: 0
+    };
+  }
+
+  return activeSchedule.contributions.reduce(
+    (total, contribution) => ({
+      costContributions:
+        total.costContributions +
+        (contribution.costContributionMonthly ??
+          contribution.baseMonthlyObligation ??
+          0),
+      capitalContributions:
+        total.capitalContributions +
+        (contribution.capitalContributionMonthly ?? 0),
+      usageContributions:
+        total.usageContributions +
+        (contribution.usageContributionMonthly ?? 0),
+      reserveContributions:
+        total.reserveContributions +
+        (contribution.liquidityReserveMonthly ??
+          contribution.reserveTopUp ??
+          0)
+    }),
+    {
+      costContributions: 0,
+      capitalContributions: 0,
+      usageContributions: 0,
+      reserveContributions: 0
+    }
+  );
+}
+
+function aggregateBankAccountYears(
+  monthly: readonly BankAccountMonth[]
+): BankAccountYear[] {
+  const years = new Map<number, BankAccountYear>();
+
+  for (const month of monthly) {
+    const year = Math.floor(month.month / 12) + 1;
+    const existing =
+      years.get(year) ??
+      ({
+        year,
+        startEquity: 0,
+        costContributions: 0,
+        capitalContributions: 0,
+        usageContributions: 0,
+        reserveContributions: 0,
+        debtDrawdown: 0,
+        rentalIncome: 0,
+        vatRefund: 0,
+        acquisition: 0,
+        renovation: 0,
+        opex: 0,
+        interest: 0,
+        principalRepayment: 0,
+        totalIncome: 0,
+        totalExpenses: 0,
+        netMovement: 0,
+        closingBalance: 0
+      } satisfies BankAccountYear);
+
+    existing.startEquity += month.startEquity;
+    existing.costContributions += month.costContributions;
+    existing.capitalContributions += month.capitalContributions;
+    existing.usageContributions += month.usageContributions;
+    existing.reserveContributions += month.reserveContributions;
+    existing.debtDrawdown += month.debtDrawdown;
+    existing.rentalIncome += month.rentalIncome;
+    existing.vatRefund += month.vatRefund;
+    existing.acquisition += month.acquisition;
+    existing.renovation += month.renovation;
+    existing.opex += month.opex;
+    existing.interest += month.interest;
+    existing.principalRepayment += month.principalRepayment;
+    existing.totalIncome += month.totalIncome;
+    existing.totalExpenses += month.totalExpenses;
+    existing.netMovement += month.netMovement;
+    existing.closingBalance = month.closingBalance;
+    years.set(year, existing);
+  }
+
+  return [...years.values()].map((year) => ({
+    year: year.year,
+    startEquity: roundMoney(year.startEquity),
+    costContributions: roundMoney(year.costContributions),
+    capitalContributions: roundMoney(year.capitalContributions),
+    usageContributions: roundMoney(year.usageContributions),
+    reserveContributions: roundMoney(year.reserveContributions),
+    debtDrawdown: roundMoney(year.debtDrawdown),
+    rentalIncome: roundMoney(year.rentalIncome),
+    vatRefund: roundMoney(year.vatRefund),
+    acquisition: roundMoney(year.acquisition),
+    renovation: roundMoney(year.renovation),
+    opex: roundMoney(year.opex),
+    interest: roundMoney(year.interest),
+    principalRepayment: roundMoney(year.principalRepayment),
+    totalIncome: roundMoney(year.totalIncome),
+    totalExpenses: roundMoney(year.totalExpenses),
+    netMovement: roundMoney(year.netMovement),
+    closingBalance: roundMoney(year.closingBalance)
   }));
 }
