@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { HelpPopover } from "../HelpPopover";
 
 type NumberSliderFieldProps = {
   label: string;
@@ -7,6 +8,8 @@ type NumberSliderFieldProps = {
   max: number;
   step?: number;
   unit?: string;
+  helpLabel?: string;
+  helpText?: string;
   onChange: (value: number) => void;
 };
 
@@ -17,6 +20,8 @@ export function NumberSliderField({
   max,
   step = 1,
   unit,
+  helpLabel,
+  helpText,
   onChange
 }: NumberSliderFieldProps) {
   const reactId = useId();
@@ -31,7 +36,12 @@ export function NumberSliderField({
 
   return (
     <label className="number-slider-field" htmlFor={fieldId}>
-      <span>{label}</span>
+      <span className="field-label-with-help">
+        {label}
+        {helpText ? (
+          <HelpPopover label={helpLabel ?? label}>{helpText}</HelpPopover>
+        ) : null}
+      </span>
       <div className="slider-control">
         <input
           aria-label={`${label} Schieberegler`}

@@ -23,6 +23,7 @@ import type { GoNoGoStatus } from "../../modules/strategy/types";
 import type { DirtyState, ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
+import { HelpPopover } from "../../ui/HelpPopover";
 import { DirtyStateIndicator } from "../../ui/status/DirtyStateIndicator";
 import { formatDateTime } from "../../utils/dates";
 import { formatMoney, formatPercent } from "../../utils/money";
@@ -64,6 +65,100 @@ type InputTabsProps = {
 function tabLabel(kind: TemplateKind): string {
   return visibleInputModules.find((module) => module.kind === kind)?.label ?? kind;
 }
+
+function FieldLabel({
+  label,
+  helpText
+}: {
+  label: string;
+  helpText?: string;
+}) {
+  return (
+    <span className="field-label-with-help">
+      {label}
+      {helpText ? <HelpPopover label={label}>{helpText}</HelpPopover> : null}
+    </span>
+  );
+}
+
+const FIELD_HELP = {
+  startEk:
+    "Einmalige Einzahlung zu Projektbeginn. Formel Unternehmensanteil: anteilswirksamer Kapitalwert / Summe aller anteilswirksamen Kapitalwerte.",
+  usageContribution:
+    "Monatliches Nutzungsentgelt fuer Zimmernaechte. Formel Jahres-Nutzungsbudget = Nutzungsentgelt mtl. * 12.",
+  monthlyNetIncome:
+    "Persoenliches Monatsnettoeinkommen fuer die Banksicht. Formel Belastungsquote = Monatszahlung / Monatsnettoeinkommen.",
+  capitalContribution:
+    "Monatliche Kapitalruecklage oder Anlage. Je nach Regel wirkt sie auf Unternehmensanteile oder bleibt nicht verwaessernd.",
+  companyShare:
+    "Finaler wirtschaftlicher Anteil. Formel: anteilswirksamer Kapitalwert des Eigners / Summe anteilswirksamer Kapitalwerte.",
+  capitalShareMode:
+    "Steuert, ob laufende Anlagewerte aus der Tilgung oder aus manuellen Monatswerten kommen.",
+  valuationInterest:
+    "Zins fuer die Bewertung zeitlich unterschiedlicher Kapitalzahlungen. Spaetere und fruehere Einzahlungen werden damit auf einen Vergleichswert gebracht.",
+  principalShare:
+    "Wenn aktiv, erhoeht der Tilgungsanteil den anteilswirksamen Kapitalwert. Zinsen und Betriebskosten erhoehen ihn nie.",
+  capitalShareToggle:
+    "Wenn aktiv, veraendern manuelle Kapitalruecklagen Unternehmensanteile. Wenn aus, bleiben sie als nicht verwaessernder Kapitalwert separat.",
+  pointShareMode:
+    "Steuert, wie Nutzungsrechte verteilt werden. Zielmodell: Nutzungsanteil = Jahres-Nutzungsbudget / Summe aller Jahres-Nutzungsbudgets.",
+  legacyUsageWeight:
+    "Altbestand fuer fruehere Punktelogik. Nur relevant, wenn ein Altbestand-Modus gewaehlt ist.",
+  appreciation:
+    "Angenommene Wertsteigerung des Objekts. Formel Objektwert nach n Jahren = Objektwert heute * (1 + Wertsteigerung)^n.",
+  weekendOwner:
+    "Anteil der Eigennutzung, der auf Wochenenden faellt. Erhoeht den Wochenenddruck in der Belegung.",
+  weekendGuest:
+    "Anteil der Fremdgast-Zimmernaechte am Wochenende. Formel Wochenendbedarf = Zimmernaechte * Wochenendanteil.",
+  externalOccupancy:
+    "Geplante Drittvermietungs-Auslastung. Sie beeinflusst Mieterloese und freie Zimmernacht-Kapazitaet.",
+  externalPrice:
+    "Durchschnittlicher Bruttoerloes pro fremd vermieteter Zimmernacht.",
+  displacement:
+    "Anteil der Eigennutzung, der moegliche Fremdvermietung verdraengt.",
+  variableRoomCost:
+    "Variable Kosten je genutzter Zimmernacht, z. B. Reinigung, Waesche oder Verbrauch.",
+  reserveRoomNight:
+    "Interne Ruecklage je Zimmernacht. Sie bleibt Liquiditaet, solange keine Reparatur oder Drittzahlung erfolgt.",
+  basePoints:
+    "Theoretischer Jahrespunktepool je Zimmer. Formel Gesamtpool = Zimmer * Punkte je Zimmer/Jahr.",
+  roomNightBase:
+    "Basispreis fuer eine Zimmernacht vor Faktoren. Formel Zimmernachtkosten = Basispreis * Wochenendfaktor * Saisonfaktor.",
+  seasonFactor:
+    "Saisonfaktor fuer Zimmernachtkosten. Ein Faktor ueber 1 macht diese Saison teurer.",
+  weekendFactor:
+    "Wochenendfaktor fuer Zimmernachtkosten. Ein Faktor ueber 1 macht diese Nachtart teurer.",
+  foundingCost:
+    "Einmalige Gruendungs- und Strukturkosten. Sie erhoehen die Mittelverwendung zu Projektbeginn.",
+  accountingCost:
+    "Laufende Buchhaltungs- oder Jahresabschlusskosten. Formel Jahreskosten = Monatswert * 12.",
+  administrationCost:
+    "Laufende Verwaltungskosten der Rechtsform. Sie laufen in Betriebskosten und Bankkonto-Zahlungsfluss.",
+  complianceCost:
+    "Laufende formale Kosten wie Mindeststeuer, Register-, Pruef- oder Complianceannahmen.",
+  costStatus:
+    "Kennzeichnet, ob Kosten fehlen, eine Planungsspanne sind oder quellenbasiert hinterlegt wurden.",
+  reserveMonths:
+    "Zielreserve in Monaten. Formel Zielpuffer = durchschnittliche Monatsausgaben * Reserve-Monate.",
+  minimumLiquidity:
+    "Untergrenze fuer das Projektkonto. Unterschreitungen erzeugen Liquiditaetsbedarf.",
+  targetLiquidity:
+    "Zielwert fuer Liquiditaet nach Reserveaufbau.",
+  targetEquity:
+    "Bank-Zielquote fuer Eigenmittel. Sie ist eine Pruefgroesse und aendert das Darlehen nicht automatisch.",
+  interest:
+    "Nominalzins des Bankdarlehens. Formel Monatszins = Restschuld * Zinssatz / 12.",
+  loanTerm:
+    "Laufzeit des Darlehens. Bei Annuitaet verteilt sie Zins und Tilgung ueber die Monatsraten.",
+  loanStart:
+    "Monat, ab dem das Darlehen im Zahlungsfluss startet. Monat 0 ist der Projektbeginn.",
+  extraRepayment:
+    "Zusatzbetrag zur regulaeren Rate. Er senkt die Restschuld schneller und erhoeht den monatlichen Bankkontoabfluss.",
+  opexAmount:
+    "Betriebskostenbetrag. Je nach Kostenbasis wird er fix, pro Wohnflaeche, pro Grundstueck oder als Prozent vom Objektwert gerechnet.",
+  opexInflation:
+    "Jaehrliche Kostensteigerung. Formel Monatskosten Jahr n = Startwert * (1 + Inflation)^n."
+} as const;
 
 export function InputTabs({
   projectState,
@@ -515,6 +610,7 @@ function OwnershipEditor({
             max={1000}
             step={10}
             unit="EUR"
+            helpText={FIELD_HELP.usageContribution}
             onChange={(monthlyUsageContribution) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
@@ -537,6 +633,7 @@ function OwnershipEditor({
             max={500000}
             step={1000}
             unit="EUR"
+            helpText={FIELD_HELP.startEk}
             onChange={(startEquityContribution) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
@@ -558,6 +655,7 @@ function OwnershipEditor({
             max={25000}
             step={100}
             unit="EUR"
+            helpText={FIELD_HELP.monthlyNetIncome}
             onChange={(monthlyNetIncomeAmount) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
@@ -576,6 +674,7 @@ function OwnershipEditor({
               max={5000}
               step={25}
               unit="EUR"
+              helpText={FIELD_HELP.capitalContribution}
               onChange={(monthlyCapitalContribution) =>
                 updateOwners(
                   projectState.ownership.data.owners.map((candidate) =>
@@ -595,6 +694,7 @@ function OwnershipEditor({
           <SummaryLine
             label="Unternehmensanteil"
             value={formatPercent(capitalShare?.companySharePct ?? 0)}
+            helpText={FIELD_HELP.companyShare}
           />
         </div>
         );
@@ -704,6 +804,7 @@ function LegalFormEditor({
           max={25000}
           step={250}
           unit="EUR"
+          helpText={FIELD_HELP.foundingCost}
           onChange={(foundingCostAmount) =>
             updateLegalFormData({
               ...projectState.legalForm.data,
@@ -722,6 +823,7 @@ function LegalFormEditor({
           max={2500}
           step={25}
           unit="EUR/Monat"
+          helpText={FIELD_HELP.accountingCost}
           onChange={(monthlyAccounting) =>
             updateLegalFormData({
               ...projectState.legalForm.data,
@@ -736,6 +838,7 @@ function LegalFormEditor({
           max={2500}
           step={25}
           unit="EUR/Monat"
+          helpText={FIELD_HELP.administrationCost}
           onChange={(monthlyAdministration) =>
             updateLegalFormData({
               ...projectState.legalForm.data,
@@ -750,6 +853,7 @@ function LegalFormEditor({
           max={2500}
           step={25}
           unit="EUR/Monat"
+          helpText={FIELD_HELP.complianceCost}
           onChange={(monthlyCompliance) =>
             updateLegalFormData({
               ...projectState.legalForm.data,
@@ -758,7 +862,7 @@ function LegalFormEditor({
           }
         />
         <label className="text-field">
-          <span>Kostenstatus</span>
+          <FieldLabel label="Kostenstatus" helpText={FIELD_HELP.costStatus} />
           <select
             aria-label="Kostenstatus"
             value={projectState.legalForm.data.costStatus}
@@ -1430,6 +1534,7 @@ function FinancingEditor({
           max={10}
           step={0.05}
           unit="%"
+          helpText={FIELD_HELP.interest}
           onChange={(annualInterestRatePct) =>
             updateFinancingData({
               ...projectState.financing.data,
@@ -1444,6 +1549,7 @@ function FinancingEditor({
           max={40}
           step={1}
           unit="Jahre"
+          helpText={FIELD_HELP.loanTerm}
           onChange={(termYears) =>
             updateFinancingData({ ...projectState.financing.data, termYears })
           }
@@ -1455,6 +1561,7 @@ function FinancingEditor({
           max={120}
           step={1}
           unit="Monat"
+          helpText={FIELD_HELP.loanStart}
           onChange={(startMonth) =>
             updateFinancingData({ ...projectState.financing.data, startMonth })
           }
@@ -1466,6 +1573,7 @@ function FinancingEditor({
           max={5000}
           step={50}
           unit="EUR"
+          helpText={FIELD_HELP.extraRepayment}
           onChange={(additionalMonthlyRepayment) =>
             updateFinancingData({
               ...projectState.financing.data,
@@ -1490,7 +1598,10 @@ function CapitalAndUsageRulesEditor({
       <div className="form-section">
         <h3>Anteilsregeln</h3>
         <label className="text-field">
-          <span>Kapitalanteilsmodus</span>
+          <FieldLabel
+            label="Kapitalanteilsmodus"
+            helpText={FIELD_HELP.capitalShareMode}
+          />
           <select
             aria-label="Kapitalanteilsmodus"
             value={projectState.strategy.data.capitalShareMode}
@@ -1513,6 +1624,7 @@ function CapitalAndUsageRulesEditor({
           max={10}
           step={0.25}
           unit="%/Jahr"
+          helpText={FIELD_HELP.valuationInterest}
           onChange={(capitalValuationInterestPct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1532,7 +1644,10 @@ function CapitalAndUsageRulesEditor({
               })
             }
           />
-          <span>Tilgung veraendert Unternehmensanteile</span>
+          <FieldLabel
+            label="Tilgung veraendert Unternehmensanteile"
+            helpText={FIELD_HELP.principalShare}
+          />
         </label>
         <label className="checkbox-field">
           <input
@@ -1549,10 +1664,13 @@ function CapitalAndUsageRulesEditor({
               })
             }
           />
-          <span>Kapitalruecklage / Anlage veraendert Unternehmensanteile</span>
+          <FieldLabel
+            label="Kapitalruecklage / Anlage veraendert Unternehmensanteile"
+            helpText={FIELD_HELP.capitalShareToggle}
+          />
         </label>
         <label className="text-field">
-          <span>Nutzungsrechte</span>
+          <FieldLabel label="Nutzungsrechte" helpText={FIELD_HELP.pointShareMode} />
           <select
             aria-label="Punkte Anteilsmodus"
             value={projectState.strategy.data.pointShareMode}
@@ -1576,6 +1694,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.legacyUsageWeight}
           onChange={(pointTierWeight) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1590,6 +1709,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.legacyUsageWeight}
           onChange={(pointEquityWeight) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1607,6 +1727,7 @@ function CapitalAndUsageRulesEditor({
           max={10}
           step={0.25}
           unit="%/Jahr"
+          helpText={FIELD_HELP.appreciation}
           onChange={(appreciationPercentPerYear) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1621,6 +1742,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.weekendOwner}
           onChange={(ownerWeekendUsagePct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1635,6 +1757,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.weekendGuest}
           onChange={(guestWeekendUsagePct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1649,6 +1772,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.externalOccupancy}
           onChange={(externalOccupancyRatePct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1663,6 +1787,7 @@ function CapitalAndUsageRulesEditor({
           max={500}
           step={5}
           unit="EUR"
+          helpText={FIELD_HELP.externalPrice}
           onChange={(averageGrossPricePerExternalRoomNight) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1677,6 +1802,7 @@ function CapitalAndUsageRulesEditor({
           max={100}
           step={5}
           unit="%"
+          helpText={FIELD_HELP.displacement}
           onChange={(ownerUseDisplacementFactorPct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1691,6 +1817,7 @@ function CapitalAndUsageRulesEditor({
           max={200}
           step={5}
           unit="EUR"
+          helpText={FIELD_HELP.variableRoomCost}
           onChange={(variableCostPerRoomNightAmount) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1705,6 +1832,7 @@ function CapitalAndUsageRulesEditor({
           max={200}
           step={5}
           unit="EUR"
+          helpText={FIELD_HELP.reserveRoomNight}
           onChange={(reservePerRoomNightAmount) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1745,6 +1873,7 @@ function StrategyEditor({
           max={24}
           step={1}
           unit="Monate"
+          helpText={FIELD_HELP.reserveMonths}
           onChange={(reserveMonths) =>
             updateStrategyData({ ...projectState.strategy.data, reserveMonths })
           }
@@ -1756,6 +1885,7 @@ function StrategyEditor({
           max={250000}
           step={1000}
           unit="EUR"
+          helpText={FIELD_HELP.minimumLiquidity}
           onChange={(minimumLiquidityAmount) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1770,6 +1900,7 @@ function StrategyEditor({
           max={500000}
           step={1000}
           unit="EUR"
+          helpText={FIELD_HELP.targetLiquidity}
           onChange={(targetLiquidityAmount) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1784,6 +1915,7 @@ function StrategyEditor({
           max={100}
           step={1}
           unit="%"
+          helpText={FIELD_HELP.targetEquity}
           onChange={(targetEquityRatioPct) =>
             updateStrategyData({
               ...projectState.strategy.data,
@@ -1868,6 +2000,7 @@ function PointRulesEditor({
         max={1000}
         step={5}
         unit="Punkte"
+        helpText={FIELD_HELP.basePoints}
         onChange={(basePointsPerBedPerYear) =>
           updateRules({ ...rules, basePointsPerBedPerYear })
         }
@@ -1878,7 +2011,8 @@ function PointRulesEditor({
         min={0}
         max={200}
         step={0.1}
-        unit="EUR-Punkte"
+        unit="EUR je Zimmernacht"
+        helpText={FIELD_HELP.roomNightBase}
         onChange={(basePerBedPerNight) =>
           updateRules({ ...rules, basePerBedPerNight })
         }
@@ -1890,6 +2024,7 @@ function PointRulesEditor({
         max={5}
         step={0.1}
         unit="x"
+        helpText={FIELD_HELP.seasonFactor}
         onChange={(winterSki) =>
           updateRules({
             ...rules,
@@ -1904,6 +2039,7 @@ function PointRulesEditor({
         max={5}
         step={0.1}
         unit="x"
+        helpText={FIELD_HELP.seasonFactor}
         onChange={(summer) =>
           updateRules({
             ...rules,
@@ -1918,6 +2054,7 @@ function PointRulesEditor({
         max={5}
         step={0.1}
         unit="x"
+        helpText={FIELD_HELP.weekendFactor}
         onChange={(satSun) =>
           updateRules({
             ...rules,
@@ -1932,6 +2069,7 @@ function PointRulesEditor({
         max={5}
         step={0.1}
         unit="x"
+        helpText={FIELD_HELP.weekendFactor}
         onChange={(fri) =>
           updateRules({
             ...rules,
@@ -1946,6 +2084,7 @@ function PointRulesEditor({
         max={5}
         step={0.1}
         unit="x"
+        helpText={FIELD_HELP.weekendFactor}
         onChange={(monThu) =>
           updateRules({
             ...rules,
@@ -2164,7 +2303,10 @@ function OpexEditor({
             </button>
           </div>
           <label className="text-field">
-            <span>Kostenbasis</span>
+            <FieldLabel
+              label="Kostenbasis"
+              helpText="Legt fest, wie der Jahreswert gerechnet wird: fix, pro Quadratmeter, pro Grundstuecksflaeche oder Prozent vom Objektwert."
+            />
             <select
               aria-label={`${item.label} Kostenbasis`}
               value={item.annualCostMode}
@@ -2195,6 +2337,7 @@ function OpexEditor({
             max={item.annualCostMode === "propertyValue" ? 10 : 50000}
             step={item.annualCostMode === "propertyValue" ? 0.05 : 50}
             unit={opexUnit(item.annualCostMode)}
+            helpText={FIELD_HELP.opexAmount}
             onChange={(annualAmount) =>
               updateItems(
                 projectState.opex.data.recurringItems.map((candidate) =>
@@ -2212,6 +2355,7 @@ function OpexEditor({
             max={15}
             step={0.25}
             unit="%"
+            helpText={FIELD_HELP.opexInflation}
             onChange={(inflationPct) =>
               updateItems(
                 projectState.opex.data.recurringItems.map((candidate) =>
@@ -2579,10 +2723,18 @@ const PROPERTY_USE_OPTIONS: { value: PropertyUseType; label: string }[] = [
   { value: "unknown", label: "Nutzung offen" }
 ];
 
-function SummaryLine({ label, value }: { label: string; value: string }) {
+function SummaryLine({
+  label,
+  value,
+  helpText
+}: {
+  label: string;
+  value: string;
+  helpText?: string;
+}) {
   return (
     <div className="summary-line">
-      <span>{label}</span>
+      <FieldLabel label={label} helpText={helpText} />
       <strong>{value}</strong>
     </div>
   );

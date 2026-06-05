@@ -30,7 +30,7 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 - [x] (2026-06-05 18:45) ExecPlan-Datei anlegen.
 - [x] (2026-06-05 18:45) Neuen linken Tab `Regeln` einbauen.
 - [x] (2026-06-05 18:45) Punkt- und Einkommensdefaults sowie Migration anpassen.
-- [ ] (2026-06-05 18:45) Eingabe-Hilfen mit Formeln ausbauen.
+- [x] (2026-06-05 18:45) Eingabe-Hilfen mit Formeln ausbauen.
 - [ ] (2026-06-05 18:45) 25-Jahres-Renditeansicht in `Mein Anteil` ergaenzen.
 - [ ] (2026-06-05 18:45) Rechtsform-Kostenprofile mit Quellenstatus ergaenzen.
 - [ ] (2026-06-05 18:45) Diagramme fuer Bankkonto, Beitraege und Punkte umbauen.

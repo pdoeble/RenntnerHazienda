@@ -330,6 +330,12 @@ button:disabled {
   font-weight: 700;
 }
 
+.field-label-with-help {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+}
+
 .text-field {
   display: grid;
   flex: 1;
