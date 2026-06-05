@@ -25,6 +25,19 @@ ALLOWED_ORIGIN=https://pdoeble.github.io
 
 `ALLOWED_ORIGIN=*` ist nur fuer lokale Tests sinnvoll.
 
+## Cloudflare Deploy
+
+Wenn der Worker ueber Cloudflare Workers Builds aus diesem Repo deployed wird:
+
+```text
+Root directory: simTool/oauth-worker
+Build command: leer lassen
+Deploy command: npx wrangler deploy
+```
+
+`wrangler.json` enthaelt den Worker-Namen, den Einstiegspunkt und das
+`compatibility_date`.
+
 ## simTool-Env
 
 Im Vite/GitHub-Pages-Build setzen:

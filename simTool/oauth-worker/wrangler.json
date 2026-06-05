@@ -1,0 +1,6 @@
+{
+  "name": "renntnerhazienda-oauth",
+  "main": "worker.js",
+  "compatibility_date": "2026-06-05",
+  "workers_dev": true
+}
