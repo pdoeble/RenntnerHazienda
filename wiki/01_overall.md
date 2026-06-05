@@ -19,7 +19,7 @@ Dieses Wiki sammelt allgemeine Informationen zu rechtlichen, steuerlichen, organ
 - Herausgeber: Projektteam
 - Link: intern
 - Stand/Veröffentlichungsdatum: laufend
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Arbeitsdefinition
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung des Projektzwecks, Änderung der Eigentümerziele
@@ -41,7 +41,7 @@ Konkrete Entscheidungen zu Kauf, Finanzierung, Umsatzsteuer, Rechtsform oder Nut
 - Link: ../AGENTS.md
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Arbeitsregel
 - Stabilität: mittel
 
@@ -56,13 +56,19 @@ Konkrete Entscheidungen zu Kauf, Finanzierung, Umsatzsteuer, Rechtsform oder Nut
 | Eigennutzung | Nutzung durch Eigentümer oder nahestehende Personen | Steuer, Umsatzsteuer, Fremdüblichkeit |
 | Miteigentum | mehrere Personen sind anteilig Eigentümer einer Liegenschaft | Grundbuch, Nutzungsvereinbarung, Finanzierung |
 | Gesellschaftsform | rechtlicher Rahmen für Besitz, Nutzung, Finanzierung und Vermietung | Haftung, Steuer, Bankfähigkeit |
+| Start-EK | einmalige Einlage zum Projektstart | Kapitalnachweis, Unternehmensanteil, Exit-Bewertung |
+| Anlagebeitrag | laufender Beitrag mit Vermögensaufbaucharakter, etwa Tilgungsanteil | Unternehmensanteil, Bankunterlagen, Abgrenzung von Kosten |
+| Kostenbeitrag | laufender Beitrag für Zins, Opex, Verwaltung und sonstige Ausgaben ohne Eigentumszuwachs | Liquiditätsplanung, Nachschussmechanik |
+| Nutzungsbeitrag | laufender EUR-Beitrag für Nutzungsrechte | Umsatzsteuer-/Mietzinsprüfung, klare Trennung vom Kapital |
+| Zimmernacht | ein Schlafzimmer oder Zimmer für eine Nacht | Buchungslogik, Nutzungspunkte, Belegungsdruck |
+| Bankkonto-Cashflow | modellierte Einzahlungen und Auszahlungen des Projektkontos | Liquiditätsreserve, Bankfähigkeit, Rücklagenlogik |
 
 ### Quelle
 - Quelle: Quellenregister dieses Wikis; Begriffsverwendung aus Rechts-, Steuer- und Tourismusquellen
 - Herausgeber: Projektteam; externe Herausgeber siehe Quellenregister
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Arbeitsdefinitionen für Österreich
 - Stabilität: mittel
 
@@ -83,7 +89,7 @@ Konkrete Entscheidungen zu Kauf, Finanzierung, Umsatzsteuer, Rechtsform oder Nut
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Strukturierung
 - Stabilität: mittel
 
@@ -91,49 +97,50 @@ Konkrete Entscheidungen zu Kauf, Finanzierung, Umsatzsteuer, Rechtsform oder Nut
 
 | ID | Thema | Quelle | Herausgeber | Link | Stand/Veröffentlichungsdatum | Abrufdatum | Geltungsbereich | Stabilität |
 |---|---|---|---|---|---|---|---|---|
-| Q001 | Kaufnebenkosten | Nebenkosten beim Wohnungs- und Grundstückskauf | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150 | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q002 | Grunderwerbsteuer-Bemessung | Bemessungsgrundlage | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grunderwerbsteuer/bemessungsgrundlage.html | Website, publiziert 2026 | 2026-05-15 | Österreich | mittel |
-| Q003 | Umsatzsteuersätze | Steuersätze und Steuerbefreiungen der Umsatzsteuer | Unternehmensserviceportal / BMF | https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q004 | Umsatzsteuer allgemein | Umsatzsteuer Überblick | Unternehmensserviceportal / BMF | https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/ | Januar 2026 | 2026-05-15 | Österreich | mittel |
-| Q005 | GesbR | Gesellschaft bürgerlichen Rechts | WKO | https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr | Website, 2026 | 2026-05-15 | Österreich | mittel |
-| Q006 | KG | Kommanditgesellschaft | WKO | https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg | Stand 05.09.2025 | 2026-05-15 | Österreich | mittel |
-| Q007 | GmbH | Gesellschaft mit beschränkter Haftung | WKO | https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q008 | Körperschaftsteuer | Körperschaftsteuer | WKO | https://www.wko.at/steuern/koest-koerperschaftsteuer | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q009 | Aufenthaltsabgabe Tirol | Aufenthaltsabgaben | Land Tirol | https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/ | Website, laufend aktualisiert | 2026-05-15 | Tirol | niedrig/mittel |
-| Q010 | Freizeitwohnsitzabgabe Tirol | Leitfaden TFLAG 2025 | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf | 2025 | 2026-05-15 | Tirol | niedrig/mittel |
-| Q011 | Freizeitwohnsitzpauschale | Freizeitwohnsitzpauschale / Freizeitwohnsitzabgabe | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Freizeitwohnsitzpauschale_-Freizeitwohnsitzabgabe.pdf | PDF, laufend zu prüfen | 2026-05-15 | Tirol | niedrig |
-| Q012 | Freizeitwohnsitzverzeichnis | Freizeitwohnsitzverzeichnis | Land Tirol | https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/ | 03.04.2026 | 2026-05-15 | Tirol | niedrig |
-| Q013 | Vermietung / Beherbergung | Vermietung und Beherbergung | WKO | https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf | PDF, laufend zu prüfen | 2026-05-15 | Österreich | mittel |
-| Q014 | Flächenwidmung / Bebauungsplan | Flächenwidmungs- und Bebauungspläne | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/grundstueckskauf_und_grundbuch/grundstueckskauf/Seite.200030 | Website, laufend aktualisiert | 2026-05-15 | Österreich, Gemeindeebene | mittel |
-| Q015 | Zimmervermietung / Gewerberecht | Zimmervermietung und Gewerberecht | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406 | Letzte Aktualisierung laut Website 2025/2026, laufend zu prüfen | 2026-05-15 | Österreich | mittel |
-| Q016 | Gästeverzeichnis | Gästeblattsammlung/Gästeverzeichnis | oesterreich.gv.at | https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691 | Letzte Aktualisierung 01.01.2026 | 2026-05-15 | Österreich | mittel |
-| Q017 | USt-Option Vermietung | Option zur Steuerpflicht bei Vermietung und Verpachtung von Grundstücken | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/option-zur-steuerpflicht-bei-vermietung-und-verpachtung-von-grundstuecken-sowie-bei-leistungen-von-wohnungseigentumsgemeinschaften.html | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q018 | Vorsteuerberichtigung Grundstücke | Vorsteuerberichtigungszeitraum bei Grundstücken | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/vorsteuerberichtigungszeitraum_bei_Grundst%C3%BCcken.html | Letzte Aktualisierung 12.02.2025 | 2026-05-15 | Österreich | mittel |
-| Q019 | USt Vermietung/Verpachtung | Vermietung und Verpachtung in der Umsatzsteuer | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/vermietung-und-verpachtung-in-der-umsatzsteuer.html | Website, Stand 2026 | 2026-05-15 | Österreich | mittel |
-| Q020 | Grundsteuer | Grundsteuer | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html | Website, Stand 2026 | 2026-05-15 | Österreich / Gemeinden | mittel |
-| Q021 | DBA Deutschland Art. 6 | DBA Österreich-Deutschland, Art. 6 | RIS / Bundeskanzleramt | https://www.ris.bka.gv.at/eli/bgbl/iii/2002/182/A6/NOR40034867 | BGBl. III Nr. 182/2002, konsolidierte Fassung | 2026-05-15 | Österreich / Deutschland | mittel |
-| Q022 | DBA Schweiz Art. 6 | DBA Österreich-Schweiz, Art. 6 | RIS / Bundeskanzleramt | https://ris.bka.gv.at/eli/bgbl/1975/64/A6/NOR12046358 | BGBl. Nr. 64/1975, konsolidierte Fassung | 2026-05-15 | Österreich / Schweiz | mittel |
-| Q023 | Wohnimmobilienkredite | KIM-V-Ende / FMA-Erwartung solide Kreditvergabe | Finanzmarktaufsicht Österreich | https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/ | 26.06.2025 | 2026-05-15 | Österreich | niedrig/mittel |
-| Q024 | Bankpraxis Eigenmittel | Eigenmittel / Immobilienkredit-Informationen | Raiffeisen / Bank Austria | https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html und https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp | Websites, laufend zu prüfen | 2026-05-15 | Österreich, bankabhängig | niedrig |
-| Q025 | OG | Offene Gesellschaft | WKO | https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og- | Stand 24.10.2025 | 2026-05-15 | Österreich | mittel |
-| Q026 | GmbH & Co KG | GmbH & Co KG | WKO | https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg | Stand 05.09.2025 / laufend zu prüfen | 2026-05-15 | Österreich | mittel |
-| Q027 | Besteuerung Personengesellschaften | Besteuerung von Personengesellschaften | WKO | https://www.wko.at/steuern/besteuerung-personengesellschaften | Website, Stand 2026 | 2026-05-15 | Österreich | mittel |
-| Q028 | Verein | Vereinswesen / Grundsätzliches | Bundesministerium für Inneres | https://www.bmi.gv.at/609/grundsaetzliches.aspx | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q029 | Gewerbeanmeldung | Gewerbeanmeldung | Unternehmensserviceportal | https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q030 | Geringfügigkeit | Geringfügigkeit | Österreichische Gesundheitskasse | https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904882&portal=oegkdgportal | Stand 01.01.2026 | 2026-05-15 | Österreich | niedrig/mittel |
-| Q031 | Dienstleistungsscheck | Informationen für ArbeitgeberInnen zum Dienstleistungsscheck | Dienstleistungsscheck-Online / BVAEB | https://www.dienstleistungsscheck-online.at/dienstleistungsscheck-webapp/about/arbeitgeber.jsf | Website, laufend aktualisiert | 2026-05-15 | Österreich | niedrig/mittel |
-| Q032 | WiEReG | Register der wirtschaftlichen Eigentümer | Bundesministerium für Finanzen | https://www.bmf.gv.at/services/wiereg/wiereg-register.html | Website, laufend aktualisiert | 2026-05-15 | Österreich | mittel |
-| Q033 | AfA Vermietung | Absetzung für Abnutzung bei Vermietung und Verpachtung | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/absetzung-fuer-abnutzung-bei-vuv.html | Website, Stand 2026 | 2026-05-15 | Österreich | mittel |
-| Q034 | Liebhaberei | Liebhabereiverordnung § 2 | RIS / Bundeskanzleramt | https://www.ris.bka.gv.at/NormDokument.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10004804&Paragraf=2 | konsolidierte Rechtsvorschrift, laufend zu prüfen | 2026-05-15 | Österreich | mittel |
-| Q035 | Tirol Vermietungsleitfaden | Leitfaden zum Vermieten meiner Wohnung | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf | PDF, laufend zu prüfen | 2026-05-15 | Tirol | niedrig/mittel |
-| Q036 | Freizeitwohnsitzpauschale/-abgabe | Freizeitwohnsitzpauschale / Freizeitwohnsitzabgabe | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Freizeitwohnsitzpauschale_-_Freizeitwohnsitzabgabe.pdf | PDF, laufend zu prüfen | 2026-05-15 | Tirol | niedrig |
+| Q001 | Kaufnebenkosten | Nebenkosten beim Wohnungs- und Grundstückskauf | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150 | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q002 | Grunderwerbsteuer-Bemessung | Bemessungsgrundlage | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grunderwerbsteuer/bemessungsgrundlage.html | Website, publiziert 2026 | 2026-06-05 | Österreich | mittel |
+| Q003 | Umsatzsteuersätze | Steuersätze und Steuerbefreiungen der Umsatzsteuer | Unternehmensserviceportal / BMF | https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q004 | Umsatzsteuer allgemein | Umsatzsteuer Überblick | Unternehmensserviceportal / BMF | https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/ | Januar 2026 | 2026-06-05 | Österreich | mittel |
+| Q005 | GesbR | Gesellschaft bürgerlichen Rechts | WKO | https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr | Website, 2026 | 2026-06-05 | Österreich | mittel |
+| Q006 | KG | Kommanditgesellschaft | WKO | https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg | Stand 05.09.2025 | 2026-06-05 | Österreich | mittel |
+| Q007 | GmbH | Gesellschaft mit beschränkter Haftung | WKO | https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q008 | Körperschaftsteuer | Körperschaftsteuer | WKO | https://www.wko.at/steuern/koest-koerperschaftsteuer | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q009 | Aufenthaltsabgabe Tirol | Aufenthaltsabgaben | Land Tirol | https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/ | Website, laufend aktualisiert | 2026-06-05 | Tirol | niedrig/mittel |
+| Q010 | Freizeitwohnsitzabgabe Tirol | Leitfaden TFLAG 2025 | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf | 2025 | 2026-06-05 | Tirol | niedrig/mittel |
+| Q011 | Freizeitwohnsitzpauschale | Freizeitwohnsitzpauschale / Freizeitwohnsitzabgabe | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Freizeitwohnsitzpauschale_-Freizeitwohnsitzabgabe.pdf | PDF, laufend zu prüfen | 2026-06-05 | Tirol | niedrig |
+| Q012 | Freizeitwohnsitzverzeichnis | Freizeitwohnsitzverzeichnis | Land Tirol | https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/ | 03.04.2026 | 2026-06-05 | Tirol | niedrig |
+| Q013 | Vermietung / Beherbergung | Vermietung und Beherbergung | WKO | https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf | PDF, laufend zu prüfen | 2026-06-05 | Österreich | mittel |
+| Q014 | Flächenwidmung / Bebauungsplan | Flächenwidmungs- und Bebauungspläne | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/grundstueckskauf_und_grundbuch/grundstueckskauf/Seite.200030 | Website, laufend aktualisiert | 2026-06-05 | Österreich, Gemeindeebene | mittel |
+| Q015 | Zimmervermietung / Gewerberecht | Zimmervermietung und Gewerberecht | oesterreich.gv.at | https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406 | Letzte Aktualisierung laut Website 2025/2026, laufend zu prüfen | 2026-06-05 | Österreich | mittel |
+| Q016 | Gästeverzeichnis | Gästeblattsammlung/Gästeverzeichnis | oesterreich.gv.at | https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691 | Letzte Aktualisierung 01.01.2026 | 2026-06-05 | Österreich | mittel |
+| Q017 | USt-Option Vermietung | Option zur Steuerpflicht bei Vermietung und Verpachtung von Grundstücken | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/option-zur-steuerpflicht-bei-vermietung-und-verpachtung-von-grundstuecken-sowie-bei-leistungen-von-wohnungseigentumsgemeinschaften.html | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q018 | Vorsteuerberichtigung Grundstücke | Vorsteuerberichtigungszeitraum bei Grundstücken | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/vorsteuerberichtigungszeitraum_bei_Grundst%C3%BCcken.html | Letzte Aktualisierung 12.02.2025 | 2026-06-05 | Österreich | mittel |
+| Q019 | USt Vermietung/Verpachtung | Vermietung und Verpachtung in der Umsatzsteuer | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/vermietung-und-verpachtung-in-der-umsatzsteuer.html | Website, Stand 2026 | 2026-06-05 | Österreich | mittel |
+| Q020 | Grundsteuer | Grundsteuer | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html | Website, Stand 2026 | 2026-06-05 | Österreich / Gemeinden | mittel |
+| Q021 | DBA Deutschland Art. 6 | DBA Österreich-Deutschland, Art. 6 | RIS / Bundeskanzleramt | https://www.ris.bka.gv.at/eli/bgbl/iii/2002/182/A6/NOR40034867 | BGBl. III Nr. 182/2002, konsolidierte Fassung | 2026-06-05 | Österreich / Deutschland | mittel |
+| Q022 | DBA Schweiz Art. 6 | DBA Österreich-Schweiz, Art. 6 | RIS / Bundeskanzleramt | https://ris.bka.gv.at/eli/bgbl/1975/64/A6/NOR12046358 | BGBl. Nr. 64/1975, konsolidierte Fassung | 2026-06-05 | Österreich / Schweiz | mittel |
+| Q023 | Wohnimmobilienkredite | KIM-V-Ende / FMA-Erwartung solide Kreditvergabe | Finanzmarktaufsicht Österreich | https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/ | 26.06.2025 | 2026-06-05 | Österreich | niedrig/mittel |
+| Q024 | Bankpraxis Eigenmittel | Eigenmittel / Immobilienkredit-Informationen | Raiffeisen / Bank Austria | https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html und https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp | Websites, laufend zu prüfen | 2026-06-05 | Österreich, bankabhängig | niedrig |
+| Q025 | OG | Offene Gesellschaft | WKO | https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og- | Stand 24.10.2025 | 2026-06-05 | Österreich | mittel |
+| Q026 | GmbH & Co KG | GmbH & Co KG | WKO | https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg | Stand 05.09.2025 / laufend zu prüfen | 2026-06-05 | Österreich | mittel |
+| Q027 | Besteuerung Personengesellschaften | Besteuerung von Personengesellschaften | WKO | https://www.wko.at/steuern/besteuerung-personengesellschaften | Website, Stand 2026 | 2026-06-05 | Österreich | mittel |
+| Q028 | Verein | Vereinswesen / Grundsätzliches | Bundesministerium für Inneres | https://www.bmi.gv.at/609/grundsaetzliches.aspx | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q029 | Gewerbeanmeldung | Gewerbeanmeldung | Unternehmensserviceportal | https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q030 | Geringfügigkeit | Geringfügigkeit | Österreichische Gesundheitskasse | https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904882&portal=oegkdgportal | Stand 01.01.2026 | 2026-06-05 | Österreich | niedrig/mittel |
+| Q031 | Dienstleistungsscheck | Informationen für ArbeitgeberInnen zum Dienstleistungsscheck | Dienstleistungsscheck-Online / BVAEB | https://www.dienstleistungsscheck-online.at/dienstleistungsscheck-webapp/about/arbeitgeber.jsf | Website, laufend aktualisiert | 2026-06-05 | Österreich | niedrig/mittel |
+| Q032 | WiEReG | Register der wirtschaftlichen Eigentümer | Bundesministerium für Finanzen | https://www.bmf.gv.at/services/wiereg/wiereg-register.html | Website, laufend aktualisiert | 2026-06-05 | Österreich | mittel |
+| Q033 | AfA Vermietung | Absetzung für Abnutzung bei Vermietung und Verpachtung | Bundesministerium für Finanzen | https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/absetzung-fuer-abnutzung-bei-vuv.html | Website, Stand 2026 | 2026-06-05 | Österreich | mittel |
+| Q034 | Liebhaberei | Liebhabereiverordnung § 2 | RIS / Bundeskanzleramt | https://www.ris.bka.gv.at/NormDokument.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10004804&Paragraf=2 | konsolidierte Rechtsvorschrift, laufend zu prüfen | 2026-06-05 | Österreich | mittel |
+| Q035 | Tirol Vermietungsleitfaden | Leitfaden zum Vermieten meiner Wohnung | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf | PDF, laufend zu prüfen | 2026-06-05 | Tirol | niedrig/mittel |
+| Q036 | Freizeitwohnsitzpauschale/-abgabe | Freizeitwohnsitzpauschale / Freizeitwohnsitzabgabe | Land Tirol | https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Freizeitwohnsitzpauschale_-_Freizeitwohnsitzabgabe.pdf | PDF, laufend zu prüfen | 2026-06-05 | Tirol | niedrig |
+| Q037 | Berechnungslogik simTool | Interne Berechnungspipeline und Modelllogik | Projektteam RenntnerHazienda | ../wiki/08_calculation_logic.md | Projektstand 2026-06-05 | 2026-06-05 | internes App-Modell | niedrig |
 
 ### Quelle
 - Quelle: Wiki-Quellenregister
 - Herausgeber: Projektteam
 - Link: ../AGENTS.md
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Projektinterne Quellenverwaltung
 - Stabilität: mittel
 
@@ -153,7 +160,7 @@ Regel: Rechtliche, steuerliche und finanzielle Kernaussagen sollen möglichst au
 - Herausgeber: Projektteam
 - Link: ../AGENTS.md
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Qualitätssicherung
 - Stabilität: mittel
 
@@ -175,7 +182,7 @@ Regel: Rechtliche, steuerliche und finanzielle Kernaussagen sollen möglichst au
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interner Arbeitsablauf
 - Stabilität: mittel
 
@@ -195,7 +202,7 @@ Für ein gemeinschaftliches Ferienhaus mit vier bis zehn Beteiligten, überwiege
 - Herausgeber: Projektteam; externe Quellen siehe Q014, Q015, Q017, Q018, Q023, Q035
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein; Tirol als Landesbeispiel
 - Stabilität: mittel
 - Aktualisierung nötig bei: Standortfestlegung, Gemeindeauskunft, Gesetzesänderung, Bankanfrage
@@ -206,7 +213,7 @@ Für ein gemeinschaftliches Ferienhaus mit vier bis zehn Beteiligten, überwiege
 | Nutzung | private Hauptmotivation, ergänzende Vermietung | Mischnutzung ist rechtlich und umsatzsteuerlich der größte Komplexitätstreiber. |
 | Bundesland/Gemeinde | offen; Tirol als restriktives Referenzmodell | Raumordnung, Baurecht, Grundverkehr und viele Tourismusabgaben sind lokal bzw. landesrechtlich geprägt. |
 | Servicelevel | minimal | Nebenleistungen können aus bloßer Vermietung eine gewerberechtlich relevante Beherbergung machen. |
-| Eigentümerbeiträge | ungleich, teilweise Arbeit statt Geld | Die Binnenordnung braucht robuste Regeln für Kapitalkonten, Arbeitspunkte, Nachschüsse und Exit. |
+| Eigentümerbeiträge | ungleich, teilweise Start-EK, laufende Anlagebeiträge, Kostenbeiträge oder Arbeitsleistungen | Die Binnenordnung braucht robuste Regeln für Kapitalkonten, Unternehmensanteile, Arbeitsleistungen, Nachschüsse und Exit. |
 | Haftungspräferenz | begrenzte persönliche Garantien gewünscht | Diese Präferenz kann mit Bankpraxis bei kleinen Immobiliengesellschaften kollidieren. |
 | Vermarktung | begrenzt, nicht öffentlich forciert | Das reduziert gewerberechtlichen Druck, beseitigt ihn aber nicht sicher. |
 
@@ -220,7 +227,7 @@ Die folgenden Fragen sind Go/No-Go-Fragen. Detailoptimierungen sind erst sinnvol
 - Herausgeber: Projektteam; externe Herausgeber siehe Quellenregister
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein; Deutschland/Schweiz nur für DBA-Grundlogik
 - Stabilität: mittel
 
@@ -230,7 +237,7 @@ Die folgenden Fragen sind Go/No-Go-Fragen. Detailoptimierungen sind erst sinnvol
 4. Akzeptiert die Eigentümergruppe persönliche Haftung oder Bürgschaften, oder soll die Struktur diese gerade begrenzen?
 5. Finanziert eine Bank die gewählte Struktur ohne unerwünschte Vollbesicherung durch Gesellschafter?
 6. Ist der Exit-Mechanismus vollständig geregelt: Bewertung, Aufgriffsrechte, Zahlungsfristen, Tod, Scheidung, Insolvenz und Ausfall eines Eigentümers?
-7. Steuert das Punktesystem nur Nutzung, oder ersetzt es faktisch Arbeitsentgelt, Kapitalverzinsung oder verdeckte Mietzahlungen?
+7. Steuern Nutzungsbeitrag und Nutzungspunkte nur Zimmernächte, oder ersetzen sie faktisch Arbeitsentgelt, Kapitalverzinsung oder verdeckte Mietzahlungen?
 8. Ist der Hausmeisterfall arbeitsrechtlich lösbar, ohne Dienstleistungsscheck-Missbrauch, Sachbezugsprobleme oder Mischverwendung?
 9. Sind in Deutschland oder der Schweiz steuerlich ansässige Beteiligte bereit, österreichische Steuer- und Erklärungspflichten sowie Folgeerklärungen im Ansässigkeitsstaat zu tragen?
 10. Bleibt das Projekt attraktiv, wenn Fremdvermietung nur moderat funktioniert und die Eigentümer dauerhaft Fixkosten zuschießen müssen?
@@ -245,7 +252,7 @@ Der Entscheidungsfluss bildet die im DeepResearch-Bericht vorgeschlagene Reihenf
 - Herausgeber: Projektteam; externe Herausgeber siehe Quellenregister
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein
 - Stabilität: mittel
 
@@ -262,7 +269,7 @@ flowchart TD
     G --> H
     H -- Nein --> I[Mehr Eigenkapital oder andere Struktur]
     H -- Ja --> J[Steuer- und Compliance-Set-up finalisieren]
-    J --> K[Punktesystem, Exit-Regeln und Hausmeistermodell vertraglich schließen]
+    J --> K[Nutzungsregeln, Zimmernachtmodell, Exit-Regeln und Hausmeistermodell vertraglich schließen]
 ```
 
 ## 11. Nächste Arbeitspakete
@@ -275,7 +282,7 @@ Die weitere Recherche sollte vom Standort zur Struktur und erst danach zur Detai
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Arbeitsplanung
 - Stabilität: mittel
 
@@ -289,8 +296,8 @@ timeline
     Woche drei : ownership_matrix finalisieren
                 : Miteigentum, KG und GmbH & Co KG als Kernoptionen vergleichen
     Woche vier : Bankenpaket vorbereiten
-                : Liquiditätstabellen und Stressszenarien ergänzen
-    Woche fünf : Punktesystem frei von versteckten Vergütungen modellieren
+                : Bankkonto-Cashflow und Stressszenarien ergänzen
+    Woche fünf : Nutzungsbeitrag und Zimmernachtmodell frei von versteckten Vergütungen modellieren
                 : Exit- und Bewertungslogik festlegen
     Woche sechs : Hausmeister- und Compliance-Prozesse dokumentieren
                 : Gäste- und Abgaben-Reporting aufsetzen
@@ -306,7 +313,7 @@ Drei Punkte bleiben ohne Objekt- und Standortbezug offen: die konkrete landes- u
 - Herausgeber: Projektteam; externe Herausgeber siehe Quellenregister
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein
 - Stabilität: mittel
 
@@ -320,7 +327,7 @@ Die DeepResearch-Inhalte sind nach Dringlichkeit in die fachlichen Wiki-Dateien 
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Arbeitsplanung
 - Stabilität: mittel
 
@@ -329,7 +336,7 @@ Die DeepResearch-Inhalte sind nach Dringlichkeit in die fachlichen Wiki-Dateien 
 | sofort | 02_legal.md | Landes- und Gemeindelogik: Widmung, Bebauung, Freizeitwohnsitz, touristische Nutzung, Tagungsnutzung, Zuständigkeiten, schriftliche Bestätigungen |
 | sofort | 03_tax.md | Kauf-USt-Entscheidungsbaum, Vorsteuerfähigkeit, 20-Jahres-Berichtigung, USt-Sätze je Leistung, GrESt, Grundsteuer, Aufenthaltsabgaben, DBA-Basislogik |
 | sofort | 04_ownership.md | ownership_matrix, Beteiligungs- und Exit-Regime, Rollenmodell, Beschlussfassungen |
-| hoch | 05_finance.md | Bankanforderungen, Eigenkapitalbedarf, Bürgschaftsfragen, Liquiditätstabellen, Stressszenarien |
-| hoch | 06_usage.md | Punktesystemvarianten, Buchungslogik, Sperrzeiten, Fremdvermietungsfreigaben, owner-affiliated company usage |
+| hoch | 05_finance.md | Bankanforderungen, Eigenkapitalbedarf, Bürgschaftsfragen, Bankkonto-Cashflow, Stressszenarien |
+| hoch | 06_usage.md | Nutzungsbeitrag, Nutzungspunkte, Zimmernachtmodell, Buchungslogik, Sperrzeiten, Fremdvermietungsfreigaben, owner-affiliated company usage |
 | hoch | 07_operational.md | Fixkostenmodell, Deckungsbeiträge, Hausmeistervarianten, Compliance-Prozesse, Gästemeldung, Tourismusabgaben |
 | ergänzend | 01_overall.md | Entscheidungsbaum, Definitionen, Projektprämissen, Killer Questions, Quellenbasis |

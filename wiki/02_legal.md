@@ -17,7 +17,7 @@ Der Erwerb einer Liegenschaft in Österreich wird regelmäßig über einen Kaufv
 - Herausgeber: oesterreich.gv.at
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung von Gerichtsgebühren, Grunderwerbsteuer, Grundbuchverfahren
@@ -49,7 +49,7 @@ Eigentum an einer österreichischen Liegenschaft wird im Grundbuch ersichtlich g
 - Herausgeber: oesterreich.gv.at
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung der Grundbuchgebühren oder Verfahren
@@ -80,7 +80,7 @@ Die zulässige Nutzung einer Immobilie ergibt sich nicht allein aus dem Kaufvert
 - Herausgeber: Land Tirol
 - Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf
 - Stand/Veröffentlichungsdatum: 2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol
 - Stabilität: niedrig/mittel
 - Aktualisierung nötig bei: Änderung Landesrecht, Gemeindeauskunft, Objektprüfung
@@ -111,7 +111,7 @@ Ein Freizeitwohnsitz ist rechtlich nicht automatisch dasselbe wie ein touristisc
 - Link: https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/
 - Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf
 - Stand/Veröffentlichungsdatum: Freizeitwohnsitzverzeichnis 03.04.2026; TFLAG-Leitfaden 2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol
 - Stabilität: niedrig/mittel
 - Aktualisierung nötig bei: Änderung der Landesgesetze, Gemeindeauskunft, konkreter Objektprüfung
@@ -141,7 +141,7 @@ Die rechtliche Einordnung hängt davon ab, ob eine bloße Gebrauchsüberlassung,
 - Herausgeber: Wirtschaftskammer Österreich
 - Link: https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf
 - Stand/Veröffentlichungsdatum: PDF, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung Gewerberecht, Tourismusrecht, Verwaltungspraxis
@@ -171,7 +171,7 @@ Bei touristischer Beherbergung bestehen regelmäßig Melde- und Aufzeichnungspfl
 - Herausgeber: Land Tirol
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol
 - Stabilität: niedrig/mittel
 - Aktualisierung nötig bei: Änderung der Melde- oder Abgabenprozesse
@@ -196,9 +196,9 @@ Bei Eigennutzung und Fremdvermietung sind Gebäudeversicherung, Haus- und Grundb
 - Quelle: Versicherungs-ABC Mietsachschäden / Leitsätze Haftpflichtversicherung
 - Herausgeber: Wirtschaftskammer Österreich
 - Link: https://www.wko.at/branchen/information-consulting/versicherungsmakler-berater-versicherungsangelegenheiten/versicherungs-abc-m.html
-- Link: https://www.wko.at/stmk/information-consulting/versicherungsmakler-schlichtungsstellen/leitsaetze-zu-haftpflichtversicherung
+- Link: https://www.wko.at/oe/rss-versicherungsmakler/leitsaetze-versicherungsbedingungen-haftpflichtversicherung
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel, da konkreter Deckungsumfang vom Versicherungsvertrag abhängt
 
@@ -226,7 +226,7 @@ Vor Kauf, Steuerplanung oder Rechtsformwahl ist zu klären, ob die konkrete Lieg
 - Link: https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/
 - Link: https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=LrT&Gesetzesnummer=20000910
 - Stand/Veröffentlichungsdatum: oesterreich.gv.at laufend aktualisiert; Freizeitwohnsitzverzeichnis 03.04.2026; RIS konsolidiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein; Tirol als Landesbeispiel
 - Stabilität: niedrig/mittel
 
@@ -254,7 +254,7 @@ Ein Objekt kann touristisch vermietbar sein, ohne dass private Zweitwohnsitz- od
 - Link: https://statistik.tirol.gv.at/homepage/freizeitwohnsitze/
 - Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf
 - Stand/Veröffentlichungsdatum: RIS konsolidiert; Freizeitwohnsitzverzeichnis 03.04.2026; Leitfaden 2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol
 - Stabilität: niedrig/mittel
 
@@ -277,7 +277,7 @@ Die Abgrenzung zwischen bloßer Raumvermietung und gewerblicher Beherbergung hä
 - Link: https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406
 - Link: https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf
 - Stand/Veröffentlichungsdatum: Websites/PDF, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -301,7 +301,7 @@ Firmenaufenthalte sind rechtlich nur dann unkritisch, wenn sie sich im Rahmen de
 - Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -331,7 +331,7 @@ Wer touristisch vermietet, muss Registrierung, Gästemeldung und Abgaben als eig
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
 - Stand/Veröffentlichungsdatum: oesterreich.gv.at 01.01.2026; Land Tirol laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -354,7 +354,7 @@ Die Unterlagenanforderung ist nach Nutzungsrisiken zu priorisieren, nicht nach E
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/grundstueckskauf_und_grundbuch/grundstueckskauf/Seite.200030
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
 - Stand/Veröffentlichungsdatum: 2026-05-15 / Websites laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein; Tirol als Beispiel
 - Stabilität: mittel
 

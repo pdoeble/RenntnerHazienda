@@ -19,7 +19,7 @@ Eine gemeinschaftliche Ferienimmobilie benötigt klare Regeln zu Eigentum, Finan
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung Gesellschaftsrecht, Steuerrecht, Bankanforderungen
@@ -53,7 +53,7 @@ Beim Miteigentum sind mehrere Personen anteilig Eigentümer derselben Liegenscha
 - Herausgeber: oesterreich.gv.at
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -96,7 +96,7 @@ Die GesbR ist ein vertraglicher Zusammenschluss mehrerer Personen. Laut WKO besi
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-buergerliches-recht-gesbr-faqs
 - Stand/Veröffentlichungsdatum: Website; FAQ Stand 17.12.2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -137,7 +137,7 @@ Die OG ist eine Personengesellschaft mit Firmenbucheintragung. Alle Gesellschaft
 - Link: https://www.wko.at/wirtschaftsrecht/offene-gesellschaft-og-
 - Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/offene-gesellschaft-og.html
 - Stand/Veröffentlichungsdatum: WKO Stand 24.10.2025; USP 01.01.2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -174,7 +174,7 @@ Die KG ist eine Personengesellschaft mit mindestens einem unbeschränkt haftende
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-faqs
 - Stand/Veröffentlichungsdatum: WKO, Stand 05.09.2025 / laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -216,7 +216,7 @@ Die GmbH ist eine Kapitalgesellschaft mit eigener Rechtspersönlichkeit. Das Min
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-faqs
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -259,7 +259,7 @@ Die GmbH & Co KG kombiniert eine KG mit einer GmbH als Komplementärin. Dadurch 
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -299,7 +299,7 @@ Ein Verein dient grundsätzlich einem ideellen Zweck. Für ein Ferienhaus mit Ei
 - Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
 - Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -329,7 +329,7 @@ Ein Verein dient grundsätzlich einem ideellen Zweck. Für ein Ferienhaus mit Ei
 - Link: https://www.wko.at/wirtschaftsrecht/uebersicht-gesellschaftsformen
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: WKO Stand 08.05.2026; DeepResearch 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -364,11 +364,11 @@ Für ein privat geprägtes Ferienhaus mit ungleichen Beiträgen, begrenzter Verm
 - Link: https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg
 - Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
 - Stand/Veröffentlichungsdatum: WKO/BMI Websites, Stand 2025/2026 bzw. laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
-| Struktur | Haftung | Bankability | Form-/Laufkosten | Steuerlogik | Exit/Eintritt | Hausmeister anstellen | Punktesystem | Geeignetheit |
+| Struktur | Haftung | Bankability | Form-/Laufkosten | Steuerlogik | Exit/Eintritt | Hausmeister anstellen | Nutzungsrechte | Geeignetheit |
 |---|---|---|---|---|---|---|---|---|
 | Direktes Miteigentum | keine Haftungshülle; persönliche Vertragshaftung | mittel bis schwach | niedrig | Einkünfte direkt bei Eigentümern | schwierig, weil Grundbuch- und Zustimmungsthemen | möglich, aber administrativ sperrig | sehr flexibel | gut bei stark privatem Modell |
 | GesbR | persönlich; keine Rechtspersönlichkeit | schwach bis mittel | niedrig | transparent; Gesellschafter bleiben Rechtsträger | schwierig bis mittel | möglich, aber unpraktisch | sehr flexibel | nur für sehr vertrauensbasierte Gruppen |
@@ -397,7 +397,7 @@ Die GesbR hat keine eigene Rechtspersönlichkeit und kann nicht selbst ins Grund
 - Link: https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg
 - Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026 bzw. laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -411,7 +411,7 @@ Personengesellschaften sind für die Ertragsteuer grundsätzlich transparent; de
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
 - Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/koerperschaftsteuer.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -427,7 +427,7 @@ Wenn Privatnutzung dominiert, persönliche Haftung gruppentauglich ist und maxim
 - Link: https://www.wko.at/wirtschaftsrecht/uebersicht-gesellschaftsformen
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
 - Stand/Veröffentlichungsdatum: 2026-05-15; WKO/FMA Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -439,7 +439,7 @@ Wenn Privatnutzung dominiert, persönliche Haftung gruppentauglich ist und maxim
 - Nutzungskalender und Prioritäten
 - Fremdvermietungsfreigaben
 - Regeln für Firmen der Eigentümer oder nahestehende Nutzer
-- Arbeitsleistungen und Punktesystem mit Cap
+- Arbeitsleistungen getrennt von Nutzungspunkten; Cap und Genehmigung nur für interne Priorität oder ausdrücklich geregelte Vergütung
 - Vertretung gegenüber Bank, Behörden, Gästen und Dienstleistern
 - Beschlussmehrheiten und Vetorechte
 - Budget, Rücklage und Sonderumlagen
@@ -463,7 +463,7 @@ Der Verein ist für eine eigentumsnahe Ferienhausstruktur mit privaten Nutzungsv
 - Link: https://www.bmi.gv.at/609/grundsaetzliches.aspx
 - Link: https://www.usp.gv.at/gruendung/EAP/gewerbeanmeldung.html
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 

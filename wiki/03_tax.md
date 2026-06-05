@@ -17,7 +17,7 @@ Beim Kauf einer österreichischen Immobilie fallen regelmäßig Nebenkosten an. 
 - Herausgeber: oesterreich.gv.at
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung Grunderwerbsteuer, Grundbuchgebühr, Maklerrecht, Gerichtsgebühren
@@ -51,7 +51,7 @@ Die Grunderwerbsteuer berechnet sich beim entgeltlichen Erwerb grundsätzlich na
 - Herausgeber: Bundesministerium für Finanzen
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grunderwerbsteuer/bemessungsgrundlage.html
 - Stand/Veröffentlichungsdatum: Website, publiziert 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung GrEStG, Verwaltungspraxis, Sonderfällen
@@ -83,7 +83,7 @@ Immobilienumsätze können umsatzsteuerlich besonders behandelt werden. Ein Verk
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Januar 2026 / laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung UStG, Verwaltungspraxis, Immobilienumsatzbesteuerung
@@ -114,7 +114,7 @@ Der Normalsteuersatz in Österreich beträgt 20 %. Bestimmte Leistungen unterlie
 - Herausgeber: Unternehmensserviceportal / Bundesministerium für Finanzen
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung UStG, Umsatzsteuersätzen, Rechtsprechung
@@ -153,7 +153,7 @@ Eigennutzung durch Eigentümer oder nahestehende Personen kann den Vorsteuerabzu
 - Herausgeber: Unternehmensserviceportal / Bundesministerium für Finanzen
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/
 - Stand/Veröffentlichungsdatum: Januar 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung UStG, Rechtsprechung, Einzelfallstruktur
@@ -182,7 +182,7 @@ Laufende Einkünfte können je nach Struktur und Tätigkeit als Vermietung und V
 - Herausgeber: Wirtschaftskammer Österreich
 - Link: https://www.wko.at/steuern/koest-koerperschaftsteuer
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung Körperschaftsteuer, Mindeststeuer, Ausschüttungsbesteuerung
@@ -214,7 +214,7 @@ Gebäude, Einrichtung, Finanzierungskosten, Instandhaltung und Betriebskosten k�
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/absetzung-fuer-abnutzung-bei-vuv.html
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/besondere-verhaeltnisse-bei-vuv.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -243,7 +243,7 @@ Bei dauerhaft defizitärer Vermietung, insbesondere bei Ferienobjekten mit Eigen
 - Link: https://www.ris.bka.gv.at/NormDokument.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10004804&Paragraf=2
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/vermietung-verpachtung-einleitung.html
 - Stand/Veröffentlichungsdatum: RIS konsolidiert; BMF Website Stand 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -273,7 +273,7 @@ Bei touristischer Nutzung und/oder Freizeitwohnsitznutzung können Aufenthaltsab
 - Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Freizeitwohnsitzpauschale_-Freizeitwohnsitzabgabe.pdf
 - Link: https://www.tirol.gv.at/fileadmin/themen/tirol-europa/gemeinden/downloads/Leitfaden_zum_TFLAG_2025_inklusive.pdf
 - Stand/Veröffentlichungsdatum: Website/PDF, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol, teilweise gemeindeabhängig
 - Stabilität: niedrig
 - Aktualisierung nötig bei: Gemeindewechsel, Satzänderung, Nutzungsänderung, Gesetzesänderung
@@ -305,7 +305,7 @@ Umsatzsteuer auf den Kaufpreis ist nicht automatisch geschuldet. Grundstücksver
 - Link: https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/option-zur-steuerpflicht-bei-vermietung-und-verpachtung-von-grundstuecken-sowie-bei-leistungen-von-wohnungseigentumsgemeinschaften.html
 - Link: https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/vorsteuerberichtigungszeitraum_bei_Grundst%C3%BCcken.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -340,7 +340,7 @@ Bei Vermietung und Verpachtung von Grundstücken ist die Option zur Steuerpflich
 - Herausgeber: Bundesministerium für Finanzen
 - Link: https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/option-zur-steuerpflicht-bei-vermietung-und-verpachtung-von-grundstuecken-sowie-bei-leistungen-von-wohnungseigentumsgemeinschaften.html
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -363,7 +363,7 @@ Der Normalsteuersatz beträgt 20 %. Beherbergung in eingerichteten Wohn- und Sch
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/vermietung-verpachtung/vermietung-und-verpachtung-in-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -394,7 +394,7 @@ Touristische Vermietung und Freizeitwohnsitznutzung können unterschiedliche Abg
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Freizeitwohnsitzpauschale_-_Freizeitwohnsitzabgabe.pdf
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html
 - Stand/Veröffentlichungsdatum: Land Tirol laufend zu prüfen; BMF Website Stand 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol / Österreich
 - Stabilität: niedrig, da Abgabenhöhe lokal und zeitlich variabel
 
@@ -419,7 +419,7 @@ Für in Deutschland oder der Schweiz steuerlich ansässige Beteiligte ist die An
 - Link: https://ris.bka.gv.at/eli/bgbl/1975/64/A6/NOR12046358
 - Link: https://www.bmf.gv.at/themen/steuern/internationales-steuerrecht/doppelbesteuerungsabkommen/dba-allgemeines.html
 - Stand/Veröffentlichungsdatum: RIS konsolidiert; BMF Website Stand 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Deutschland / Schweiz
 - Stabilität: mittel
 
@@ -436,7 +436,7 @@ Die Szenarien dienen als steuerliche Arbeitsmatrix. Sie ersetzen keine Steuerber
 - Herausgeber: Projektteam; externe Herausgeber siehe Quellenregister in 01_overall.md
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein; Tirol, Deutschland und Schweiz nur soweit genannt
 - Stabilität: mittel
 
@@ -447,15 +447,15 @@ Die Szenarien dienen als steuerliche Arbeitsmatrix. Sie ersetzen keine Steuerber
 | Gemischt privat + unternehmerisch | 20 % beim Kauf möglich, aber heikel | Mischsatz / Mischleistungen | hohes Kürzungs- und Berichtigungsrisiko über 20 Jahre | Freizeitwohnsitzthemen möglich | steuerlich anspruchsvollste Variante |
 | Tiroler Freizeitwohnsitz mit touristischer Vermietung | wie oben | wie oben | private Nutzung erschwert Vorsteuer | Aufenthaltsabgaben, Freizeitwohnsitzpauschale und Freizeitwohnsitzabgabe möglich | nur nach sauberem Landes- und Gemeindecheck sinnvoll |
 
-## 16. Steuerliche Warnhinweise für Punktesysteme
+## 16. Steuerliche Warnhinweise für Nutzungsbeitrag und Nutzungspunkte
 
 ### Kernaussage
-Ein Punktesystem sollte Nutzungsrechte steuern und nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder Mietzahlungen ersetzen. Bei Personengesellschaften können Vergütungen an Gesellschafter für Mitarbeit oder die Überlassung von Wirtschaftsgütern eigene steuerliche Folgen haben.
+Nutzungsbeitrag und Nutzungspunkte sollten ausschließlich interne Nutzungsrechte an Zimmernächten steuern. Sie dürfen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder verdeckte Mietzahlungen ersetzen. Bei Personengesellschaften können Vergütungen an Gesellschafter für Mitarbeit oder die Überlassung von Wirtschaftsgütern eigene steuerliche Folgen haben.
 
 ### Geltungsbereich
 - Land: Österreich
 - Rechtsformen: insbesondere Personengesellschaften und Miteigentümerstrukturen
-- Nutzung: Eigennutzung, Arbeitsleistungen, Kapitaleinlagen
+- Nutzung: Eigennutzung, Nutzungsbeiträge, Arbeitsleistungen, Kapitaleinlagen
 
 ### Quelle
 - Quelle: Kommanditgesellschaft / Besteuerung von Personengesellschaften
@@ -463,13 +463,14 @@ Ein Punktesystem sollte Nutzungsrechte steuern und nicht unbemerkt Arbeitsentgel
 - Link: https://www.wko.at/gruendung/kommanditgesellschaft-kg
 - Link: https://www.wko.at/steuern/besteuerung-personengesellschaften
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
 ### Prüfpunkte
-- Werden Arbeitspunkte nur für interne Priorisierung genutzt oder wirtschaftlich vergütet?
-- Gibt es Caps für Arbeitsleistungen?
+- Werden Nutzungspunkte nur für die interne Zimmernachtverteilung genutzt oder wirtschaftlich vergütet?
+- Sind Start-EK, Anlagebeitrag, Kostenbeitrag und Nutzungsbeitrag getrennt dokumentiert?
+- Gibt es Caps und Genehmigungsregeln für Arbeitsleistungen?
 - Gibt es fremdübliche Dokumentation und Genehmigung?
 - Ist die Exit-Bewertung unabhängig von subjektiven Arbeitsleistungen?
 - Sind Sondervergütungen steuerlich erfasst?

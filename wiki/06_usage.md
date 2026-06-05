@@ -18,7 +18,7 @@ Ein Ferienhaus kann privat, touristisch, an Firmen, langfristig oder gemischt ge
 - Link: https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -46,7 +46,7 @@ Eigennutzung muss organisatorisch und steuerlich klar abgegrenzt werden. Bei meh
 - Herausgeber: Unternehmensserviceportal / Bundesministerium für Finanzen
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/
 - Stand/Veröffentlichungsdatum: Januar 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -88,7 +88,7 @@ Fremdvermietung muss hinsichtlich Zielgruppe, Preis, Mindestaufenthalt, Rechnung
 - Herausgeber: Land Tirol
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Tirol
 - Stabilität: niedrig/mittel
 
@@ -124,7 +124,7 @@ Die Vermietung an Firmen kann über reine Unterkunft hinausgehen. Werden Seminar
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Link: https://www.wko.at/oe/tourismus-freizeitwirtschaft/hotellerie/vermietung-beherbergung.pdf
 - Stand/Veröffentlichungsdatum: laufend aktualisiert / laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -153,7 +153,7 @@ Bei gemischter Nutzung ist ein belastbarer Nutzungskalender zentral. Er dient de
 - Herausgeber: Unternehmensserviceportal / Bundesministerium für Finanzen
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/
 - Stand/Veröffentlichungsdatum: Januar 2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -187,7 +187,7 @@ Eine Hausordnung reduziert Konflikte und Haftungsrisiken. Sie sollte für Eigent
 - Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
 - Link: https://www.wko.at/branchen/information-consulting/versicherungsmakler-berater-versicherungsangelegenheiten/versicherungs-abc-m.html
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -225,7 +225,7 @@ Saison- und Preislogik beeinflussen Wirtschaftlichkeit, Eigennutzungskonflikte u
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
 - Stand/Veröffentlichungsdatum: Websites/PDF, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: konkrete Region
 - Stabilität: niedrig
 
@@ -241,14 +241,14 @@ Saison- und Preislogik beeinflussen Wirtschaftlichkeit, Eigennutzungskonflikte u
 - Reinigungsgebühr
 - Kaution
 
-## 8. Punktesystem: Zweck und Steuergrenze
+## 8. Nutzungsbeitrag und Nutzungspunkte: Zweck und Steuergrenze
 
 ### Kernaussage
-Ein Punktesystem sollte Nutzung priorisieren und dokumentieren, nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen oder Mietzahlungen ersetzen. Arbeitspunkte brauchen Genehmigung, Stundenwert, Cap und Verfall. Die Exit-Bewertung sollte unabhängig von subjektiv bewerteter Arbeit erfolgen.
+Der Nutzungsbeitrag ist ein EUR-Beitrag für interne Nutzungsrechte. Nutzungspunkte dokumentieren daraus abgeleitete Berechtigungen für Zimmernächte. Sie sollen nicht unbemerkt Arbeitsentgelt, Kapitalverzinsung, Sondervergütungen, Mietzahlungen oder Unternehmensanteile ersetzen. Start-EK, Anlagebeitrag, Kostenbeitrag und Nutzungsbeitrag sind deshalb getrennt zu führen.
 
 ### Geltungsbereich
 - Land: Österreich
-- Nutzung: Eigennutzung, Fremdvermietungsfreigabe, Arbeitseinsatz
+- Nutzung: Eigennutzung, Fremdvermietungsfreigabe, Arbeitseinsatz, Zimmernächte
 - Rechtsformen: Miteigentum, Personengesellschaften, GmbH-Strukturen
 
 ### Quelle
@@ -257,58 +257,51 @@ Ein Punktesystem sollte Nutzung priorisieren und dokumentieren, nicht unbemerkt 
 - Link: https://www.wko.at/gruendung/kommanditgesellschaft-kg
 - Link: https://www.wko.at/steuern/besteuerung-personengesellschaften
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
 ### Mindestregeln
-- jährlicher genehmigter Arbeitskatalog
-- dokumentierte Leistungserbringung
-- Cap für Arbeitspunkte
-- keine automatische Kapital- oder Arbeitsvergütung ohne steuerliche Prüfung
-- jährliche Abrechnung und Genehmigung
-- Exit-Bewertung ohne Rückgriff auf subjektive Arbeitspunkte
+- getrennte Konten für Kapital, laufende Kosten, Nutzungsbeitrag und Nutzungspunkte
+- keine automatische Kapital- oder Arbeitsvergütung über Nutzungspunkte ohne steuerliche Prüfung
+- Nutzungspunkte nur als interne Priorisierung oder Bezahl-/Verbrauchseinheit für Zimmernächte
+- dokumentierte Saison-, Feiertags- und Wochenendmultiplikatoren
+- jährliche Abrechnung der erworbenen, verbrauchten und verfallenden Nutzungsrechte
+- Exit-Bewertung ohne Rückgriff auf subjektiv bewertete Nutzungs- oder Arbeitsleistungen
 
-## 9. Drei Varianten für ein Punktesystem
+## 9. Zimmernachtmodell und Varianten
 
 ### Kernaussage
-Die drei Varianten sind Arbeitsmodelle für die interne Nutzung. Sie sind vor Umsetzung rechtlich und steuerlich zu prüfen.
+Die interne Nutzung sollte als Zimmernachtmodell geführt werden. Eine Zimmernacht ist ein Schlafzimmer oder Zimmer für eine Nacht; nicht das ganze Haus. Dadurch können mehrere Beteiligte gleichzeitig unterschiedliche Zimmer nutzen. Wochenenden, Ferien und Hochsaisonen müssen gesondert bepreist oder priorisiert werden, weil die Eigentümernutzung erfahrungsgemäß nicht gleichmäßig über das Jahr verteilt ist.
 
 ### Quelle
 - Quelle: DeepResearch-Referenz; steuerliche Warnhinweise siehe Abschnitt 8
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Modellierung
 - Stabilität: mittel
 
-### Variante Kapital-dominiert
+### Mindestmodell
 | Element | Vorschlag |
 |---|---|
-| Basispunkte | 80 % nach eingezahltem Kapital / Darlehensübernahme |
-| Arbeitspunkte | 20 % nach genehmigten Leistungen |
-| Arbeitspunkte-Cap | maximal 25 % der Jahrespunkte eines Eigentümers |
-| Verfall | Arbeitspunkte verfallen jährlich, Kapitalpunkte nicht |
-| Geeignet für | stark privat geprägtes Modell |
+| Jahres-Nutzungsbudget | monatlicher Nutzungsbeitrag mal zwölf |
+| Grundeinheit | eine Zimmernacht |
+| Preislogik | Basispreis pro Zimmernacht plus Saison-, Feiertags- und Wochenendmultiplikator |
+| Wochenenddruck | gesonderte Kennzahl für Freitag bis Sonntag, weil die Nachfrage dort konzentriert ist |
+| Fremdgäste | Fremdgast-Zimmernächte getrennt von Eigentümer-Zimmernächten erfassen |
+| Überziehung | nur mit vorher definiertem Ausgleich oder Sperre |
+| Verfall | nur für Nutzungsrechte, nicht für Unternehmensanteile |
+| Geeignet für | mehrere Eigentümer mit ungleichen Beiträgen und paralleler Zimmernutzung |
 
-### Variante Hybrid mit Jahresbudget
-| Element | Vorschlag |
-|---|---|
-| Basispunkte | fixer Jahresblock je 10.000 EUR eingebrachtem Kapital |
-| Zusatzpunkte | dokumentierte Arbeit, Sonderumlagen, garantierte Vermietungsfreigaben |
-| Sperrzeiten | Ferienzeiten separat quotiert oder gelost |
-| Ausgleich | Überziehung nur gegen Ausgleichszahlung an Gemeinschaft |
-| Geeignet für | sechs bis zehn Eigentümer mit ungleichen Beiträgen |
-
-### Variante Betriebsnahes Credit-Modell
-| Element | Vorschlag |
-|---|---|
-| Eigentümerkonto | Geldkonto und Nutzungskonto je Eigentümer |
-| Credits | entstehen aus Kapital, genehmigten Arbeitsleistungen und Budgetvorfinanzierung |
-| Preise | jede Nacht / Veranstaltung zieht Credits nach Saisonkalender |
-| Vorteil | transparent, bank- und exitfähig |
-| Nachteil | höherer Verwaltungsaufwand |
+### Abgrenzung zu Kapital und Arbeit
+| Thema | Nicht über Nutzungspunkte lösen | Separat regeln |
+|---|---|---|
+| Start-EK | keine zusätzlichen Nutzungsrechte ohne Nutzungsbeitrag ableiten | Unternehmensanteil / Kapitalkonto |
+| Anlagebeitrag | keine stille Verzinsung über Nächte | Unternehmensanteil / Tilgungs- oder Anlagekonto |
+| Kostenbeitrag | keine Eigentumsquote aus Opex-Zahlungen | laufende Umlage und Nachschussmechanik |
+| Arbeitsleistung | keine verdeckte Vergütung über unbewertete Punkte | Genehmigung, Cap, steuerliche Prüfung, ggf. Dienst- oder Werkvertrag |
 
 ## 10. Buchungslogik und Sperrzeiten
 
@@ -327,7 +320,7 @@ Bei mehreren Eigentümern muss die Buchungslogik Hochsaison, Nebensaison, privat
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / regionale Anwendung
 - Stabilität: niedrig/mittel
 
@@ -358,7 +351,7 @@ Nutzungen durch Unternehmen, die einem Eigentümer nahestehen, sind nicht automa
 - Link: https://www.oesterreich.gv.at/de/themen/reisen_und_freizeit/reisen-und-ferien/7/Seite.2960406
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol bei Abgaben
 - Stabilität: mittel
 
@@ -388,7 +381,7 @@ Fremdvermietung darf die private Zielnutzung nicht unkontrolliert verdrängen, m
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites 2026/laufend
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 

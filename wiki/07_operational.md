@@ -18,7 +18,7 @@ Die laufenden Kosten einer Ferienimmobilie setzen sich aus fixen Kosten, variabl
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -63,7 +63,7 @@ Für die Wirtschaftlichkeitsrechnung sollten Fixkosten und variable Kosten getre
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: mittel
 
@@ -102,10 +102,10 @@ Ferienimmobilien benötigen eine laufende Instandhaltungs- und Erneuerungsrückl
 ### Quelle
 - Quelle: Eigenmittel / Immobilienkredit-Informationen
 - Herausgeber: Raiffeisen / Bank Austria
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: objektabhängig
 - Stabilität: niedrig
 
@@ -138,7 +138,7 @@ Einnahmen können aus touristischer Vermietung, Firmenvermietung, Zusatzleistung
 - Herausgeber: Unternehmensserviceportal / Bundesministerium für Finanzen
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -174,7 +174,7 @@ Eine Wirtschaftlichkeitsrechnung sollte Cashflow, steuerliches Ergebnis und Liqu
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Controllinglogik
 - Stabilität: mittel
 
@@ -198,9 +198,14 @@ Deckungsbeitrag
 operatives Ergebnis vor Finanzierung
 - Zinsen
 - Tilgung
-- Rücklagen
-= Liquiditäts-Cashflow
+= Nettoabfluss aus Finanzierung
+
+Bankkonto-Cashflow =
+  Einzahlungen auf das Projektkonto
+  - Auszahlungen an Dritte oder Bank
 ```
+
+Interne Rücklagenzuführungen sind in dieser Bankkonto-Sicht keine Ausgabe an Dritte, solange das Geld auf dem Projektkonto oder einem zugeordneten Rücklagenkonto bleibt. Sie erhöhen die zweckgebundene Liquiditätsreserve. Erst tatsächliche Reparaturen, Renovierungen, Versicherungszahlungen, Abgaben oder andere Drittzahlungen reduzieren den Bankkontostand.
 
 ### Kennzahlen
 - Auslastungstage
@@ -211,7 +216,8 @@ operatives Ergebnis vor Finanzierung
 - Fixkosten pro Jahr
 - Break-even-Auslastung
 - Kapitaldienstdeckungsgrad
-- Cashflow nach Finanzierung
+- Bankkonto-Cashflow nach Finanzierung
+- Kontostand Jahresende
 - Rücklage pro Jahr
 - Eigenkapitalrendite, falls sinnvoll
 
@@ -241,7 +247,7 @@ Der operative Betrieb muss festlegen, wer Buchungen, Gästekommunikation, Reinig
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
 - Link: https://www.oesterreich.gv.at/de/lexicon/G/Seite.991691
 - Stand/Veröffentlichungsdatum: Land Tirol laufend zu prüfen; oesterreich.gv.at 01.01.2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -278,7 +284,7 @@ Saubere Dokumentation ist bei gemischter Nutzung zentral. Sie dient Steuererklä
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -310,7 +316,7 @@ Der Betrieb einer gemeinschaftlichen Ferienimmobilie hat operative, finanzielle,
 - Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: mittel
 
@@ -362,7 +368,7 @@ Für die operative Rechnung sollten mindestens sieben Kostenblöcke getrennt gef
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.bmf.gv.at/themen/steuern/immobilien-grundstuecke/grundbesitzabgaben-einheitsbewertung/grundsteuer.html
 - Stand/Veröffentlichungsdatum: 2026-05-15; externe Websites laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -390,7 +396,7 @@ Eine belastbare operative Kennzahl ist der Deckungsbeitrag pro vermieteter Nacht
 - Herausgeber: Projektteam
 - Link: ../references/260515-DeepResearch1
 - Stand/Veröffentlichungsdatum: 2026-05-15
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Wiki-interne Controllinglogik
 - Stabilität: mittel
 
@@ -425,7 +431,7 @@ Der Basismodell-Vorschlag ist ein externer Dienstleister für Reinigung, Winterd
 - Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904691&portal=oegkdgportal
 - Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.905270&portal=oegkdgportal
 - Stand/Veröffentlichungsdatum: Websites, Stand 01.01.2026 bzw. laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel
 
@@ -453,7 +459,7 @@ Der Dienstleistungsscheck ist für das Projekt meist nicht die passende Lösung.
 - Link: https://www.gesundheitskasse.at/cdscontent/?contentid=10007.904693
 - Link: https://www.usp.gv.at/services/suchen-und-finden/lexikon/geringfuegige-beschaeftigung.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 01.01.2026 bzw. laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel
 
@@ -479,7 +485,7 @@ Touristische Vermietung braucht einen wiederkehrenden Compliance-Prozess. In Tir
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.tirol.gv.at/fileadmin/themen/tourismus/tourismusabteilung/Aufenthaltsabgaben/Leitfaden_zum_Vermieten_meiner_Wohnung.pdf
 - Stand/Veröffentlichungsdatum: oesterreich.gv.at 01.01.2026; Land Tirol laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Tirol
 - Stabilität: niedrig/mittel
 
@@ -508,7 +514,7 @@ Bei Kapitalgesellschaften und firmenbuchfähigen Personengesellschaften kommen U
 - Link: https://www.bmf.gv.at/services/wiereg/wiereg-register.html
 - Link: https://www.usp.gv.at/laufender-betrieb/register-der-wirtschaftlichen-eigentuemer.html
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 

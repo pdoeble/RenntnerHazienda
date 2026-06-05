@@ -17,7 +17,7 @@ Der Kapitalbedarf einer Ferienimmobilie besteht nicht nur aus dem Kaufpreis. Zus
 - Herausgeber: oesterreich.gv.at
 - Link: https://www.oesterreich.gv.at/de/themen/bauen_und_wohnen/wohnen/8/Seite.210150
 - Stand/Veröffentlichungsdatum: Website, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 - Aktualisierung nötig bei: Änderung Gebühren, Maklerrecht, Finanzierungsstruktur
@@ -62,9 +62,9 @@ Eigenkapital reduziert Finanzierungsrisiko, Bankrisiko und laufenden Kapitaldien
 - Quelle: KIM-V-Ende / Eigenmittel
 - Herausgeber: Finanzmarktaufsicht Österreich / Raiffeisen
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformation laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel
 
@@ -93,7 +93,7 @@ Fremdfinanzierung erfolgt häufig über einen hypothekarisch besicherten Kredit.
 - Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
 - Stand/Veröffentlichungsdatum: FMA Website laufend aktualisiert; Pressemitteilung 26.06.2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / EU
 - Stabilität: niedrig, da Zinsen und Bankpraxis laufend wechseln
 
@@ -125,7 +125,7 @@ Die Wahl des Kreditnehmers ist eine zentrale Strukturfrage. Kreditnehmer können
 - Link: https://www.wko.at/wirtschaftsrecht/kommanditgesellschaft-kg
 - Link: https://www.wko.at/wirtschaftsrecht/gesellschaft-mit-beschraenkter-haftung-gmbh
 - Stand/Veröffentlichungsdatum: Websites, laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -152,10 +152,10 @@ Banken bewerten nicht nur Objektwert, sondern auch Verwertbarkeit, Nutzungserlau
 - Quelle: KIM-V-Ende / Eigenmittel / Immobilienkredit
 - Herausgeber: Finanzmarktaufsicht Österreich / Raiffeisen / Bank Austria
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
 - Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformationen laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig, da bankabhängig
 
@@ -190,7 +190,7 @@ Bei geplanter Vermietung sollte die Finanzierung mit konservativen Auslastungs-,
 - Link: https://www.tirol.gv.at/tourismus/aufenthaltsabgabe/
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich / Region
 - Stabilität: niedrig
 
@@ -216,10 +216,10 @@ Für Bankgespräche sollten rechtliche, wirtschaftliche, steuerliche und organis
 - Quelle: Immobilienkredit / Eigenmittel / KIM-V-Ende
 - Herausgeber: Bank Austria / Raiffeisen / Finanzmarktaufsicht Österreich
 - Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen; FMA 26.06.2025
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich, bankabhängig
 - Stabilität: niedrig
 
@@ -252,7 +252,7 @@ Gemeinschaftliche Ferienimmobilien kombinieren Immobilien-, Zins-, Auslastungs-,
 - Link: ../references/260515-DeepResearch1
 - Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
 - Stand/Veröffentlichungsdatum: 2026-05-15 / FMA laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein
 - Stabilität: mittel
 
@@ -282,7 +282,7 @@ Seit dem Auslaufen der KIM-V am 30.06.2025 besteht kein starres KIM-V-Regime meh
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
 - Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
 - Stand/Veröffentlichungsdatum: 26.06.2025 / laufend aktualisierte Website
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: niedrig/mittel
 
@@ -302,11 +302,11 @@ Ein Ferienhaus mit mehreren privaten Eigentümern, grenzüberschreitenden Beteil
 ### Quelle
 - Quelle: Eigenmittel / Immobilienkredit
 - Herausgeber: Raiffeisen / Bank Austria
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
 - Link: https://www.bankaustria.at/kredit-finanzierungs-tipps-geldanlage-immobilien.jsp
 - Stand/Veröffentlichungsdatum: Websites, laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich, bankabhängig
 - Stabilität: niedrig
 
@@ -326,7 +326,7 @@ Die folgende Tabelle ist eine Arbeitsannahme für das Wiki. Annahmen: 70 % LTV a
 - Link: https://www.usp.gv.at/themen/steuern-finanzen/umsatzsteuer-ueberblick/steuersaetze-und-steuerbefreiungen-der-umsatzsteuer.html
 - Link: https://www.bmf.gv.at/themen/steuern/fuer-unternehmen/umsatzsteuer/informationen/vorsteuerberichtigungszeitraum_bei_Grundst%C3%BCcken.html
 - Stand/Veröffentlichungsdatum: Websites, Stand 2025/2026
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich
 - Stabilität: mittel
 
@@ -356,9 +356,9 @@ Für Bankgespräche sollte die Eigentümergruppe ein einheitliches Paket vorbere
 - Herausgeber: Finanzmarktaufsicht Österreich / Bank Austria / Raiffeisen
 - Link: https://www.fma.gv.at/kim-v-ende-fma-erwartet-stabile-kreditvergabe/
 - Link: https://www.bankaustria.at/privatkunden-stories-das-1x1-des-immobilienkredits.jsp
-- Link: https://www.raiffeisen.at/noew/rlb/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
+- Link: https://www.raiffeisen.at/de/privatkunden/kredit-leasing/wohnfinanzierung/eigenmittel.html
 - Stand/Veröffentlichungsdatum: FMA 26.06.2025; Bankinformationen laufend zu prüfen
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich, bankabhängig
 - Stabilität: niedrig
 
@@ -367,7 +367,7 @@ Für Bankgespräche sollte die Eigentümergruppe ein einheitliches Paket vorbere
 - Vermögensstatus und Eigenmittelnachweise
 - Eigentümerliste mit Beteiligungsquoten
 - Entwurf Gesellschafts-, Syndikats- oder Miteigentümervertrag
-- Nutzungsregelwerk und Punktesystem
+- Nutzungsregelwerk mit Nutzungsbeitrag, Nutzungspunkten und Zimmernachtmodell
 - Exit- und Aufgriffsregeln
 - Nachschussmechanismus
 - Budget- und Liquiditätsplanung
@@ -387,7 +387,7 @@ Die Finanzierungsprüfung sollte mindestens drei Stressachsen simulieren: Zinsan
 - Link: ../references/260515-DeepResearch1
 - Link: https://www.fma.gv.at/banken/wohnimmobilienkredite/
 - Stand/Veröffentlichungsdatum: 2026-05-15 / FMA laufend aktualisiert
-- Abrufdatum: 2026-05-15
+- Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich allgemein
 - Stabilität: mittel
 
