@@ -1,4 +1,3 @@
-import { Download, Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { calculateAll } from "../calculations/calculateAll";
 import { buildProjectSnapshot } from "../calculations/buildProjectSnapshot";
@@ -25,8 +24,6 @@ import {
 } from "../state/projectStore";
 import type { VisualizationTab } from "../state/uiStore";
 import { DiagnosticsPanel } from "../ui/status/DiagnosticsPanel";
-import { DirtyStateIndicator } from "../ui/status/DirtyStateIndicator";
-import { FileActionButton } from "../ui/buttons/FileActionButton";
 import { formatDateTime } from "../utils/dates";
 import type { TemplateKind } from "../domain/templates";
 import { InputTabs, type InputPanelTab } from "./layout/InputTabs";
@@ -43,7 +40,7 @@ export function App() {
   const [persistenceDiagnostics, setPersistenceDiagnostics] = useState<
     ReturnType<typeof calculateAll>["diagnostics"]
   >([]);
-  const [selectedInput, setSelectedInput] = useState<InputPanelTab>("ownership");
+  const [selectedInput, setSelectedInput] = useState<InputPanelTab>("project");
   const [selectedVisualization, setSelectedVisualization] =
     useState<VisualizationTab>("dashboard");
   const [githubToken, setGithubToken] = useState(() => getStoredGithubToken() ?? "");
@@ -187,60 +184,8 @@ export function App() {
       <header className="topbar">
         <div className="project-title">
           <p className="eyebrow">simTool</p>
-          <h1>{manifest.name}</h1>
+          <h1>RenntnerHazienda</h1>
           <span>Berechnet: {formatDateTime(snapshot.metadata.calculatedAt)}</span>
-        </div>
-        <div className="status-row">
-          <DirtyStateIndicator dirtyState={dirtyState} />
-          {persistenceMessage ? (
-            <span className="status-pill">{persistenceMessage}</span>
-          ) : null}
-        </div>
-        <div className="button-row">
-          <ProjectLoadSelect
-            projectName={manifest.name}
-            onUpload={() => void loadProject()}
-          />
-          <FileActionButton
-            label="Projekt speichern"
-            icon={Save}
-            onClick={() => saveProject("projekt")}
-          />
-          <FileActionButton
-            label="Export"
-            icon={Download}
-            onClick={() => saveProject("projekt-portable")}
-          />
-        </div>
-        <div className="github-row">
-          <label className="text-field github-token-field">
-            <span>GitHub Token</span>
-            <input
-              aria-label="GitHub Token"
-              type="password"
-              value={githubToken}
-              placeholder="ghp_..."
-              onChange={(event) => setGithubToken(event.currentTarget.value)}
-              onBlur={() => setStoredGithubToken(githubToken)}
-            />
-          </label>
-          <button
-            className="icon-button"
-            type="button"
-            onClick={() => void loadProjectFromGithub()}
-          >
-            GitHub laden
-          </button>
-          <button
-            className="icon-button"
-            type="button"
-            onClick={() => void saveProjectToGithub()}
-          >
-            GitHub speichern
-          </button>
-          <span className="muted">
-            {githubProjectConfig().owner}/{githubProjectConfig().repo}:{githubProjectConfig().path}
-          </span>
         </div>
       </header>
 
@@ -248,6 +193,22 @@ export function App() {
         left={
           <InputTabs
             projectState={projectState}
+            calculationResult={result}
+            projectPanel={{
+              projectName: manifest.name,
+              calculatedAt: snapshot.metadata.calculatedAt,
+              dirtyState,
+              persistenceMessage,
+              githubToken,
+              githubConfigLabel: `${githubProjectConfig().owner}/${githubProjectConfig().repo}:${githubProjectConfig().path}`,
+              onGithubTokenChange: setGithubToken,
+              onGithubTokenBlur: () => setStoredGithubToken(githubToken),
+              onLoadProject: () => void loadProject(),
+              onSaveProject: () => saveProject("projekt"),
+              onExportProject: () => saveProject("projekt-portable"),
+              onLoadGithub: () => void loadProjectFromGithub(),
+              onSaveGithub: () => void saveProjectToGithub()
+            }}
             selectedKind={selectedInput}
             onSelectKind={setSelectedInput}
             onTemplateChange={replaceTemplate}
@@ -283,36 +244,6 @@ function githubErrorMessage(error: unknown, fallback: string): string {
     return `${fallback}: HTTP ${status}`;
   }
   return error instanceof Error ? error.message : fallback;
-}
-
-function ProjectLoadSelect({
-  projectName,
-  onUpload
-}: {
-  projectName: string;
-  onUpload: () => void;
-}) {
-  return (
-    <label className="action-select">
-      <span>Projekt laden</span>
-      <select
-        aria-label="Projekt laden"
-        defaultValue=""
-        onChange={(event) => {
-          if (event.currentTarget.value === "upload") {
-            onUpload();
-          }
-          event.currentTarget.value = "";
-        }}
-      >
-        <option value="" disabled>
-          Laden
-        </option>
-        <option value="current-project">{projectName}</option>
-        <option value="upload">Upload...</option>
-      </select>
-    </label>
-  );
 }
 
 function templateSuffix(kind: TemplateKind): string {

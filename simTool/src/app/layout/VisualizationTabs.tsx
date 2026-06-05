@@ -2,9 +2,9 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  ComposedChart,
   Legend,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -65,8 +65,6 @@ function VisualizationBody({
       return <DashboardView result={result} />;
     case "capitalNeed":
       return <CapitalNeedView result={result} />;
-    case "liquidity":
-      return <LiquidityView result={result} />;
     case "contributions":
       return <ContributionsView result={result} />;
     case "points":
@@ -89,17 +87,20 @@ function VisualizationBody({
 function PointsView({ result }: { result: CalculationResult }) {
   const chartData = result.points.owners.map((owner) => ({
     owner: owner.ownerName,
-    punkte: owner.annualPoints,
-    naechte: owner.affordableNightsAverage
+    budget: owner.annualUsageBudget,
+    zimmernaechte: owner.affordableNightsAverage
   }));
 
   return (
     <div className="visualization-view">
       <MetricGrid
         metrics={[
-          ["Jahrespunkt-Pool", result.points.annualPointPool.toLocaleString("de-DE")],
-          ["Kapazitaet", `${result.points.capacity} Betten/Einheiten`],
-          ["Modus", pointModeLabel(result.points.shareMode)]
+          [
+            "Theoretischer Zimmernacht-Pool",
+            result.points.annualPointPool.toLocaleString("de-DE")
+          ],
+          ["Zimmerkapazitaet", `${result.points.capacity} Zimmer`],
+          ["Nutzungslogik", "EUR-Beitrag -> Zimmernacht-Punkte"]
         ]}
       />
       <ChartFrame>
@@ -110,36 +111,34 @@ function PointsView({ result }: { result: CalculationResult }) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="punkte" fill="#0f766e" />
-            <Bar dataKey="naechte" fill="#2563eb" />
+            <Bar dataKey="budget" name="Jahres-Nutzungsbudget" fill="#0f766e" />
+            <Bar dataKey="zimmernaechte" name="Leistbare Zimmernaechte" fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
         headers={[
           "Eigner",
-          "Nutzungsbeitrag",
+          "Nutzungsbeitrag mtl.",
+          "Jahres-Nutzungsbudget",
           "Nutzungsanteil",
           "Unternehmensanteil",
-          "Punkte-Anteil",
-          "Jahrespunkte",
-          "Ø Naechte"
+          "Leistbare Zimmernaechte"
         ]}
         rows={result.points.owners.map((owner) => [
           owner.ownerName,
-          owner.usagePointBudget.toLocaleString("de-DE"),
+          formatMoney(owner.monthlyUsageContribution),
+          formatMoney(owner.annualUsageBudget),
           `${owner.usageSharePct.toFixed(2)}%`,
           `${owner.companySharePct.toFixed(2)}%`,
-          `${owner.pointSharePct.toFixed(2)}%`,
-          owner.annualPoints.toLocaleString("de-DE"),
           owner.affordableNightsAverage.toString()
         ])}
       />
       <DataTable
-        headers={["Nacht-Typ", "Punkte je Nacht"]}
+        headers={["Zimmernacht-Typ", "Kosten je Zimmernacht"]}
         rows={result.points.nightTypes.map((nightType) => [
           nightType.label,
-          nightType.pointsPerNight.toLocaleString("de-DE")
+          formatMoney(nightType.roomNightPrice)
         ])}
       />
     </div>
@@ -161,10 +160,15 @@ function MyShareView({ result }: { result: CalculationResult }) {
   const initialContribution = result.contributions.initialContributions.find(
     (contribution) => contribution.ownerId === owner?.ownerId
   );
-  const monthlyContribution =
+  const recurringContribution =
     result.contributions.recurringContributions[0]?.contributions.find(
       (contribution) => contribution.ownerId === owner?.ownerId
-    )?.totalMonthlyContribution ?? 0;
+    );
+  const monthlyContribution = recurringContribution?.totalMonthlyContribution ?? 0;
+  const monthlyCostContribution =
+    recurringContribution?.costContributionMonthly ??
+    recurringContribution?.baseMonthlyObligation ??
+    0;
   const capitalShareOwner = result.capitalShares.owners.find(
     (candidate) => candidate.ownerId === owner?.ownerId
   );
@@ -197,16 +201,19 @@ function MyShareView({ result }: { result: CalculationResult }) {
       </label>
       <MetricGrid
         metrics={[
-          ["Punkte-Anteil", `${owner.pointSharePct.toFixed(2)}%`],
           ["Unternehmensanteil", `${owner.companySharePct.toFixed(2)}%`],
-          ["Eigenkapital", formatMoney(initialContribution?.amount ?? 0)],
+          ["Start-EK", formatMoney(initialContribution?.amount ?? 0)],
           [
             "Anlagebeitrag mtl.",
             `${formatMoney(capitalShareOwner?.monthlyCapitalContribution ?? 0)}/Monat`
           ],
-          ["Kostenbeitrag mtl.", `${formatMoney(monthlyContribution)}/Monat`],
-          ["Jahrespunkte", owner.annualPoints.toLocaleString("de-DE")],
-          ["Ø Naechte", owner.affordableNightsAverage.toString()]
+          ["Kostenbeitrag mtl.", `${formatMoney(monthlyCostContribution)}/Monat`],
+          [
+            "Nutzungsbeitrag mtl.",
+            `${formatMoney(owner.monthlyUsageContribution)}/Monat`
+          ],
+          ["Jahres-Nutzungsbudget", formatMoney(owner.annualUsageBudget)],
+          ["Zimmernaechte", owner.affordableNightsAverage.toString()]
         ]}
       />
       <div className="form-section">
@@ -244,15 +251,16 @@ function OccupancyView({ result }: { result: CalculationResult }) {
       <MetricGrid
         metrics={[
           ["Haus", occupancy.houseTitle || "offen"],
-          ["Kapazitaet", `${occupancy.capacityPersons} Personen`],
+          ["Kapazitaet", `${occupancy.roomCapacity} Zimmer / ${occupancy.capacityPersons} Personen`],
           ["Basis", occupancy.capacityDataQuality],
-          ["Eigennutzung", `${occupancy.ownerDemandNights} Naechte/Jahr`],
-          ["Fremdgaeste", `${occupancy.guestNights} Naechte/Jahr`],
-          ["Freie Naechte", occupancy.freeNights.toString()],
-          ["Auslastung", `${occupancy.occupancyPct.toFixed(1)}%`],
+          ["Eigennutzung", `${occupancy.ownerDemandRoomNights} Zimmernaechte/Jahr`],
+          ["Fremdgaeste", `${occupancy.guestRoomNights} Zimmernaechte/Jahr`],
+          ["Freie Zimmernaechte", occupancy.freeRoomNights.toString()],
+          ["Auslastung gesamt", `${occupancy.occupancyPct.toFixed(1)}%`],
+          ["Wochenenddruck", `${occupancy.weekendOccupancyPct.toFixed(1)}%`],
           ["Belegungsdruck", occupancy.pressureLabel],
           [
-            "Punkte je verfuegb. Nacht",
+            "Punkte je verfuegb. Zimmernacht",
             occupancy.pointsPerAvailableNight.toLocaleString("de-DE")
           ]
         ]}
@@ -263,16 +271,39 @@ function OccupancyView({ result }: { result: CalculationResult }) {
           ["Schlafzimmer", occupancy.bedrooms?.toString() ?? "offen"],
           ["Betten", occupancy.beds?.toString() ?? "offen"],
           ["Eigner", occupancy.ownerCount.toString()],
-          ["Eigennutzung geschaetzt", `${occupancy.ownerDemandNights} Naechte`],
-          ["Fremdgaeste", `${occupancy.guestNights} Naechte`],
-          ["Blockierte Naechte gesamt", `${occupancy.blockedNights} Naechte`],
-          ["Freie Naechte", `${occupancy.freeNights} Naechte`]
+          ["Zimmernacht-Kapazitaet", `${occupancy.roomNightCapacity} Zimmernaechte`],
+          [
+            "Wochenend-Kapazitaet",
+            `${occupancy.weekendRoomNightCapacity} Zimmernaechte`
+          ],
+          [
+            "Werktag-Kapazitaet",
+            `${occupancy.weekdayRoomNightCapacity} Zimmernaechte`
+          ],
+          [
+            "Eigennutzung geschaetzt",
+            `${occupancy.ownerDemandRoomNights} Zimmernaechte`
+          ],
+          ["Fremdgaeste", `${occupancy.guestRoomNights} Zimmernaechte`],
+          [
+            "Blockierte Zimmernaechte gesamt",
+            `${occupancy.blockedRoomNights} Zimmernaechte`
+          ],
+          ["Freie Zimmernaechte", `${occupancy.freeRoomNights} Zimmernaechte`],
+          [
+            "Wochenende belegt",
+            `${occupancy.weekendDemandRoomNights} von ${occupancy.weekendRoomNightCapacity}`
+          ],
+          [
+            "Werktage belegt",
+            `${occupancy.weekdayDemandRoomNights} von ${occupancy.weekdayRoomNightCapacity}`
+          ]
         ]}
       />
       <p className="muted">
-        Standardkapazitaet ist zwei Personen je Schlafzimmer. Wenn Schlafzimmer
-        fehlen, nutzt das Modell Betten; fehlen beide Werte, bleibt die
-        Kapazitaet offen.
+        Eine Nutzungseinheit ist eine Zimmernacht. Wochenenddruck trennt Freitag
+        bis Sonntag vom restlichen Jahr; die Wochenendanteile stehen in der
+        Strategie.
       </p>
     </div>
   );
@@ -361,55 +392,23 @@ function CapitalNeedView({ result }: { result: CalculationResult }) {
   );
 }
 
-function LiquidityView({ result }: { result: CalculationResult }) {
-  const chartData = clampItems(result.liquidity.monthly, 60).map((month) => ({
-    month: month.month,
-    liquiditaet: month.closingBalance
-  }));
-
-  return (
-    <div className="visualization-view">
-      <MetricGrid
-        metrics={[
-          ["Minimum", formatMoney(result.liquidity.minimumLiquidity)],
-          ["Endstand", formatMoney(result.liquidity.finalLiquidity)],
-          [
-            "Erster negativer Monat",
-            result.liquidity.firstNegativeMonth?.toString() ?? "kein Wert"
-          ]
-        ]}
-      />
-      <ChartFrame>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" label={{ value: "Monat", position: "insideBottom", offset: -3 }} />
-            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
-            <Tooltip formatter={(value) => formatMoney(Number(value))} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="liquiditaet"
-              stroke="#2563eb"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </ChartFrame>
-    </div>
-  );
-}
-
 function ContributionsView({ result }: { result: CalculationResult }) {
   const chartData = result.contributions.initialContributions.map(
     (contribution) => ({
       owner: contribution.ownerName,
-      eigenkapital: contribution.amount,
-      monatlich:
+      startEk: contribution.amount,
+      kosten:
         result.contributions.recurringContributions[0]?.contributions.find(
           (candidate) => candidate.ownerId === contribution.ownerId
-        )?.amount ?? 0
+        )?.costContributionMonthly ?? 0,
+      anlage:
+        result.contributions.recurringContributions[0]?.contributions.find(
+          (candidate) => candidate.ownerId === contribution.ownerId
+        )?.capitalContributionMonthly ?? 0,
+      nutzung:
+        result.contributions.recurringContributions[0]?.contributions.find(
+          (candidate) => candidate.ownerId === contribution.ownerId
+        )?.usageContributionMonthly ?? 0
     })
   );
   const yearlyContributionRows = result.contributions.recurringContributions.map(
@@ -430,11 +429,11 @@ function ContributionsView({ result }: { result: CalculationResult }) {
       <MetricGrid
         metrics={[
           [
-            "Initialbedarf",
+            "Start-EK gesamt",
             formatMoney(result.contributions.requiredInitialContribution)
           ],
           [
-            "Monatsbeitrag",
+            "Monatszahlung gesamt",
             formatMoney(result.contributions.requiredMonthlyContribution)
           ],
           [
@@ -451,34 +450,52 @@ function ContributionsView({ result }: { result: CalculationResult }) {
             <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="eigenkapital" fill="#0f766e" />
-            <Bar dataKey="monatlich" fill="#2563eb" />
+            <Bar dataKey="startEk" name="Start-EK" fill="#0f766e" />
+            <Bar dataKey="kosten" name="Kostenbeitrag mtl." fill="#b45309" />
+            <Bar dataKey="anlage" name="Anlagebeitrag mtl." fill="#7c3aed" />
+            <Bar dataKey="nutzung" name="Nutzungsbeitrag mtl." fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
         headers={[
           "Eigner",
-          "Anteil",
-          "Initiale Einlage",
-          "Basis mtl.",
-          "Reserve mtl.",
+          "Unternehmensanteil",
+          "Start-EK",
+          "Kostenbeitrag mtl.",
+          "Anlagebeitrag mtl.",
+          "Nutzungsbeitrag mtl.",
+          "Liquiditaetsreserve mtl.",
           "Sonderumlage",
           "Monatlich gesamt"
         ]}
         rows={result.contributions.initialContributions.map((contribution) => [
           contribution.ownerName,
-          `${contribution.sharePct.toFixed(2)}%`,
+          `${(
+            result.capitalShares.owners.find(
+              (owner) => owner.ownerId === contribution.ownerId
+            )?.companySharePct ?? contribution.sharePct
+          ).toFixed(2)}%`,
           formatMoney(contribution.amount),
           formatMoney(
             result.contributions.recurringContributions[0]?.contributions.find(
               (candidate) => candidate.ownerId === contribution.ownerId
-            )?.baseMonthlyObligation ?? 0
+            )?.costContributionMonthly ?? 0
           ),
           formatMoney(
             result.contributions.recurringContributions[0]?.contributions.find(
               (candidate) => candidate.ownerId === contribution.ownerId
-            )?.reserveTopUp ?? 0
+            )?.capitalContributionMonthly ?? 0
+          ),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.usageContributionMonthly ?? 0
+          ),
+          formatMoney(
+            result.contributions.recurringContributions[0]?.contributions.find(
+              (candidate) => candidate.ownerId === contribution.ownerId
+            )?.liquidityReserveMonthly ?? 0
           ),
           formatMoney(
             result.contributions.recurringContributions[0]?.contributions.find(
@@ -510,12 +527,22 @@ function CashflowView({ result }: { result: CalculationResult }) {
   const firstMonthOpex = firstMonth
     ? firstMonth.recoverableOpex + firstMonth.nonRecoverableOpex
     : 0;
-  const chartData = clampItems(result.cashflow.yearly, 10).map((year) => ({
+  const chartData = clampItems(result.cashflow.bankAccountYearly, 10).map((year) => ({
     year: year.year,
-    vorBank: year.operatingResult,
-    zinsabfluss: -year.interest,
-    tilgungsabfluss: -year.principalRepayment,
-    vorBeitraegen: year.netCashflowAfterDebtService
+    startEk: year.startEquity,
+    kostenbeitraege: year.costContributions,
+    anlagebeitraege: year.capitalContributions,
+    nutzungsbeitraege: year.usageContributions,
+    reservebeitraege: year.reserveContributions,
+    darlehen: year.debtDrawdown,
+    miete: year.rentalIncome,
+    erstattung: year.vatRefund,
+    kauf: year.acquisition,
+    renovierung: year.renovation,
+    opex: year.opex,
+    zins: year.interest,
+    tilgung: year.principalRepayment,
+    kontostand: year.closingBalance
   }));
 
   return (
@@ -523,20 +550,20 @@ function CashflowView({ result }: { result: CalculationResult }) {
       <MetricGrid
         metrics={[
           [
-            "Cashflow vor Beitraegen kumuliert",
-            formatMoney(result.cashflow.cumulativeCashflow)
+            "Kontostand Ende",
+            formatMoney(result.liquidity.finalLiquidity)
           ],
           ["Bankrate Monat 1", formatMoney(firstMonth?.debtService ?? 0)],
           ["Zins Monat 1", formatMoney(firstMonth?.interest ?? 0)],
           ["Tilgung Monat 1", formatMoney(firstMonth?.principalRepayment ?? 0)],
           ["Opex Monat 1", formatMoney(firstMonthOpex)],
           [
-            "Jahr 1 vor Bank",
-            formatMoney(result.cashflow.yearly[0]?.operatingResult ?? 0)
+            "Einnahmen Jahr 1",
+            formatMoney(result.cashflow.bankAccountYearly[0]?.totalIncome ?? 0)
           ],
           [
-            "Jahr 1 nach Opex und Bank",
-            formatMoney(result.cashflow.yearly[0]?.netCashflowAfterDebtService ?? 0)
+            "Ausgaben Jahr 1",
+            formatMoney(result.cashflow.bankAccountYearly[0]?.totalExpenses ?? 0)
           ]
         ]}
       />
@@ -548,27 +575,55 @@ function CashflowView({ result }: { result: CalculationResult }) {
             <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
-            <Bar dataKey="vorBank" fill="#15803d" />
-            <Bar dataKey="zinsabfluss" fill="#b45309" />
-            <Bar dataKey="tilgungsabfluss" fill="#7c3aed" />
-            <Bar dataKey="vorBeitraegen" fill="#2563eb" />
+            <Bar dataKey="startEk" name="Start-EK" stackId="einnahmen" fill="#0f766e" />
+            <Bar dataKey="kostenbeitraege" name="Kostenbeitrag" stackId="einnahmen" fill="#14b8a6" />
+            <Bar dataKey="anlagebeitraege" name="Anlagebeitrag" stackId="einnahmen" fill="#7c3aed" />
+            <Bar dataKey="nutzungsbeitraege" name="Nutzungsbeitrag" stackId="einnahmen" fill="#2563eb" />
+            <Bar dataKey="reservebeitraege" name="Liquiditaetsreserve" stackId="einnahmen" fill="#64748b" />
+            <Bar dataKey="darlehen" name="Darlehen" stackId="einnahmen" fill="#0891b2" />
+            <Bar dataKey="miete" name="Miete" stackId="einnahmen" fill="#22c55e" />
+            <Bar dataKey="erstattung" name="Erstattung" stackId="einnahmen" fill="#84cc16" />
+            <Bar dataKey="kauf" name="Kauf/Nebenkosten" stackId="ausgaben" fill="#991b1b" />
+            <Bar dataKey="renovierung" name="Renovierung" stackId="ausgaben" fill="#dc2626" />
+            <Bar dataKey="opex" name="Opex" stackId="ausgaben" fill="#b45309" />
+            <Bar dataKey="zins" name="Zins" stackId="ausgaben" fill="#f97316" />
+            <Bar dataKey="tilgung" name="Tilgung" stackId="ausgaben" fill="#6d28d9" />
           </BarChart>
+        </ResponsiveContainer>
+      </ChartFrame>
+      <ChartFrame>
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="year" />
+            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <Tooltip formatter={(value) => formatMoney(Number(value))} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="kontostand"
+              name="Kontostand"
+              stroke="#2563eb"
+              strokeWidth={2}
+              dot={false}
+            />
+          </ComposedChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
         headers={[
           "Jahr",
-          "Vor Bank",
-          "Zinsabfluss",
-          "Tilgungsabfluss",
-          "Vor Beitraegen"
+          "Einnahmen",
+          "Ausgaben vom Bankkonto",
+          "Netto",
+          "Kontostand"
         ]}
-        rows={clampItems(result.cashflow.yearly, 5).map((year) => [
+        rows={clampItems(result.cashflow.bankAccountYearly, 10).map((year) => [
           year.year.toString(),
-          formatMoney(year.operatingResult),
-          formatMoney(-year.interest),
-          formatMoney(-year.principalRepayment),
-          formatMoney(year.netCashflowAfterDebtService)
+          formatMoney(year.totalIncome),
+          formatMoney(year.totalExpenses),
+          formatMoney(year.netMovement),
+          formatMoney(year.closingBalance)
         ])}
       />
       <DataTable
@@ -582,13 +637,30 @@ function CashflowView({ result }: { result: CalculationResult }) {
 function DebtView({ result }: { result: CalculationResult }) {
   const firstMonth = result.debt.monthlyDebtService[0];
   const chartData = clampItems(result.debt.monthlyDebtService, 300)
-    .filter((month) => month.month % 12 === 0)
-    .map((month) => ({
-      year: Math.floor(month.month / 12) + 1,
-      restschuld: month.remainingDebt,
-      zins: month.interest,
-      tilgung: month.principalRepayment
-    }));
+    .reduce<
+      {
+        year: number;
+        restschuld: number;
+        zins: number;
+        tilgung: number;
+      }[]
+    >((years, month) => {
+      const year = Math.floor(month.month / 12) + 1;
+      const existing = years.find((candidate) => candidate.year === year);
+      if (existing) {
+        existing.zins += month.interest;
+        existing.tilgung += month.principalRepayment;
+        existing.restschuld = month.remainingDebt;
+        return years;
+      }
+      years.push({
+        year,
+        restschuld: month.remainingDebt,
+        zins: month.interest,
+        tilgung: month.principalRepayment
+      });
+      return years;
+    }, []);
 
   return (
     <div className="visualization-view">
@@ -604,24 +676,48 @@ function DebtView({ result }: { result: CalculationResult }) {
       />
       <ChartFrame>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={chartData}>
+          <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="year" />
-            <YAxis tickFormatter={(value) => formatMoney(Number(value))} width={92} />
+            <YAxis
+              yAxisId="debt"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
+            <YAxis
+              yAxisId="payment"
+              orientation="right"
+              tickFormatter={(value) => formatMoney(Number(value))}
+              width={92}
+            />
             <Tooltip formatter={(value) => formatMoney(Number(value))} />
             <Legend />
             <Line
+              yAxisId="debt"
               type="monotone"
               dataKey="restschuld"
+              name="Restschuld"
               stroke="#7c3aed"
               strokeWidth={2}
               dot={false}
             />
-          </LineChart>
+            <Bar
+              yAxisId="payment"
+              dataKey="zins"
+              name="Zins"
+              fill="#b45309"
+            />
+            <Bar
+              yAxisId="payment"
+              dataKey="tilgung"
+              name="Tilgung"
+              fill="#2563eb"
+            />
+          </ComposedChart>
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Jahr", "Restschuld", "Zins mtl.", "Tilgung mtl."]}
+        headers={["Jahr", "Restschuld", "Zins p.a.", "Tilgung p.a."]}
         rows={clampItems(chartData, 8).map((year) => [
           year.year.toString(),
           formatMoney(year.restschuld),
@@ -866,19 +962,6 @@ function NumberInput({
       />
     </label>
   );
-}
-
-function pointModeLabel(mode: CalculationResult["points"]["shareMode"]): string {
-  if (mode === "usage") {
-    return "Nutzungsbeitrag";
-  }
-  if (mode === "tier") {
-    return "Nutzungsbeitrag";
-  }
-  if (mode === "equity") {
-    return "Unternehmensanteil";
-  }
-  return "Nutzung + Unternehmensanteil";
 }
 
 function looksLikeHtml(text: string): boolean {

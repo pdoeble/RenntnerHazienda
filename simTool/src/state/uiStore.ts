@@ -14,7 +14,6 @@ export const INPUT_TAB_ORDER: TemplateKind[] = [
 export type VisualizationTab =
   | "dashboard"
   | "capitalNeed"
-  | "liquidity"
   | "contributions"
   | "points"
   | "myShare"
@@ -27,7 +26,6 @@ export type VisualizationTab =
 export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
   "dashboard",
   "capitalNeed",
-  "liquidity",
   "contributions",
   "points",
   "myShare",
@@ -41,7 +39,6 @@ export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
 export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
   dashboard: "Dashboard",
   capitalNeed: "Kapitalbedarf",
-  liquidity: "Liquiditaet",
   contributions: "Beitraege",
   points: "Punkte",
   myShare: "Mein Anteil",

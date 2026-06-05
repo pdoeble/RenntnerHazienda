@@ -9,6 +9,7 @@ import {
   enrichHouseWithGoogleMaps,
   hasGoogleMapsKey
 } from "../../maps/googleMapsEnrichment";
+import type { CalculationResult } from "../../calculations/types";
 import type { LegalFormValue } from "../../modules/legal-form/types";
 import { visibleInputModules } from "../../modules/registry";
 import type { OpexAnnualCostMode } from "../../modules/opex/types";
@@ -19,16 +20,36 @@ import type {
   PropertyUseType
 } from "../../modules/property/types";
 import type { GoNoGoStatus } from "../../modules/strategy/types";
-import type { ProjectState } from "../../state/projectStore";
+import type { DirtyState, ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
+import { DirtyStateIndicator } from "../../ui/status/DirtyStateIndicator";
+import { formatDateTime } from "../../utils/dates";
 import { formatMoney, formatPercent } from "../../utils/money";
 import { HouseComparisonEditor } from "./HouseComparisonEditor";
 
-export type InputPanelTab = TemplateKind | "houseComparison";
+export type InputPanelTab = "project" | TemplateKind | "houseComparison";
+
+export type ProjectPanelProps = {
+  projectName: string;
+  calculatedAt: string;
+  dirtyState: DirtyState;
+  persistenceMessage: string;
+  githubToken: string;
+  githubConfigLabel: string;
+  onGithubTokenChange: (token: string) => void;
+  onGithubTokenBlur: () => void;
+  onLoadProject: () => void;
+  onSaveProject: () => void;
+  onExportProject: () => void;
+  onLoadGithub: () => void;
+  onSaveGithub: () => void;
+};
 
 type InputTabsProps = {
   projectState: ProjectState;
+  calculationResult: CalculationResult;
+  projectPanel: ProjectPanelProps;
   selectedKind: InputPanelTab;
   onSelectKind: (kind: InputPanelTab) => void;
   onTemplateChange: (
@@ -42,6 +63,8 @@ type InputTabsProps = {
 
 export function InputTabs({
   projectState,
+  calculationResult,
+  projectPanel,
   selectedKind,
   onSelectKind,
   onTemplateChange,
@@ -50,6 +73,7 @@ export function InputTabs({
   onExportTemplate
 }: InputTabsProps) {
   const visibleTabs = [
+    { kind: "project" as const, label: "Projekt" },
     ...visibleInputModules.map((module) => ({
       kind: module.kind as InputPanelTab,
       label: module.label
@@ -60,9 +84,12 @@ export function InputTabs({
     (module) => module.kind === selectedKind
   );
   const templateKind: TemplateKind =
-    selectedKind === "houseComparison" ? "property" : selectedKind;
+    selectedKind === "houseComparison" || selectedKind === "project"
+      ? "property"
+      : selectedKind;
   const activeTemplate = projectState[templateKind];
-  const validation = activeModule?.validate(activeTemplate);
+  const validation =
+    selectedKind === "project" ? undefined : activeModule?.validate(activeTemplate);
   const validationErrors =
     validation?.diagnostics.filter((diagnostic) => diagnostic.severity === "error") ??
     [];
@@ -87,29 +114,43 @@ export function InputTabs({
       <div className="tab-header">
         <div>
           <p className="eyebrow">
-            {selectedKind === "houseComparison" ? "Hausvergleich" : activeModule?.label}
+            {selectedKind === "project"
+              ? "Projekt"
+              : selectedKind === "houseComparison"
+                ? "Hausvergleich"
+                : activeModule?.label}
           </p>
           <h2>
-            {selectedKind === "houseComparison" ? "Hausvergleich" : activeTemplate.name}
+            {selectedKind === "project"
+              ? projectPanel.projectName
+              : selectedKind === "houseComparison"
+                ? "Hausvergleich"
+                : activeTemplate.name}
           </h2>
-          <span className="muted">Template: {activeTemplate.id}</span>
+          <span className="muted">
+            {selectedKind === "project"
+              ? `Berechnet: ${formatDateTime(projectPanel.calculatedAt)}`
+              : `Template: ${activeTemplate.id}`}
+          </span>
         </div>
-        <div className="button-row">
-          <TemplateLoadSelect
-            templateName={activeTemplate.name}
-            onUpload={() => onLoadTemplate(templateKind)}
-          />
-          <FileActionButton
-            label="Speichern"
-            icon={Save}
-            onClick={() => onSaveTemplate(templateKind)}
-          />
-          <FileActionButton
-            label="Export"
-            icon={Download}
-            onClick={() => onExportTemplate(templateKind)}
-          />
-        </div>
+        {selectedKind === "project" ? null : (
+          <div className="button-row">
+            <TemplateLoadSelect
+              templateName={activeTemplate.name}
+              onUpload={() => onLoadTemplate(templateKind)}
+            />
+            <FileActionButton
+              label="Speichern"
+              icon={Save}
+              onClick={() => onSaveTemplate(templateKind)}
+            />
+            <FileActionButton
+              label="Export"
+              icon={Download}
+              onClick={() => onExportTemplate(templateKind)}
+            />
+          </div>
+        )}
       </div>
 
       {validationErrors.length > 0 ? (
@@ -123,6 +164,8 @@ export function InputTabs({
       <InputTabBody
         kind={selectedKind}
         projectState={projectState}
+        calculationResult={calculationResult}
+        projectPanel={projectPanel}
         onTemplateChange={onTemplateChange}
       />
     </div>
@@ -159,19 +202,118 @@ function TemplateLoadSelect({
   );
 }
 
+function ProjectEditor({ projectPanel }: { projectPanel: ProjectPanelProps }) {
+  return (
+    <div className="form-grid">
+      <div className="form-section">
+        <h3>Projekt</h3>
+        <DirtyStateIndicator dirtyState={projectPanel.dirtyState} />
+        {projectPanel.persistenceMessage ? (
+          <span className="status-pill">{projectPanel.persistenceMessage}</span>
+        ) : null}
+        <div className="button-row">
+          <ProjectLoadSelect
+            projectName={projectPanel.projectName}
+            onUpload={projectPanel.onLoadProject}
+          />
+          <FileActionButton
+            label="Projekt speichern"
+            icon={Save}
+            onClick={projectPanel.onSaveProject}
+          />
+          <FileActionButton
+            label="Export"
+            icon={Download}
+            onClick={projectPanel.onExportProject}
+          />
+        </div>
+      </div>
+      <div className="form-section">
+        <h3>GitHub Speicher</h3>
+        <label className="text-field github-token-field">
+          <span>GitHub Token</span>
+          <input
+            aria-label="GitHub Token"
+            type="password"
+            value={projectPanel.githubToken}
+            placeholder="ghp_..."
+            onChange={(event) =>
+              projectPanel.onGithubTokenChange(event.currentTarget.value)
+            }
+            onBlur={projectPanel.onGithubTokenBlur}
+          />
+        </label>
+        <div className="button-row">
+          <button
+            className="icon-button"
+            type="button"
+            onClick={projectPanel.onLoadGithub}
+          >
+            GitHub laden
+          </button>
+          <button
+            className="icon-button"
+            type="button"
+            onClick={projectPanel.onSaveGithub}
+          >
+            GitHub speichern
+          </button>
+        </div>
+        <span className="muted">{projectPanel.githubConfigLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+function ProjectLoadSelect({
+  projectName,
+  onUpload
+}: {
+  projectName: string;
+  onUpload: () => void;
+}) {
+  return (
+    <label className="action-select">
+      <span>Projekt laden</span>
+      <select
+        aria-label="Projekt laden"
+        defaultValue=""
+        onChange={(event) => {
+          if (event.currentTarget.value === "upload") {
+            onUpload();
+          }
+          event.currentTarget.value = "";
+        }}
+      >
+        <option value="" disabled>
+          Laden
+        </option>
+        <option value="current-project">{projectName}</option>
+        <option value="upload">Upload...</option>
+      </select>
+    </label>
+  );
+}
+
 function InputTabBody({
   kind,
   projectState,
+  calculationResult,
+  projectPanel,
   onTemplateChange
 }: {
   kind: InputPanelTab;
   projectState: ProjectState;
+  calculationResult: CalculationResult;
+  projectPanel: ProjectPanelProps;
   onTemplateChange: (
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
   ) => void;
 }) {
   switch (kind) {
+    case "project":
+      return <ProjectEditor projectPanel={projectPanel} />;
     case "houseComparison":
       return (
         <HouseComparisonEditor
@@ -188,6 +330,7 @@ function InputTabBody({
       return (
         <OwnershipEditor
           projectState={projectState}
+          calculationResult={calculationResult}
           onTemplateChange={onTemplateChange}
         />
       );
@@ -234,9 +377,11 @@ function InputTabBody({
 
 function OwnershipEditor({
   projectState,
+  calculationResult,
   onTemplateChange
 }: {
   projectState: ProjectState;
+  calculationResult: CalculationResult;
   onTemplateChange: (
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
@@ -261,7 +406,11 @@ function OwnershipEditor({
 
   return (
     <div className="form-grid">
-      {projectState.ownership.data.owners.map((owner) => (
+      {projectState.ownership.data.owners.map((owner) => {
+        const capitalShare = calculationResult.capitalShares.owners.find(
+          (candidate) => candidate.ownerId === owner.id
+        );
+        return (
         <div className="form-section owner-section" key={owner.id}>
           <div className="subsection-header">
             <label className="text-field">
@@ -298,20 +447,21 @@ function OwnershipEditor({
             </button>
           </div>
           <NumberSliderField
-            label="Nutzungsbeitrag"
-            value={owner.usagePointBudget}
+            label="Nutzungsbeitrag mtl."
+            value={owner.monthlyUsageContribution}
             min={0}
-            max={100}
-            step={25}
-            unit="Punkte"
-            onChange={(usagePointBudget) =>
+            max={1000}
+            step={10}
+            unit="EUR"
+            onChange={(monthlyUsageContribution) =>
               updateOwners(
                 projectState.ownership.data.owners.map((candidate) =>
                   candidate.id === owner.id
                     ? {
                         ...candidate,
-                        usagePointBudget,
-                        participationTier: usagePointBudget
+                        monthlyUsageContribution,
+                        usagePointBudget: monthlyUsageContribution,
+                        participationTier: monthlyUsageContribution
                       }
                     : candidate
                 )
@@ -339,33 +489,37 @@ function OwnershipEditor({
               )
             }
           />
-          <NumberSliderField
-            label="Anlagebeitrag mtl."
-            value={owner.monthlyCapitalContribution}
-            min={0}
-            max={5000}
-            step={25}
-            unit="EUR"
-            onChange={(monthlyCapitalContribution) =>
-              updateOwners(
-                projectState.ownership.data.owners.map((candidate) =>
-                  candidate.id === owner.id
-                    ? { ...candidate, monthlyCapitalContribution }
-                    : candidate
+          {projectState.strategy.data.capitalShareMode === "manualMonthly" ? (
+            <NumberSliderField
+              label="Anlagebeitrag mtl."
+              value={owner.monthlyCapitalContribution}
+              min={0}
+              max={5000}
+              step={25}
+              unit="EUR"
+              onChange={(monthlyCapitalContribution) =>
+                updateOwners(
+                  projectState.ownership.data.owners.map((candidate) =>
+                    candidate.id === owner.id
+                      ? { ...candidate, monthlyCapitalContribution }
+                      : candidate
+                  )
                 )
-              )
-            }
-          />
+              }
+            />
+          ) : (
+            <SummaryLine
+              label="Anlagebeitrag mtl."
+              value={`${formatMoney(capitalShare?.monthlyCapitalContribution ?? 0)} berechnet`}
+            />
+          )}
           <SummaryLine
-            label="EK-Anteil"
-            value={formatPercent(
-              totalEquity > 0
-                ? (owner.startEquityContribution / totalEquity) * 100
-                : 0
-            )}
+            label="Unternehmensanteil"
+            value={formatPercent(capitalShare?.companySharePct ?? 0)}
           />
         </div>
-      ))}
+        );
+      })}
       <button
         className="icon-button"
         type="button"
@@ -380,6 +534,7 @@ function OwnershipEditor({
               equityContribution: 0,
               startEquityContribution: 0,
               monthlyCapitalContribution: 0,
+              monthlyUsageContribution: 50,
               usagePointBudget: 50,
               ownershipSharePct: 0,
               companySharePct: 0
@@ -795,12 +950,12 @@ function PropertyEditor({
           }
         />
         <NumberSliderField
-          label="Fremdgaeste"
+          label="Fremdgast-Zimmernaechte"
           value={projectState.property.data.guestNightsPerYear}
           min={0}
           max={365}
           step={5}
-          unit="Naechte/Jahr"
+          unit="Zimmernaechte/Jahr"
           onChange={(guestNightsPerYear) =>
             updatePropertyData({
               ...projectState.property.data,
@@ -1350,7 +1505,7 @@ function StrategyEditor({
           }
         />
         <label className="text-field">
-          <span>Nutzungspunkt-Modus</span>
+          <span>Nutzungsrechte</span>
           <select
             aria-label="Punkte Anteilsmodus"
             value={projectState.strategy.data.pointShareMode}
@@ -1361,14 +1516,14 @@ function StrategyEditor({
               })
             }
           >
-            <option value="usage">Nur Nutzungsbeitrag</option>
-            <option value="blended">Nutzung und Unternehmensanteil</option>
-            <option value="tier">Legacy: Nutzungsbeitrag</option>
+            <option value="usage">Aus Nutzungsbeitrag berechnen</option>
+            <option value="blended">Legacy: Mischanteil</option>
+            <option value="tier">Legacy: Nutzungsgewicht</option>
             <option value="equity">Legacy: Unternehmensanteil</option>
           </select>
         </label>
         <NumberSliderField
-          label="Nutzungsgewicht"
+          label="Legacy Nutzungsgewicht"
           value={projectState.strategy.data.pointTierWeight}
           min={0}
           max={100}
@@ -1382,7 +1537,7 @@ function StrategyEditor({
           }
         />
         <NumberSliderField
-          label="Unternehmensgewicht"
+          label="Legacy Unternehmensgewicht"
           value={projectState.strategy.data.pointEquityWeight}
           min={0}
           max={100}
@@ -1406,6 +1561,34 @@ function StrategyEditor({
             updateStrategyData({
               ...projectState.strategy.data,
               appreciationPercentPerYear
+            })
+          }
+        />
+        <NumberSliderField
+          label="Eigennutzung Wochenende"
+          value={projectState.strategy.data.ownerWeekendUsagePct}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(ownerWeekendUsagePct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              ownerWeekendUsagePct
+            })
+          }
+        />
+        <NumberSliderField
+          label="Fremdgaeste Wochenende"
+          value={projectState.strategy.data.guestWeekendUsagePct}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(guestWeekendUsagePct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              guestWeekendUsagePct
             })
           }
         />
@@ -1465,9 +1648,9 @@ function PointRulesEditor({
 
   return (
     <div className="form-section">
-      <h3>Nutzungspunkte</h3>
+      <h3>Punktregeln fuer Zimmernaechte</h3>
       <NumberSliderField
-        label="Punkte je Bett/Jahr"
+        label="Theoretische Punkte je Zimmer/Jahr"
         value={rules.basePointsPerBedPerYear}
         min={0}
         max={1000}
@@ -1478,12 +1661,12 @@ function PointRulesEditor({
         }
       />
       <NumberSliderField
-        label="Basis je Bett/Nacht"
+        label="Basispreis je Zimmernacht"
         value={rules.basePerBedPerNight}
         min={0}
-        max={10}
+        max={200}
         step={0.1}
-        unit="Punkte"
+        unit="EUR-Punkte"
         onChange={(basePerBedPerNight) =>
           updateRules({ ...rules, basePerBedPerNight })
         }
@@ -1517,7 +1700,7 @@ function PointRulesEditor({
         }
       />
       <NumberSliderField
-        label="Wochenende-Faktor"
+        label="Sa/So-Faktor"
         value={rules.weekendMultipliers.satSun}
         min={0}
         max={5}
@@ -1527,6 +1710,34 @@ function PointRulesEditor({
           updateRules({
             ...rules,
             weekendMultipliers: { ...rules.weekendMultipliers, satSun }
+          })
+        }
+      />
+      <NumberSliderField
+        label="Freitag-Faktor"
+        value={rules.weekendMultipliers.fri}
+        min={0}
+        max={5}
+        step={0.1}
+        unit="x"
+        onChange={(fri) =>
+          updateRules({
+            ...rules,
+            weekendMultipliers: { ...rules.weekendMultipliers, fri }
+          })
+        }
+      />
+      <NumberSliderField
+        label="Mo-Do-Faktor"
+        value={rules.weekendMultipliers.monThu}
+        min={0}
+        max={5}
+        step={0.1}
+        unit="x"
+        onChange={(monThu) =>
+          updateRules({
+            ...rules,
+            weekendMultipliers: { ...rules.weekendMultipliers, monThu }
           })
         }
       />
@@ -1835,7 +2046,8 @@ function withDerivedShares(
   return owners.map((owner) => ({
     ...owner,
     equityContribution: owner.startEquityContribution,
-    participationTier: owner.usagePointBudget,
+    usagePointBudget: owner.monthlyUsageContribution,
+    participationTier: owner.monthlyUsageContribution,
     ownershipSharePct:
       totalEquity > 0 ? (owner.startEquityContribution / totalEquity) * 100 : 0,
     companySharePct:
