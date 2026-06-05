@@ -3,6 +3,8 @@ import { migrateVersionedEnvelope } from "../../validation/migrationRunner";
 import { ownershipTemplateSchema } from "./schema";
 import type { OwnershipTemplate } from "./types";
 
+const DEFAULT_MONTHLY_NET_INCOME_AMOUNT = 2900;
+
 export function migrateOwnership(input: unknown): OwnershipTemplate {
   const migrated = migrateVersionedEnvelope(
     normalizeOwnership(input),
@@ -42,13 +44,17 @@ function normalizeOwnership(input: unknown): unknown {
     const monthlyUsageContribution = numberOrZero(
       record.monthlyUsageContribution ?? record.usagePointBudget ?? record.participationTier
     );
+    const monthlyNetIncomeAmount = positiveNumberOrDefault(
+      record.monthlyNetIncomeAmount,
+      DEFAULT_MONTHLY_NET_INCOME_AMOUNT
+    );
 
     return {
       ...record,
       startEquityContribution,
       equityContribution: startEquityContribution,
       monthlyUsageContribution,
-      monthlyNetIncomeAmount: numberOrZero(record.monthlyNetIncomeAmount),
+      monthlyNetIncomeAmount,
       usagePointBudget,
       participationTier: usagePointBudget,
       monthlyCapitalContribution: numberOrZero(
@@ -100,4 +106,10 @@ function normalizeOwnership(input: unknown): unknown {
 
 function numberOrZero(value: unknown): number {
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function positiveNumberOrDefault(value: unknown, fallback: number): number {
+  return typeof value === "number" && Number.isFinite(value) && value > 0
+    ? value
+    : fallback;
 }

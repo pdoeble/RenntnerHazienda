@@ -28,7 +28,7 @@ import { formatDateTime } from "../../utils/dates";
 import { formatMoney, formatPercent } from "../../utils/money";
 import { HouseComparisonEditor } from "./HouseComparisonEditor";
 
-export type InputPanelTab = "project" | TemplateKind | "houseComparison";
+export type InputPanelTab = "project" | "rules" | TemplateKind | "houseComparison";
 
 export type ProjectPanelProps = {
   projectName: string;
@@ -61,6 +61,10 @@ type InputTabsProps = {
   onExportTemplate: (kind: TemplateKind) => void;
 };
 
+function tabLabel(kind: TemplateKind): string {
+  return visibleInputModules.find((module) => module.kind === kind)?.label ?? kind;
+}
+
 export function InputTabs({
   projectState,
   calculationResult,
@@ -74,22 +78,29 @@ export function InputTabs({
 }: InputTabsProps) {
   const visibleTabs = [
     { kind: "project" as const, label: "Projekt" },
-    ...visibleInputModules.map((module) => ({
-      kind: module.kind as InputPanelTab,
-      label: module.label
-    })),
-    { kind: "houseComparison" as const, label: "Hausvergleich" }
+    { kind: "ownership" as const, label: tabLabel("ownership") },
+    { kind: "rules" as const, label: "Regeln" },
+    { kind: "legalForm" as const, label: tabLabel("legalForm") },
+    { kind: "houseComparison" as const, label: "Hausvergleich" },
+    { kind: "property" as const, label: tabLabel("property") },
+    { kind: "financing" as const, label: tabLabel("financing") },
+    { kind: "strategy" as const, label: tabLabel("strategy") },
+    { kind: "opex" as const, label: tabLabel("opex") }
   ];
   const activeModule = visibleInputModules.find(
     (module) => module.kind === selectedKind
   );
   const templateKind: TemplateKind =
-    selectedKind === "houseComparison" || selectedKind === "project"
+    selectedKind === "houseComparison" ||
+    selectedKind === "project" ||
+    selectedKind === "rules"
       ? "property"
       : selectedKind;
   const activeTemplate = projectState[templateKind];
   const validation =
-    selectedKind === "project" ? undefined : activeModule?.validate(activeTemplate);
+    selectedKind === "project" || selectedKind === "rules"
+      ? undefined
+      : activeModule?.validate(activeTemplate);
   const validationErrors =
     validation?.diagnostics.filter((diagnostic) => diagnostic.severity === "error") ??
     [];
@@ -116,6 +127,8 @@ export function InputTabs({
           <p className="eyebrow">
             {selectedKind === "project"
               ? "Projekt"
+              : selectedKind === "rules"
+                ? "Regeln"
               : selectedKind === "houseComparison"
                 ? "Hausvergleich"
                 : activeModule?.label}
@@ -123,6 +136,8 @@ export function InputTabs({
           <h2>
             {selectedKind === "project"
               ? projectPanel.projectName
+              : selectedKind === "rules"
+                ? "Berechnungsregeln"
               : selectedKind === "houseComparison"
                 ? "Hausvergleich"
                 : activeTemplate.name}
@@ -130,10 +145,12 @@ export function InputTabs({
           <span className="muted">
             {selectedKind === "project"
               ? `Berechnet: ${formatDateTime(projectPanel.calculatedAt)}`
+              : selectedKind === "rules"
+                ? "Regeln schreiben in Immobilien- und Strategieannahmen"
               : `Template: ${activeTemplate.id}`}
           </span>
         </div>
-        {selectedKind === "project" ? null : (
+        {selectedKind === "project" || selectedKind === "rules" ? null : (
           <div className="button-row">
             <TemplateLoadSelect
               templateName={activeTemplate.name}
@@ -295,6 +312,44 @@ function ProjectLoadSelect({
   );
 }
 
+function RulesEditor({
+  projectState,
+  onTemplateChange
+}: {
+  projectState: ProjectState;
+  onTemplateChange: (
+    kind: TemplateKind,
+    template: TemplateEnvelope<unknown>
+  ) => void;
+}) {
+  function updatePropertyData(data: ProjectState["property"]["data"]) {
+    onTemplateChange("property", {
+      ...projectState.property,
+      data
+    });
+  }
+
+  function updateStrategyData(data: ProjectState["strategy"]["data"]) {
+    onTemplateChange("strategy", {
+      ...projectState.strategy,
+      data
+    });
+  }
+
+  return (
+    <div className="form-grid">
+      <PointRulesEditor
+        projectState={projectState}
+        updatePropertyData={updatePropertyData}
+      />
+      <CapitalAndUsageRulesEditor
+        projectState={projectState}
+        updateStrategyData={updateStrategyData}
+      />
+    </div>
+  );
+}
+
 function InputTabBody({
   kind,
   projectState,
@@ -314,6 +369,13 @@ function InputTabBody({
   switch (kind) {
     case "project":
       return <ProjectEditor projectPanel={projectPanel} />;
+    case "rules":
+      return (
+        <RulesEditor
+          projectState={projectState}
+          onTemplateChange={onTemplateChange}
+        />
+      );
     case "houseComparison":
       return (
         <HouseComparisonEditor
@@ -552,7 +614,7 @@ function OwnershipEditor({
               startEquityContribution: 0,
               monthlyCapitalContribution: 0,
               monthlyUsageContribution: 50,
-              monthlyNetIncomeAmount: 0,
+              monthlyNetIncomeAmount: 2900,
               usagePointBudget: 50,
               ownershipSharePct: 0,
               companySharePct: 0
@@ -1102,10 +1164,6 @@ function PropertyEditor({
         projectState={projectState}
         updatePropertyData={updatePropertyData}
       />
-      <PointRulesEditor
-        projectState={projectState}
-        updatePropertyData={updatePropertyData}
-      />
     </div>
   );
 }
@@ -1420,96 +1478,17 @@ function FinancingEditor({
   );
 }
 
-function StrategyEditor({
+function CapitalAndUsageRulesEditor({
   projectState,
-  onTemplateChange
+  updateStrategyData
 }: {
   projectState: ProjectState;
-  onTemplateChange: (
-    kind: TemplateKind,
-    template: TemplateEnvelope<unknown>
-  ) => void;
+  updateStrategyData: (data: ProjectState["strategy"]["data"]) => void;
 }) {
-  function updateStrategyData(data: ProjectState["strategy"]["data"]) {
-    onTemplateChange("strategy", {
-      ...projectState.strategy,
-      data
-    });
-  }
-
   return (
-    <div className="form-grid">
+    <>
       <div className="form-section">
-        <h3>Liquiditaetsziele</h3>
-        <NumberSliderField
-          label="Reserve-Monate"
-          value={projectState.strategy.data.reserveMonths}
-          min={0}
-          max={24}
-          step={1}
-          unit="Monate"
-          onChange={(reserveMonths) =>
-            updateStrategyData({ ...projectState.strategy.data, reserveMonths })
-          }
-        />
-        <NumberSliderField
-          label="Mindestliquiditaet"
-          value={projectState.strategy.data.minimumLiquidityAmount}
-          min={0}
-          max={250000}
-          step={1000}
-          unit="EUR"
-          onChange={(minimumLiquidityAmount) =>
-            updateStrategyData({
-              ...projectState.strategy.data,
-              minimumLiquidityAmount
-            })
-          }
-        />
-        <NumberSliderField
-          label="Zielliquiditaet"
-          value={projectState.strategy.data.targetLiquidityAmount}
-          min={0}
-          max={500000}
-          step={1000}
-          unit="EUR"
-          onChange={(targetLiquidityAmount) =>
-            updateStrategyData({
-              ...projectState.strategy.data,
-              targetLiquidityAmount
-            })
-          }
-        />
-        <NumberSliderField
-          label="Ziel-EK-Quote"
-          value={projectState.strategy.data.targetEquityRatioPct}
-          min={0}
-          max={100}
-          step={1}
-          unit="%"
-          onChange={(targetEquityRatioPct) =>
-            updateStrategyData({
-              ...projectState.strategy.data,
-              targetEquityRatioPct
-            })
-          }
-        />
-        <label className="checkbox-field">
-          <input
-            type="checkbox"
-            checked={projectState.strategy.data.rentOffsetsOwnerContributions}
-            onChange={(event) =>
-              updateStrategyData({
-                ...projectState.strategy.data,
-                rentOffsetsOwnerContributions: event.currentTarget.checked
-              })
-            }
-          />
-          <span>Mieteinnahmen reduzieren Eignerbeitraege</span>
-        </label>
-      </div>
-      <div className="form-section">
-        <h3>Kapital- und Nutzungssystem</h3>
+        <h3>Anteilsregeln</h3>
         <label className="text-field">
           <span>Kapitalanteilsmodus</span>
           <select
@@ -1618,6 +1597,9 @@ function StrategyEditor({
             })
           }
         />
+      </div>
+      <div className="form-section">
+        <h3>Nutzungs- und Belegungsregeln</h3>
         <NumberSliderField
           label="Wertsteigerung"
           value={projectState.strategy.data.appreciationPercentPerYear}
@@ -1730,6 +1712,98 @@ function StrategyEditor({
             })
           }
         />
+      </div>
+    </>
+  );
+}
+
+function StrategyEditor({
+  projectState,
+  onTemplateChange
+}: {
+  projectState: ProjectState;
+  onTemplateChange: (
+    kind: TemplateKind,
+    template: TemplateEnvelope<unknown>
+  ) => void;
+}) {
+  function updateStrategyData(data: ProjectState["strategy"]["data"]) {
+    onTemplateChange("strategy", {
+      ...projectState.strategy,
+      data
+    });
+  }
+
+  return (
+    <div className="form-grid">
+      <div className="form-section">
+        <h3>Liquiditaetsziele</h3>
+        <NumberSliderField
+          label="Reserve-Monate"
+          value={projectState.strategy.data.reserveMonths}
+          min={0}
+          max={24}
+          step={1}
+          unit="Monate"
+          onChange={(reserveMonths) =>
+            updateStrategyData({ ...projectState.strategy.data, reserveMonths })
+          }
+        />
+        <NumberSliderField
+          label="Mindestliquiditaet"
+          value={projectState.strategy.data.minimumLiquidityAmount}
+          min={0}
+          max={250000}
+          step={1000}
+          unit="EUR"
+          onChange={(minimumLiquidityAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              minimumLiquidityAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="Zielliquiditaet"
+          value={projectState.strategy.data.targetLiquidityAmount}
+          min={0}
+          max={500000}
+          step={1000}
+          unit="EUR"
+          onChange={(targetLiquidityAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              targetLiquidityAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="Ziel-EK-Quote"
+          value={projectState.strategy.data.targetEquityRatioPct}
+          min={0}
+          max={100}
+          step={1}
+          unit="%"
+          onChange={(targetEquityRatioPct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              targetEquityRatioPct
+            })
+          }
+        />
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            checked={projectState.strategy.data.rentOffsetsOwnerContributions}
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                rentOffsetsOwnerContributions: event.currentTarget.checked
+              })
+            }
+          />
+          <span>Mieteinnahmen reduzieren Eignerbeitraege</span>
+        </label>
       </div>
       <div className="form-section">
         <h3>Entscheidungs-Pruefpunkte</h3>

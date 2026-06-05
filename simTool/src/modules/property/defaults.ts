@@ -90,7 +90,7 @@ export const defaultPropertyTemplate: PropertyTemplate = {
     },
     pointRules: {
       basePointsPerBedPerYear: 365,
-      basePerBedPerNight: 1,
+      basePerBedPerNight: 6,
       weekendMultipliers: {
         monThu: 1,
         fri: 1.2,

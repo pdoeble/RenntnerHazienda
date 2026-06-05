@@ -49,7 +49,7 @@ export const propertyEnergySchema = z
 export const propertyPointRulesSchema = z
   .object({
     basePointsPerBedPerYear: nonNegativeNumberSchema.default(365),
-    basePerBedPerNight: nonNegativeNumberSchema.default(1),
+    basePerBedPerNight: nonNegativeNumberSchema.default(6),
     weekendMultipliers: z
       .object({
         monThu: nonNegativeNumberSchema.default(1),
@@ -71,7 +71,7 @@ export const propertyPointRulesSchema = z
   .strict()
   .default({
     basePointsPerBedPerYear: 365,
-    basePerBedPerNight: 1,
+    basePerBedPerNight: 6,
     weekendMultipliers: { monThu: 1, fri: 1.2, satSun: 1.5 },
     seasonMultipliers: { winterSki: 1.8, summer: 1.4, spring: 1, autumn: 1 }
   });

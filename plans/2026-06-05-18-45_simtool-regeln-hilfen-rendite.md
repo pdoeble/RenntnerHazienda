@@ -27,9 +27,9 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 ## Progress
 - [x] (2026-06-05 18:45) PID `768` beenden und Dev-Server-Logs entfernen.
 - [x] (2026-06-05 18:45) Worktree vor Umsetzung pruefen.
-- [ ] (2026-06-05 18:45) ExecPlan-Datei anlegen.
-- [ ] (2026-06-05 18:45) Neuen linken Tab `Regeln` einbauen.
-- [ ] (2026-06-05 18:45) Punkt- und Einkommensdefaults sowie Migration anpassen.
+- [x] (2026-06-05 18:45) ExecPlan-Datei anlegen.
+- [x] (2026-06-05 18:45) Neuen linken Tab `Regeln` einbauen.
+- [x] (2026-06-05 18:45) Punkt- und Einkommensdefaults sowie Migration anpassen.
 - [ ] (2026-06-05 18:45) Eingabe-Hilfen mit Formeln ausbauen.
 - [ ] (2026-06-05 18:45) 25-Jahres-Renditeansicht in `Mein Anteil` ergaenzen.
 - [ ] (2026-06-05 18:45) Rechtsform-Kostenprofile mit Quellenstatus ergaenzen.
