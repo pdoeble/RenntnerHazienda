@@ -371,6 +371,54 @@ describe("calculation pipeline", () => {
     expect(firstOwner?.totalMonthlyContribution).toBeGreaterThan(0);
   });
 
+  it("keeps non-diluting capital contributions out of company shares", () => {
+    const project = projectFixture();
+    project.strategy.data.capitalShareMode = "manualMonthly";
+    project.strategy.data.manualCapitalContributionsAffectCompanyShare = false;
+    project.ownership.data.owners = project.ownership.data.owners.map((owner) =>
+      owner.id === "phil"
+        ? { ...owner, monthlyCapitalContribution: 1000 }
+        : owner
+    );
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+    const phil = result.capitalShares.owners.find(
+      (owner) => owner.ownerId === "phil"
+    );
+
+    expect(phil?.companySharePct).toBeCloseTo(17.7778, 4);
+    expect(phil?.nonDilutingCapitalValue).toBeGreaterThan(0);
+    expect(
+      result.diagnostics.some(
+        (diagnostic) =>
+          diagnostic.id === "capital-shares.manual-capital-no-share-effect"
+      )
+    ).toBe(true);
+  });
+
+  it("lets manual capital contributions affect company shares when enabled", () => {
+    const project = projectFixture();
+    project.strategy.data.capitalShareMode = "manualMonthly";
+    project.strategy.data.manualCapitalContributionsAffectCompanyShare = true;
+    project.ownership.data.owners = project.ownership.data.owners.map((owner) =>
+      owner.id === "phil"
+        ? { ...owner, monthlyCapitalContribution: 1000 }
+        : owner
+    );
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+    const phil = result.capitalShares.owners.find(
+      (owner) => owner.ownerId === "phil"
+    );
+
+    expect(phil?.companySharePct).toBeGreaterThan(17.7778);
+    expect(phil?.nonDilutingCapitalValue).toBe(0);
+  });
+
   it("can offset cost contributions with rental income while keeping principal as investment", () => {
     const project = projectFixture();
     project.property.data.expectedMonthlyRent = 4500;

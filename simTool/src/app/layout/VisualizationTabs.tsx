@@ -216,6 +216,14 @@ function MyShareView({ result }: { result: CalculationResult }) {
             "Kapitalruecklage / Anlage mtl.",
             `${formatMoney(capitalShareOwner?.monthlyCapitalContribution ?? 0)}/Monat`
           ],
+          [
+            "Anteilswirksamer Kapitalwert",
+            formatMoney(capitalShareOwner?.shareEffectiveCapitalValue ?? 0)
+          ],
+          [
+            "Nicht verwaessernder Kapitalwert",
+            formatMoney(capitalShareOwner?.nonDilutingCapitalValue ?? 0)
+          ],
           ["Kostenbeitrag mtl.", `${formatMoney(monthlyCostContribution)}/Monat`],
           [
             "Nutzungsentgelt mtl.",
@@ -1138,7 +1146,11 @@ const HELP_TEXTS: Record<string, string> = {
   "Umsatzsteuer-Matrix":
     "Die Umsatzsteuer-Matrix markiert je Leistungsart, was steuerlich zu pruefen ist. Offene Felder sind bewusst keine Steuerentscheidung.",
   "Kapitalruecklage / Anlage mtl.":
-    "Diese Zahlung ist Vermoegenszufuehrung. Ob sie Unternehmensanteile aendert oder als Ruecklage/Darlehen laeuft, muss vertraglich festgelegt sein."
+    "Diese Zahlung ist Vermoegenszufuehrung. Ob sie Unternehmensanteile aendert oder als Ruecklage/Darlehen laeuft, muss vertraglich festgelegt sein.",
+  "Anteilswirksamer Kapitalwert":
+    "Dieser Wert ist die aufgezinste Kapitalbasis, die in der App tatsaechlich den Unternehmensanteil bestimmt.",
+  "Nicht verwaessernder Kapitalwert":
+    "Dieser Wert zeigt Kapitalzufuehrungen, die wirtschaftlich sichtbar sind, aber die Unternehmensanteile nicht veraendern."
 };
 
 function ChartFrame({ children }: { children: ReactNode }) {

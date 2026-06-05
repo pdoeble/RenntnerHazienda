@@ -48,8 +48,8 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - [x] (2026-06-05 16:35) Mittelherkunft und Mittelverwendung modelliert.
 - [x] (2026-06-05 16:35) Erwerbskostenmodell fuer Oesterreich in die Mittelverwendung ueberfuehrt.
 - [x] (2026-06-05 17:05) Zahlungsklassen und Buchungslogik ergaenzt.
-- [ ] (2026-06-05 15:45) Unternehmensanteile von Nutzungsentgelt, Kostenumlage und Darlehen trennen.
-- [ ] (2026-06-05 15:45) Beitraege und `Mein Anteil` fachlich umbauen.
+- [x] (2026-06-05 17:35) Unternehmensanteile von Nutzungsentgelt, Kostenumlage und Darlehen getrennt; Anteilsschalter fuer Tilgung und Kapitalruecklage ergaenzt.
+- [x] (2026-06-05 17:35) Beitraege und `Mein Anteil` fachlich um anteilswirksamen und nicht verwaessernden Kapitalwert ergaenzt.
 - [x] (2026-06-05 16:35) Belegung auf Zimmernaechte, Eigennutzung und Fremdvermietung im Grundmodell umgebaut.
 - [x] (2026-06-05 16:35) Eigennutzungswert mit Kostenuntergrenze, Marktwertverdraengung und Hybridregel ergaenzt.
 - [x] (2026-06-05 16:35) Bankkonto-Zahlungsfluss, Ergebnisrechnung und Vermoegensuebersicht getrennt.
@@ -111,7 +111,7 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - Wiki und Beraterdokument auf diese Kernlogiken aktualisiert.
 - `npm run lint`, `npm run typecheck` und `npm test` erfolgreich.
 - Offen:
-  - Vollstaendige Anteilsklassen-Logik aus Zahlungsklassen, Kennzahlenregister, Build/Sync und Abschlussarchivierung.
+  - Kennzahlenregister, Build/Sync und Abschlussarchivierung.
 - Beim naechsten Mal verbessern:
   - Nach jedem Commit dokumentieren, welche App-, Test- und Wiki-Bereiche geaendert wurden.
 

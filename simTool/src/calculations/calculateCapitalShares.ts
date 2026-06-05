@@ -15,6 +15,10 @@ export function calculateCapitalShares(
   const valuationInterestPct = snapshot.strategy.data.capitalValuationInterestPct;
   const annualRate = valuationInterestPct / 100;
   const mode = snapshot.strategy.data.capitalShareMode;
+  const scheduledPrincipalAffectsCompanyShare =
+    snapshot.strategy.data.scheduledPrincipalAffectsCompanyShare;
+  const manualCapitalContributionsAffectCompanyShare =
+    snapshot.strategy.data.manualCapitalContributionsAffectCompanyShare;
   const owners = snapshot.ownership.data.owners.map((owner) => {
     const startEquitySharePct = calculateOwnerEquitySharePct(snapshot, owner.id);
     const scheduledPrincipalContribution =
@@ -31,7 +35,7 @@ export function calculateCapitalShares(
       termMonths > 0 ? scheduledPrincipalContribution / termMonths : 0;
     const startEquityFutureValue =
       owner.startEquityContribution * compoundFactor(annualRate, termMonths);
-    const monthlyFutureValue =
+    const monthlyFutureValueRaw =
       mode === "scheduledPrincipal"
         ? debt.monthlyDebtService
             .slice(0, termMonths)
@@ -49,6 +53,18 @@ export function calculateCapitalShares(
             annualRate,
             termMonths
           );
+    const monthlyAffectsCompanyShare =
+      mode === "scheduledPrincipal"
+        ? scheduledPrincipalAffectsCompanyShare
+        : manualCapitalContributionsAffectCompanyShare;
+    const shareEffectiveMonthlyValue = monthlyAffectsCompanyShare
+      ? monthlyFutureValueRaw
+      : 0;
+    const nonDilutingCapitalValue = monthlyAffectsCompanyShare
+      ? 0
+      : monthlyFutureValueRaw;
+    const shareEffectiveCapitalValue =
+      startEquityFutureValue + shareEffectiveMonthlyValue;
 
     return {
       ownerId: owner.id,
@@ -58,9 +74,9 @@ export function calculateCapitalShares(
       monthlyCapitalContribution: roundMoney(averageMonthlyCapitalContribution),
       monthlyUsageContribution: roundMoney(owner.monthlyUsageContribution),
       usagePointBudget: owner.usagePointBudget,
-      capitalValueAtLoanEnd: roundMoney(
-        startEquityFutureValue + monthlyFutureValue
-      ),
+      shareEffectiveCapitalValue: roundMoney(shareEffectiveCapitalValue),
+      nonDilutingCapitalValue: roundMoney(nonDilutingCapitalValue),
+      capitalValueAtLoanEnd: roundMoney(shareEffectiveCapitalValue),
       companySharePct: 0
     } satisfies CapitalShareOwnerResult;
   });
@@ -83,7 +99,32 @@ export function calculateCapitalShares(
     valuationInterestPct,
     totalCapitalValueAtLoanEnd: roundMoney(totalCapitalValueAtLoanEnd),
     owners: ownersWithShares,
-    diagnostics: []
+    diagnostics: [
+      ...(!scheduledPrincipalAffectsCompanyShare &&
+      mode === "scheduledPrincipal"
+        ? [
+            {
+              id: "capital-shares.scheduled-principal-no-share-effect",
+              severity: "info" as const,
+              domain: "ownership" as const,
+              message:
+                "Tilgung wird als nicht verwaessernde Kapitalzufuehrung gezeigt und veraendert Unternehmensanteile nicht."
+            }
+          ]
+        : []),
+      ...(!manualCapitalContributionsAffectCompanyShare &&
+      mode === "manualMonthly"
+        ? [
+            {
+              id: "capital-shares.manual-capital-no-share-effect",
+              severity: "info" as const,
+              domain: "ownership" as const,
+              message:
+                "Manuelle Kapitalruecklagen werden als nicht verwaessernde Kapitalzufuehrung gezeigt und veraendern Unternehmensanteile nicht."
+            }
+          ]
+        : [])
+    ]
   };
 }
 

@@ -184,6 +184,8 @@ export type CapitalShareOwnerResult = {
   monthlyCapitalContribution: number;
   monthlyUsageContribution: number;
   usagePointBudget: number;
+  shareEffectiveCapitalValue: number;
+  nonDilutingCapitalValue: number;
   capitalValueAtLoanEnd: number;
   companySharePct: number;
 };

@@ -16,7 +16,7 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | Nr. | Erkenntnis | Quelle | App-Ziel | Wiki-Ziel | Status | Pruefhinweis |
 |---:|---|---|---|---|---|---|
 | 1 | Sichtbare Fachsprache muss deutsch sein. | Nutzer / Erstplan | UI-Labels, Diagnosen, Hilfen | alle Wiki-Dateien | umgesetzt im ersten Block | Resttreffer nur interne Dateinamen |
-| 2 | Zahlungen muessen nach rechtlicher und bilanzieller Wirkung getrennt werden. | Bericht 1 | Zahlungsklassen, Buchungslogik | `04_ownership.md`, `05_finance.md`, `08_calculation_logic.md` | umgesetzt | Zahlungsklassen im Datenmodell; Beispielbuchungen als Arbeitsmodell in der App |
+| 2 | Zahlungen muessen nach rechtlicher und bilanzieller Wirkung getrennt werden. | Bericht 1 | Zahlungsklassen, Buchungslogik | `04_ownership.md`, `05_finance.md`, `08_calculation_logic.md` | umgesetzt | Zahlungsklassen im Datenmodell; Beispielbuchungen und Anteilsschalter fuer anteilswirksame Kapitalzufuehrung in der App |
 | 3 | Mittelherkunft und Mittelverwendung muessen saldieren. | Bericht 1 und 2 | Finanzierungsberechnung | `05_finance.md`, `08_calculation_logic.md` | umgesetzt | harte Diagnose bei Luecke/Ueberschuss |
 | 4 | Objektsicht, Rechtstraegersicht, Mitgliedersicht und Banksicht sind zu trennen. | Bericht 2 | Ergebnisstruktur, UI-Tabs | `01_overall.md`, `08_calculation_logic.md` | umgesetzt im Grundmodell | weitere UI-Feingliederung moeglich |
 | 5 | Netto-, Umsatzsteuer- und Bruttowerte duerfen nicht vermischt werden. | Bericht 2 | Umsatzsteuer-Matrix, Erwerbskosten | `03_tax.md`, `08_calculation_logic.md` | umgesetzt | Mittelverwendung fuehrt Netto/USt/Brutto; USt-Matrix markiert offene Steuerfragen |
@@ -42,7 +42,8 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | `2b311ed` | Konsolidierter Ausfuehrungsplan und Auditstruktur | Dokumentation |
 | `f425ed2` | Deutsche App-Begriffe, Mittelherkunft/-verwendung, Bankkonto-Zahlungsfluss, Banksicht, Eigennutzungswert, Hilfepopover und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 | `f208636` | Buchungslogik, Umsatzsteuer-Matrix und Rechtsform-Pruefgatter in App und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
-| naechster Commit | Persoenliche Belastungsquote, Banksicht-Stressfaelle und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| `6aab03c` | Persoenliche Belastungsquote, Banksicht-Stressfaelle und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| naechster Commit | Anteilsschalter fuer Tilgung und Kapitalruecklage mit getrenntem nicht verwaessernden Kapitalwert | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 
 ## Arbeitsregel
 

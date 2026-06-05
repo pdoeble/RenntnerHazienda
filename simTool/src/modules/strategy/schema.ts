@@ -57,6 +57,8 @@ export const strategyDataSchema = z
     pointTierWeight: percentSchema.default(50),
     pointEquityWeight: percentSchema.default(50),
     capitalShareMode: capitalShareModeSchema.default("scheduledPrincipal"),
+    scheduledPrincipalAffectsCompanyShare: z.boolean().default(true),
+    manualCapitalContributionsAffectCompanyShare: z.boolean().default(true),
     capitalValuationInterestPct: z.number().finite().default(2),
     appreciationPercentPerYear: z.number().finite().default(2),
     ownerWeekendUsagePct: percentSchema.default(80),

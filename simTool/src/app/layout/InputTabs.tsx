@@ -1541,6 +1541,37 @@ function StrategyEditor({
             })
           }
         />
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            checked={projectState.strategy.data.scheduledPrincipalAffectsCompanyShare}
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                scheduledPrincipalAffectsCompanyShare:
+                  event.currentTarget.checked
+              })
+            }
+          />
+          <span>Tilgung veraendert Unternehmensanteile</span>
+        </label>
+        <label className="checkbox-field">
+          <input
+            type="checkbox"
+            checked={
+              projectState.strategy.data
+                .manualCapitalContributionsAffectCompanyShare
+            }
+            onChange={(event) =>
+              updateStrategyData({
+                ...projectState.strategy.data,
+                manualCapitalContributionsAffectCompanyShare:
+                  event.currentTarget.checked
+              })
+            }
+          />
+          <span>Kapitalruecklage / Anlage veraendert Unternehmensanteile</span>
+        </label>
         <label className="text-field">
           <span>Nutzungsrechte</span>
           <select

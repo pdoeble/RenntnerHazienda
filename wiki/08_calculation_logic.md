@@ -239,6 +239,8 @@ Das Modell trennt Eigentums-/Unternehmensanteile von Nutzungsrechten. Start-EK u
 ### Modus `scheduledPrincipal`
 Im Default-Modus wird die laufende Tilgung des Bankdarlehens als Kapitalwirkung interpretiert. Die Tilgung wird im Verhältnis der Start-EK-Quoten auf die Eigner verteilt.
 
+Seit Projektstand 2026-06-05 steuert der Schalter `Tilgung verändert Unternehmensanteile`, ob diese Kapitalwirkung tatsächlich in den Unternehmensanteil einfließt. Wenn der Schalter aus ist, wird die Tilgung als nicht verwässernde Kapitalzuführung ausgewiesen und verändert die Beteiligungstabelle nicht.
+
 ```text
 Start-EK-Quote Eigner =
   Start-EK Eigner / Summe Start-EK * 100
@@ -260,6 +262,8 @@ Unternehmensanteil Eigner =
 
 ### Modus `manualMonthly`
 Im manuellen Modus wird nicht die Banktilgung verteilt. Stattdessen zählt die je Eigner eingetragene monatliche Kapitalruecklage / Anlage zum Unternehmensanteil, wenn diese Beteiligungswirkung in der Struktur so festgelegt ist.
+
+Der Schalter `Kapitalruecklage / Anlage verändert Unternehmensanteile` legt fest, ob die manuelle monatliche Zahlung anteilswirksam ist. Wenn der Schalter aus ist, zeigt die App den Kapitalwert separat als nicht verwässernde Kapitalzuführung.
 
 ### Quelle
 - Quelle: Kapitalanteilsberechnung

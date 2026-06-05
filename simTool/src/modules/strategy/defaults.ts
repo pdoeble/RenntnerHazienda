@@ -26,6 +26,8 @@ export const defaultStrategyTemplate: StrategyTemplate = {
     pointTierWeight: 50,
     pointEquityWeight: 50,
     capitalShareMode: "scheduledPrincipal",
+    scheduledPrincipalAffectsCompanyShare: true,
+    manualCapitalContributionsAffectCompanyShare: true,
     capitalValuationInterestPct: 2,
     appreciationPercentPerYear: 2,
     ownerWeekendUsagePct: 80,

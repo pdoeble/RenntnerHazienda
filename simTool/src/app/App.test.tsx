@@ -91,6 +91,12 @@ describe("App shell", () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("tab", { name: "Strategie" }));
+    expect(
+      screen.getByText("Tilgung veraendert Unternehmensanteile")
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Kapitalruecklage / Anlage veraendert Unternehmensanteile")
+    ).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Zielliquiditaet"), {
       target: { value: "60000" }
     });
