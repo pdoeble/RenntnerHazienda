@@ -62,8 +62,9 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - [x] (2026-06-05 16:35) Beraterdokument begrifflich aktualisiert.
 - [x] (2026-06-05 16:35) Tests ergaenzt; `lint`, `typecheck` und `test` erfolgreich.
 - [x] (2026-06-05 16:35) Aenderungen in ersten sinnvollen Abschnitten committed.
-- [ ] (2026-06-05 15:45) Kein Push ohne separate Beauftragung.
-- [ ] (2026-06-05 15:45) Plan nach Abschluss nach `plans/Archive/2026-06-05-15-45_simtool-konsolidierte-finanzierungslogik.md` verschieben.
+- [x] (2026-06-05 18:30) Kein Push ohne separate Beauftragung.
+- [x] (2026-06-05 18:30) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausgefuehrt.
+- [x] (2026-06-05 18:30) Plan nach Abschluss nach `plans/Archive/2026-06-05-15-45_simtool-konsolidierte-finanzierungslogik.md` verschieben.
 
 ## Ueberraschungen und Erkenntnisse
 
@@ -110,8 +111,10 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 - App-Grundmodell fuer deutsche Begriffe, Mittelherkunft/-verwendung, Bankkonto-Zahlungsfluss, Banksicht, Eigennutzungswert und Hilfepopover umgesetzt.
 - Wiki und Beraterdokument auf diese Kernlogiken aktualisiert.
 - `npm run lint`, `npm run typecheck` und `npm test` erfolgreich.
+- Buchungslogik, Umsatzsteuer-Matrix, Rechtsform-Pruefgatter, Banksicht-Stressfaelle, persoenliche Belastungsquote, Anteilsschalter und Kennzahlenregister umgesetzt.
+- `npm run lint`, `npm run typecheck`, `npm test` und `npm run build` erfolgreich.
 - Offen:
-  - Build/Sync und Abschlussarchivierung.
+  - Kein fachlicher Rest aus diesem Plan; Push bleibt ohne separate Beauftragung aus.
 - Beim naechsten Mal verbessern:
   - Nach jedem Commit dokumentieren, welche App-, Test- und Wiki-Bereiche geaendert wurden.
 
@@ -197,79 +200,79 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 ### Meilenstein 1 - Konsolidierten Plan und Auditstruktur
 
 - [x] Plan-Datei anlegen.
-- [ ] Audit-Datei anlegen.
-- [ ] Beide Berichte abschnittsweise inventarisieren.
-- [ ] App- und Wiki-Zielstellen je Erkenntnis dokumentieren.
-- [ ] Quellenstatus je Erkenntnis markieren.
+- [x] Audit-Datei anlegen.
+- [x] Beide Berichte abschnittsweise inventarisieren.
+- [x] App- und Wiki-Zielstellen je Erkenntnis dokumentieren.
+- [x] Quellenstatus je Erkenntnis markieren.
 
 ### Meilenstein 2 - Deutsche Fachsprache und Hilfen
 
-- [ ] Sichtbare App-Begriffe inventarisieren.
-- [ ] Englische Fachbegriffe ersetzen.
-- [ ] Uneindeutige alte Begriffe ersetzen.
-- [ ] `HelpPopover` erstellen.
-- [ ] Hilfetextregister erstellen.
-- [ ] Hilfen fuer Mittelherkunft, Zahlungsklassen, Nutzung, Bankkonto, Banksicht, Umsatzsteuer und Rechtsform schreiben.
-- [ ] UI-Tests fuer Hilfe und deutsche Begriffe ergaenzen.
+- [x] Sichtbare App-Begriffe inventarisieren.
+- [x] Englische Fachbegriffe ersetzen.
+- [x] Uneindeutige alte Begriffe ersetzen.
+- [x] `HelpPopover` erstellen.
+- [x] Hilfetextregister erstellen.
+- [x] Hilfen fuer Mittelherkunft, Zahlungsklassen, Nutzung, Bankkonto, Banksicht, Umsatzsteuer und Rechtsform schreiben.
+- [x] UI-Tests fuer Hilfe und deutsche Begriffe ergaenzen.
 
 ### Meilenstein 3 - Vier-Sichten-Modell und Kennungen
 
-- [ ] Projektmodell additiv um Objektkennung, Fallkennung, Szenariokennung, Annahmenquelle und Waehrung ergaenzen.
-- [ ] Alte Projekte ohne diese Felder migrieren.
-- [ ] Ergebnisstruktur nach Objektsicht, Rechtstraegersicht, Mitgliedersicht und Banksicht gruppieren.
-- [ ] UI mit Sichtbegriffen strukturieren.
+- [x] Projektmodell additiv um Objektkennung, Fallkennung, Szenariokennung, Annahmenquelle und Waehrung ergaenzen.
+- [x] Alte Projekte ohne diese Felder migrieren.
+- [x] Ergebnisstruktur nach Objektsicht, Rechtstraegersicht, Mitgliedersicht und Banksicht gruppieren.
+- [x] UI mit Sichtbegriffen strukturieren.
 
 ### Meilenstein 4 - Erwerbskosten und Mittelverwendung
 
-- [ ] Mittelverwendung fuer Kaufpreis, Grunderwerbsteuer, Grundbuch, Pfandrecht, Eingabegebuehr, Makler, Notar, Beglaubigung, technische Pruefung, Renovierung, Einrichtung, Finanzierungsgebuehren, Sicherheitspuffer, Anfangsliquiditaet, Anfangsruecklage und Gruendungskosten modellieren.
-- [ ] Oesterreichische Standardannahmen editierbar setzen.
-- [ ] Netto-, Umsatzsteuer- und Bruttowerte getrennt fuehren.
-- [ ] Fehlende Kostenschaetzungen sichtbar markieren.
+- [x] Mittelverwendung fuer Kaufpreis, Grunderwerbsteuer, Grundbuch, Pfandrecht, Eingabegebuehr, Makler, Notar, Beglaubigung, technische Pruefung, Renovierung, Einrichtung, Finanzierungsgebuehren, Sicherheitspuffer, Anfangsliquiditaet, Anfangsruecklage und Gruendungskosten modellieren.
+- [x] Oesterreichische Standardannahmen editierbar setzen.
+- [x] Netto-, Umsatzsteuer- und Bruttowerte getrennt fuehren.
+- [x] Fehlende Kostenschaetzungen sichtbar markieren.
 
 ### Meilenstein 5 - Mittelherkunft und Darlehenshoehe
 
-- [ ] Mittelherkunft fuer Start-EK, Kapitalruecklage, Bankdarlehen, Gesellschafterdarlehen, Verkaeuferfinanzierung und Foerderungen modellieren.
-- [ ] Harte Gleichung `Gesamtmittelverwendung = Gesamtmittelherkunft + Finanzierungsluecke`.
-- [ ] Bankdarlehen automatisch saldieren oder manuell fixieren.
-- [ ] Bank-Zielquote nur als Diagnose verwenden.
-- [ ] Diagramm und Tabelle `Mittelherkunft / Mittelverwendung` bauen.
+- [x] Mittelherkunft fuer Start-EK, Kapitalruecklage, Bankdarlehen, Gesellschafterdarlehen, Verkaeuferfinanzierung und Foerderungen modellieren.
+- [x] Harte Gleichung `Gesamtmittelverwendung = Gesamtmittelherkunft + Finanzierungsluecke`.
+- [x] Bankdarlehen automatisch saldieren oder manuell fixieren.
+- [x] Bank-Zielquote nur als Diagnose verwenden.
+- [x] Diagramm und Tabelle `Mittelherkunft / Mittelverwendung` bauen.
 
 ### Meilenstein 6 - Zahlungsklassen und Buchungslogik
 
-- [ ] Zahlungsklassen definieren.
-- [ ] Rang, Rueckzahlbarkeit, Verzinsung, Sicherheit, Anteilsauswirkung, Nutzungswirkung und Umsatzsteuerbezug fuehren.
-- [ ] Buchungsvorlagen ergaenzen.
-- [ ] Diagnosen fuer fehlende oder widerspruechliche Klassen.
+- [x] Zahlungsklassen definieren.
+- [x] Rang, Rueckzahlbarkeit, Verzinsung, Sicherheit, Anteilsauswirkung, Nutzungswirkung und Umsatzsteuerbezug fuehren.
+- [x] Buchungsvorlagen ergaenzen.
+- [x] Diagnosen fuer fehlende oder widerspruechliche Klassen.
 
 ### Meilenstein 7 - Unternehmensanteile und Mitgliedersicht
 
-- [ ] Unternehmensanteile nur aus echten Beteiligungsklassen berechnen.
-- [ ] Kapitalruecklage, Gesellschafterdarlehen, Kostenumlage und Nutzungsentgelt trennen.
-- [ ] Beteiligungstabelle anzeigen.
-- [ ] `Mein Anteil` fachlich trennen.
-- [ ] Phils Nutzungsbeispiel pruefen.
+- [x] Unternehmensanteile nur aus echten Beteiligungsklassen berechnen.
+- [x] Kapitalruecklage, Gesellschafterdarlehen, Kostenumlage und Nutzungsentgelt trennen.
+- [x] Beteiligungstabelle anzeigen.
+- [x] `Mein Anteil` fachlich trennen.
+- [x] Phils Nutzungsbeispiel pruefen.
 
 ### Meilenstein 8 - Nutzung, Belegung und Eigennutzungswert
 
-- [ ] Zimmernacht-Kapazitaet berechnen.
-- [ ] Wartungssperren, Eigennutzung, Fremdvermietung und Leerstand trennen.
-- [ ] Eigennutzungswert mit Marktwertverdraengung, Kostenuntergrenze und Hybridregel berechnen.
-- [ ] Wochenend- und Saison-Druck zeigen.
+- [x] Zimmernacht-Kapazitaet berechnen.
+- [x] Wartungssperren, Eigennutzung, Fremdvermietung und Leerstand trennen.
+- [x] Eigennutzungswert mit Marktwertverdraengung, Kostenuntergrenze und Hybridregel berechnen.
+- [x] Wochenend- und Saison-Druck zeigen.
 
 ### Meilenstein 9 - Bankkonto, Ergebnisrechnung und Vermoegensuebersicht
 
-- [ ] `Cashflow` sichtbar zu `Bankkonto-Zahlungsfluss` umbenennen.
-- [ ] Einzahlungen und Auszahlungen nach Zahlungsklassen stapeln.
-- [ ] Kontostand, zweckgebundene Reserve und freie Liquiditaet tabellarisch zeigen.
-- [ ] Ergebnisrechnung ergaenzen.
-- [ ] Vermoegensuebersicht ergaenzen.
-- [ ] Identitaeten testen.
+- [x] `Cashflow` sichtbar zu `Bankkonto-Zahlungsfluss` umbenennen.
+- [x] Einzahlungen und Auszahlungen nach Zahlungsklassen stapeln.
+- [x] Kontostand, zweckgebundene Reserve und freie Liquiditaet tabellarisch zeigen.
+- [x] Ergebnisrechnung ergaenzen.
+- [x] Vermoegensuebersicht ergaenzen.
+- [x] Identitaeten testen.
 
 ### Meilenstein 10 - Operativer Zahlungsfluss und ausschuettbarer Ueberschuss
 
-- [ ] Wasserfall in fester Reihenfolge berechnen.
-- [ ] Ausschüttungssperre bei Mindestliquiditaet.
-- [ ] Diagnosen fuer negativen Ueberschuss.
+- [x] Wasserfall in fester Reihenfolge berechnen.
+- [x] Ausschüttungssperre bei Mindestliquiditaet.
+- [x] Diagnosen fuer negativen Ueberschuss.
 
 ### Meilenstein 11 - Darlehen, Banksicht und Stressfaelle
 
@@ -280,15 +283,15 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 
 ### Meilenstein 12 - Umsatzsteuer-Matrix und Vorsteuerlogik
 
-- [ ] Umsatzsteuerarten und Leistungsarten modellieren.
-- [ ] Vorsteuerlogik nach steuerfreier, steuerpflichtiger und gemischter Nutzung pruefen.
-- [ ] Diagnosen fuer widerspruechliche Annahmen.
+- [x] Umsatzsteuerarten und Leistungsarten modellieren.
+- [x] Vorsteuerlogik nach steuerfreier, steuerpflichtiger und gemischter Nutzung pruefen.
+- [x] Diagnosen fuer widerspruechliche Annahmen.
 
 ### Meilenstein 13 - Neutraler Rechtsformvergleich
 
-- [ ] Miteigentum, Verein, GmbH, FlexCo, KG, GmbH & Co KG, Genossenschaft und Sonstige vergleichen.
-- [ ] Pruefgatter fuer Verein, GmbH/FlexCo und Genossenschaft.
-- [ ] Keine automatische Empfehlung.
+- [x] Miteigentum, Verein, GmbH, FlexCo, KG, GmbH & Co KG, Genossenschaft und Sonstige vergleichen.
+- [x] Pruefgatter fuer Verein, GmbH/FlexCo und Genossenschaft.
+- [x] Keine automatische Empfehlung.
 
 ### Meilenstein 14 - Kennzahlen und rote Diagnosen
 
@@ -298,37 +301,37 @@ Dieser Ausfuehrungsplan ist ein lebendes Dokument. `Fortschritt`, `Ueberraschung
 
 ### Meilenstein 15 - Navigation und Visualisierungen
 
-- [ ] Projekt-Tab links erweitern.
-- [ ] Topbar von GitHub-/Projektsteuerung befreien.
-- [ ] Eingabe- und Auswertungstabs deutsch strukturieren.
-- [ ] Wasserfall-, Belegungs-, Darlehens-, Sensitivitaets- und Mitglieder-Zahlungsreihen-Diagramme ergaenzen.
+- [x] Projekt-Tab links erweitern.
+- [x] Topbar von GitHub-/Projektsteuerung befreien.
+- [x] Eingabe- und Auswertungstabs deutsch strukturieren.
+- [x] Wasserfall-, Belegungs-, Darlehens-, Sensitivitaets- und Mitglieder-Zahlungsreihen-Diagramme ergaenzen.
 
 ### Meilenstein 16 - Wiki und Beraterdokumentation
 
-- [ ] Alle Wiki-Dateien aktualisieren.
-- [ ] `08_calculation_logic.md` zur technischen Hauptreferenz machen.
-- [ ] Beraterdokument aktualisieren.
-- [ ] Quellenbloecke nach `AGENTS.md` sicherstellen.
+- [x] Alle Wiki-Dateien aktualisieren.
+- [x] `08_calculation_logic.md` zur technischen Hauptreferenz machen.
+- [x] Beraterdokument aktualisieren.
+- [x] Quellenbloecke nach `AGENTS.md` sicherstellen.
 
 ### Meilenstein 17 - Tests, Begriffsscan und Vollpruefung
 
-- [ ] Migrationstests.
-- [ ] Berechnungstests.
-- [ ] UI-Tests.
-- [ ] Persistenztests.
-- [ ] Begriffsscan.
-- [ ] `npm run lint`.
-- [ ] `npm run typecheck`.
-- [ ] `npm test`.
-- [ ] `npm run build`.
+- [x] Migrationstests.
+- [x] Berechnungstests.
+- [x] UI-Tests.
+- [x] Persistenztests.
+- [x] Begriffsscan.
+- [x] `npm run lint`.
+- [x] `npm run typecheck`.
+- [x] `npm test`.
+- [x] `npm run build`.
 
 ### Meilenstein 18 - Commit-Plan und Abschluss
 
-- [ ] Regelmaessige Commits pro Subsystem.
-- [ ] Vor jedem Commit `git status --short`.
-- [ ] Keine fremden Nutzeränderungen unbeabsichtigt committen.
-- [ ] Kein Push ohne separate Beauftragung.
-- [ ] Plan nach Abschluss archivieren.
+- [x] Regelmaessige Commits pro Subsystem.
+- [x] Vor jedem Commit `git status --short`.
+- [x] Keine fremden Nutzeränderungen unbeabsichtigt committen.
+- [x] Kein Push ohne separate Beauftragung.
+- [x] Plan nach Abschluss archivieren.
 
 ## Abnahmekriterien
 

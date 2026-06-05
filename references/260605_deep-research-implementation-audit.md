@@ -44,7 +44,8 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | `f208636` | Buchungslogik, Umsatzsteuer-Matrix und Rechtsform-Pruefgatter in App und Tests | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 | `6aab03c` | Persoenliche Belastungsquote, Banksicht-Stressfaelle und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
 | `7f4309e` | Anteilsschalter fuer Tilgung und Kapitalruecklage mit getrenntem nicht verwaessernden Kapitalwert | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
-| naechster Commit | Kennzahlenregister, harte Identitaetsdiagnosen und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| `dc597ab` | Kennzahlenregister, harte Identitaetsdiagnosen und Wiki-Ergaenzung | `npm run lint`, `npm run typecheck`, `npm test` erfolgreich |
+| Abschluss | Build und Wiki-Sync, Planarchivierung | `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich |
 
 ## Arbeitsregel
 
