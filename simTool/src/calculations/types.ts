@@ -372,6 +372,32 @@ export type PointsResult = {
   diagnostics: DiagnosticMessage[];
 };
 
+export type PersonalReturnOwnerResult = {
+  ownerId: string;
+  ownerName: string;
+  years: number;
+  companySharePct: number;
+  projectedPropertyValue: number;
+  projectedBankBalance: number;
+  projectedRemainingDebt: number;
+  projectedProjectNetWorth: number;
+  projectedOwnerValue: number;
+  investedCapital: number;
+  startEquityContribution: number;
+  capitalPayments: number;
+  nonWealthPayments: number;
+  averageAnnualReturnPct: number;
+  returnMethod: "internalRate" | "fallback" | "notAvailable";
+};
+
+export type PersonalReturnResult = {
+  years: number;
+  propertyValueToday: number;
+  appreciationPercentPerYear: number;
+  owners: PersonalReturnOwnerResult[];
+  diagnostics: DiagnosticMessage[];
+};
+
 export type OccupancyResult = {
   activeHouseId?: string;
   houseTitle: string;
@@ -537,6 +563,7 @@ export type CalculationResult = {
   umsatzsteuer: UmsatzsteuerResult;
   capitalShares: CapitalShareResult;
   points: PointsResult;
+  personalReturns: PersonalReturnResult;
   occupancy: OccupancyResult;
   houseComparison: HouseComparisonResult;
   timeline: TimelineEvent[];

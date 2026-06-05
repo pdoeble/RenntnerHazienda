@@ -14,6 +14,7 @@ import { calculateDebt } from "./calculateDebt";
 import { calculateHouseComparison } from "./calculateHouseComparison";
 import { calculateLiquidity } from "./calculateLiquidity";
 import { calculateOccupancy } from "./calculateOccupancy";
+import { calculatePersonalReturns } from "./calculatePersonalReturns";
 import { calculatePoints } from "./calculatePoints";
 import { calculateSichten } from "./calculateSichten";
 import { calculateTimeline } from "./calculateTimeline";
@@ -57,6 +58,13 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   const capitalNeed = calculateCapitalNeed(snapshot);
   const capitalShares = calculateCapitalShares(snapshot, debt);
   const points = calculatePoints(snapshot, capitalShares);
+  const personalReturns = calculatePersonalReturns(
+    snapshot,
+    capitalShares,
+    debt,
+    cashflow,
+    contributions
+  );
   const occupancy = calculateOccupancy(snapshot, points);
   const houseComparison = calculateHouseComparison(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
@@ -76,6 +84,7 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       capitalNeed,
       capitalShares,
       points,
+      personalReturns,
       occupancy,
       houseComparison,
       timeline,
@@ -97,6 +106,7 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     umsatzsteuer,
     capitalShares,
     points,
+    personalReturns,
     occupancy,
     houseComparison,
     timeline,
@@ -273,16 +283,23 @@ function emptyCalculationResult(
       owners: [],
       diagnostics: []
     },
-    points: {
-      capacity: 0,
+      points: {
+        capacity: 0,
       annualPointPool: 0,
       propertyValue: 0,
       appreciationPercentPerYear: 0,
       shareMode: "usage",
       owners: [],
       nightTypes: [],
-      diagnostics: []
-    },
+        diagnostics: []
+      },
+      personalReturns: {
+        years: 25,
+        propertyValueToday: 0,
+        appreciationPercentPerYear: 0,
+        owners: [],
+        diagnostics: []
+      },
     occupancy: {
       houseTitle: "",
       capacityPersons: 0,

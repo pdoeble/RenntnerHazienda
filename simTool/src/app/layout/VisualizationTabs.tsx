@@ -148,7 +148,7 @@ function PointsView({ result }: { result: CalculationResult }) {
 
 function MyShareView({ result }: { result: CalculationResult }) {
   const [requestedOwnerId, setRequestedOwnerId] = useState("");
-  const [projectionYears, setProjectionYears] = useState(10);
+  const [projectionYears, setProjectionYears] = useState(25);
   const selectedOwnerId = result.points.owners.some(
     (owner) => owner.ownerId === requestedOwnerId
   )
@@ -174,6 +174,9 @@ function MyShareView({ result }: { result: CalculationResult }) {
   const monthlyUsageContribution =
     recurringContribution?.usageContributionMonthly ?? owner?.monthlyUsageContribution ?? 0;
   const capitalShareOwner = result.capitalShares.owners.find(
+    (candidate) => candidate.ownerId === owner?.ownerId
+  );
+  const personalReturn = result.personalReturns.owners.find(
     (candidate) => candidate.ownerId === owner?.ownerId
   );
   const companySharePct = owner?.companySharePct ?? 0;
@@ -233,6 +236,37 @@ function MyShareView({ result }: { result: CalculationResult }) {
           ["Zimmernaechte", owner.affordableNightsAverage.toString()]
         ]}
       />
+      <div className="form-section">
+        <SectionHeading label="Wert nach 25 Jahren" />
+        <MetricGrid
+          metrics={[
+            [
+              "Vermoegenswert nach 25 Jahren",
+              formatMoney(personalReturn?.projectedOwnerValue ?? 0)
+            ],
+            [
+              "Investiertes Kapital",
+              formatMoney(personalReturn?.investedCapital ?? 0)
+            ],
+            [
+              "Nicht vermoegenswirksame Zahlungen",
+              formatMoney(personalReturn?.nonWealthPayments ?? 0)
+            ],
+            [
+              "Durchschnittliche Jahresrendite",
+              `${(personalReturn?.averageAnnualReturnPct ?? 0).toFixed(2)}%`
+            ],
+            [
+              "Projekt-Nettovermoegen nach 25 Jahren",
+              formatMoney(personalReturn?.projectedProjectNetWorth ?? 0)
+            ],
+            [
+              "Renditemethode",
+              returnMethodLabel(personalReturn?.returnMethod)
+            ]
+          ]}
+        />
+      </div>
       <div className="form-section">
         <NumberInput
           label="Projektionsjahre"
@@ -649,6 +683,20 @@ function ContributionsView({ result }: { result: CalculationResult }) {
       />
     </div>
   );
+}
+
+function returnMethodLabel(
+  method: "internalRate" | "fallback" | "notAvailable" | undefined
+): string {
+  switch (method) {
+    case "internalRate":
+      return "interner Zinsfuss";
+    case "fallback":
+      return "vereinfachte Jahresrendite";
+    case "notAvailable":
+    default:
+      return "nicht verfuegbar";
+  }
 }
 
 function CashflowView({ result }: { result: CalculationResult }) {
@@ -1156,6 +1204,18 @@ const HELP_TEXTS: Record<string, string> = {
     "Dieser Wert ist die aufgezinste Kapitalbasis, die in der App tatsaechlich den Unternehmensanteil bestimmt.",
   "Nicht verwaessernder Kapitalwert":
     "Dieser Wert zeigt Kapitalzufuehrungen, die wirtschaftlich sichtbar sind, aber die Unternehmensanteile nicht veraendern.",
+  "Wert nach 25 Jahren":
+    "Diese Sicht schaetzt den Vermoegenswert nach 25 Jahren. Formel Projekt-Nettovermoegen = Objektwert + Bankkonto - Restschuld.",
+  "Vermoegenswert nach 25 Jahren":
+    "Eigener Vermoegenswert = Unternehmensanteil * Projekt-Nettovermoegen nach 25 Jahren.",
+  "Investiertes Kapital":
+    "Investiertes Kapital = Start-EK + vermoegenswirksame Kapitalruecklage oder Anlage bis Jahr 25.",
+  "Nicht vermoegenswirksame Zahlungen":
+    "Kostenumlage und Nutzungsentgelt sind Zahlungsabfluesse, aber keine eigene Renditebasis.",
+  "Durchschnittliche Jahresrendite":
+    "Bevorzugt interner Zinsfuss aus Start-EK, laufenden Kapitalzahlungen und Endwert; sonst vereinfachte Formel (Endwert / Investition)^(1/25) - 1.",
+  "Projekt-Nettovermoegen nach 25 Jahren":
+    "Projekt-Nettovermoegen = geschaetzter Objektwert + Bankkonto-Endstand - Restschuld.",
   "Kennzahlenregister":
     "Das Kennzahlenregister sammelt die wichtigsten Pruefwerte aus Objekt-, Rechtstraeger-, Mitglieder- und Banksicht."
 };
