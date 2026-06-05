@@ -15,15 +15,16 @@ https://pdoeble.github.io/RenntnerHazienda/
 
 ## Worker-Secrets
 
-Im Worker setzen:
+`GITHUB_OAUTH_CLIENT_ID` und `ALLOWED_ORIGIN` sind als nicht geheime
+Laufzeitvariablen in `wrangler.json` gesetzt.
+
+Im Worker muss nur noch der geheime GitHub OAuth Client Secret gesetzt werden:
 
 ```text
-GITHUB_OAUTH_CLIENT_ID=<client id der GitHub OAuth App>
 GITHUB_OAUTH_CLIENT_SECRET=<client secret der GitHub OAuth App>
-ALLOWED_ORIGIN=https://pdoeble.github.io
 ```
 
-`ALLOWED_ORIGIN=*` ist nur fuer lokale Tests sinnvoll.
+`ALLOWED_ORIGIN=*` waere nur fuer lokale Tests sinnvoll.
 
 ## Cloudflare Deploy
 

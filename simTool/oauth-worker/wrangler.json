@@ -2,5 +2,9 @@
   "name": "renntnerhazienda-oauth",
   "main": "worker.js",
   "compatibility_date": "2026-06-05",
-  "workers_dev": true
+  "workers_dev": true,
+  "vars": {
+    "GITHUB_OAUTH_CLIENT_ID": "Ov23liHjW9PlkLpztbC1",
+    "ALLOWED_ORIGIN": "https://pdoeble.github.io"
+  }
 }
