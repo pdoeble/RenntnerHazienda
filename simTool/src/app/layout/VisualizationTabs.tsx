@@ -472,6 +472,34 @@ function CapitalNeedView({ result }: { result: CalculationResult }) {
           item.rueckzahlbar ? "ja" : "nein"
         ])}
       />
+      <SectionHeading label="Buchungslogik" />
+      <DataTable
+        headers={["Vorgang", "Soll", "Haben", "Betrag", "Pruefhinweis"]}
+        rows={clampItems(result.buchungslogik.rows, 14).map((row) => [
+          row.vorgang,
+          row.soll,
+          row.haben,
+          formatMoney(row.betrag),
+          row.pruefhinweis
+        ])}
+      />
+      <SectionHeading label="Umsatzsteuer-Matrix" />
+      <DataTable
+        headers={[
+          "Leistungsart",
+          "Steuersatz",
+          "Steuerbar",
+          "Vorsteuerbezug",
+          "Pruefhinweis"
+        ]}
+        rows={result.umsatzsteuer.rows.map((row) => [
+          row.leistungsart,
+          row.angenommenerSteuersatz,
+          readableTaxStatus(row.steuerbar),
+          readableTaxStatus(row.vorsteuerbezug),
+          row.pruefhinweis
+        ])}
+      />
     </div>
   );
 }
@@ -485,7 +513,7 @@ function ContributionsView({ result }: { result: CalculationResult }) {
         result.contributions.recurringContributions[0]?.contributions.find(
           (candidate) => candidate.ownerId === contribution.ownerId
         )?.costContributionMonthly ?? 0,
-      anlage:
+      kapital:
         result.contributions.recurringContributions[0]?.contributions.find(
           (candidate) => candidate.ownerId === contribution.ownerId
         )?.capitalContributionMonthly ?? 0,
@@ -536,7 +564,11 @@ function ContributionsView({ result }: { result: CalculationResult }) {
             <Legend />
             <Bar dataKey="startEk" name="Start-EK" fill="#0f766e" />
             <Bar dataKey="kosten" name="Kostenbeitrag mtl." fill="#b45309" />
-            <Bar dataKey="anlage" name="Anlagebeitrag mtl." fill="#7c3aed" />
+            <Bar
+              dataKey="kapital"
+              name="Kapitalruecklage / Anlage mtl."
+              fill="#7c3aed"
+            />
             <Bar dataKey="nutzung" name="Nutzungsentgelt mtl." fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
@@ -547,7 +579,7 @@ function ContributionsView({ result }: { result: CalculationResult }) {
           "Unternehmensanteil",
           "Start-EK",
           "Kostenbeitrag mtl.",
-          "Anlagebeitrag mtl.",
+          "Kapitalruecklage / Anlage mtl.",
           "Nutzungsentgelt mtl.",
           "Liquiditaetsreserve mtl.",
           "Sonderumlage",
@@ -615,8 +647,8 @@ function CashflowView({ result }: { result: CalculationResult }) {
     year: year.year,
     startEk: year.startEquity,
     kostenbeitraege: year.costContributions,
-    anlagebeitraege: year.capitalContributions,
-    nutzungsbeitraege: year.usageContributions,
+    kapitalruecklagen: year.capitalContributions,
+    nutzungsentgelte: year.usageContributions,
     reservebeitraege: year.reserveContributions,
     darlehen: year.debtDrawdown,
     miete: year.rentalIncome,
@@ -661,8 +693,18 @@ function CashflowView({ result }: { result: CalculationResult }) {
             <Legend />
             <Bar dataKey="startEk" name="Start-EK" stackId="einnahmen" fill="#0f766e" />
             <Bar dataKey="kostenbeitraege" name="Kostenbeitrag" stackId="einnahmen" fill="#14b8a6" />
-            <Bar dataKey="anlagebeitraege" name="Anlagebeitrag" stackId="einnahmen" fill="#7c3aed" />
-            <Bar dataKey="nutzungsbeitraege" name="Nutzungsentgelt" stackId="einnahmen" fill="#2563eb" />
+            <Bar
+              dataKey="kapitalruecklagen"
+              name="Kapitalruecklage / Anlage"
+              stackId="einnahmen"
+              fill="#7c3aed"
+            />
+            <Bar
+              dataKey="nutzungsentgelte"
+              name="Nutzungsentgelt"
+              stackId="einnahmen"
+              fill="#2563eb"
+            />
             <Bar dataKey="reservebeitraege" name="Liquiditaetsreserve" stackId="einnahmen" fill="#64748b" />
             <Bar dataKey="darlehen" name="Darlehen" stackId="einnahmen" fill="#0891b2" />
             <Bar dataKey="miete" name="Miete" stackId="einnahmen" fill="#22c55e" />
@@ -1019,6 +1061,17 @@ function MetricGrid({ metrics }: { metrics: [string, string][] }) {
   );
 }
 
+function SectionHeading({ label }: { label: string }) {
+  return (
+    <h3 className="section-heading">
+      {label}
+      {HELP_TEXTS[label] ? (
+        <HelpPopover label={label}>{HELP_TEXTS[label]}</HelpPopover>
+      ) : null}
+    </h3>
+  );
+}
+
 const HELP_TEXTS: Record<string, string> = {
   "Mittelherkunft":
     "Mittelherkunft zeigt, woher das Projekt Geld bekommt, zum Beispiel Start-EK, Bankdarlehen oder Gesellschafterdarlehen.",
@@ -1038,8 +1091,6 @@ const HELP_TEXTS: Record<string, string> = {
     "Das Nutzungsentgelt bezahlt Nutzungsrechte oder Zimmernaechte und erzeugt keine Unternehmensanteile.",
   "Kostenbeitrag mtl.":
     "Der Kostenbeitrag deckt laufende Kosten wie Zins, Betriebskosten, Verwaltung und Buchhaltung.",
-  "Anlagebeitrag mtl.":
-    "Der Anlagebeitrag ist Vermoegensaufbau oder Kapitalzufuehrung; seine Anteilsauswirkung muss geregelt sein.",
   "Bankkonto-Endstand":
     "Der Bankkonto-Endstand ist Liquiditaet auf dem Projektkonto, nicht steuerlicher Gewinn.",
   "Betriebskosten Monat 1":
@@ -1049,7 +1100,13 @@ const HELP_TEXTS: Record<string, string> = {
   "Zimmernacht-Kapazitaet":
     "Eine Zimmernacht ist ein Schlafzimmer oder buchbares Zimmer fuer eine Nacht.",
   "Ausschuettbarer Ueberschuss":
-    "Der ausschuettbare Ueberschuss bleibt nach Betrieb, Ruecklagen, Verwaltung, Kapitaldienst und Mindestliquiditaet."
+    "Der ausschuettbare Ueberschuss bleibt nach Betrieb, Ruecklagen, Verwaltung, Kapitaldienst und Mindestliquiditaet.",
+  "Buchungslogik":
+    "Die Buchungslogik ist ein Arbeitsmodell fuer Soll/Haben-Einordnung. Sie ersetzt keinen Kontenplan und keine Steuerberatung.",
+  "Umsatzsteuer-Matrix":
+    "Die Umsatzsteuer-Matrix markiert je Leistungsart, was steuerlich zu pruefen ist. Offene Felder sind bewusst keine Steuerentscheidung.",
+  "Kapitalruecklage / Anlage mtl.":
+    "Diese Zahlung ist Vermoegenszufuehrung. Ob sie Unternehmensanteile aendert oder als Ruecklage/Darlehen laeuft, muss vertraglich festgelegt sein."
 };
 
 function ChartFrame({ children }: { children: ReactNode }) {
@@ -1178,6 +1235,16 @@ function readableUseClass(value: string): string {
     anfangsruecklage: "Anfangsruecklage",
     gruendungskosten: "Gruendungskosten",
     sonstige: "sonstige Verwendung"
+  };
+
+  return labels[value] ?? value;
+}
+
+function readableTaxStatus(value: string): string {
+  const labels: Record<string, string> = {
+    ja: "ja",
+    nein: "nein",
+    offen: "offen / pruefen"
   };
 
   return labels[value] ?? value;

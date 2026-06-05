@@ -39,7 +39,7 @@ export function calculateCashflow(
         "cashflow.missing-rent",
         "warning",
         "cashflow",
-        "Expected monthly rent is missing; cashflow uses zero rental income."
+        "Erwartete Monatsmiete fehlt; der Bankkonto-Zahlungsfluss rechnet mit null Mieterloes."
       )
     );
   }

@@ -204,6 +204,63 @@ describe("calculation pipeline", () => {
     );
   });
 
+  it("creates German booking rows for sources and uses", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+
+    expect(result.buchungslogik.rows).toContainEqual(
+      expect.objectContaining({
+        vorgang: "Start-EK der Beteiligten",
+        soll: "Bank",
+        haben: "Einlagekapital / gezeichnetes Kapital",
+        zahlungsklasse: "echtesEigenkapital"
+      })
+    );
+    expect(result.buchungslogik.rows).toContainEqual(
+      expect.objectContaining({
+        vorgang: "Automatisch saldiertes Bankdarlehen",
+        soll: "Bank",
+        haben: "Bankverbindlichkeiten",
+        zahlungsklasse: "bankdarlehen"
+      })
+    );
+    expect(result.buchungslogik.rows).toContainEqual(
+      expect.objectContaining({
+        vorgang: "Anfangsruecklage",
+        soll: "Zweckbindung Ruecklage",
+        haben: "Bankkonto intern / keine Drittzahlung"
+      })
+    );
+  });
+
+  it("marks Umsatzsteuer questions without deciding tax treatment", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+
+    expect(result.umsatzsteuer.rows).toContainEqual(
+      expect.objectContaining({
+        leistungsart: "Nutzungsentgelt Beteiligte",
+        angenommenerSteuersatz: "offen / pruefen",
+        steuerbar: "offen",
+        zahlungsklasse: "nutzungsentgelt"
+      })
+    );
+    expect(result.umsatzsteuer.rows).toContainEqual(
+      expect.objectContaining({
+        leistungsart: "Kleinunternehmergrenze / Optionsfrage",
+        vorsteuerbezug: "nein"
+      })
+    );
+    expect(
+      result.diagnostics.some(
+        (diagnostic) =>
+          diagnostic.id === "umsatzsteuer.nutzungsentgelt-pruefen"
+      )
+    ).toBe(true);
+  });
+
   it("shows a financing gap when the manual bank loan is too low", () => {
     const project = projectFixture();
     project.financing.data.bankdarlehenModus = "manuell";

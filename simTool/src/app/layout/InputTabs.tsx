@@ -509,7 +509,7 @@ function OwnershipEditor({
             />
           ) : (
             <SummaryLine
-              label="Anlagebeitrag mtl."
+              label="Kapitalruecklage / Anlage mtl."
               value={`${formatMoney(capitalShare?.monthlyCapitalContribution ?? 0)} berechnet`}
             />
           )}
@@ -603,6 +603,13 @@ function LegalFormEditor({
             ["Haftung", selectedProfile.liability],
             ["Steuerlogik", selectedProfile.tax],
             ["Governance", selectedProfile.governance],
+            ["Beteiligungstabelle", selectedProfile.beteiligungstabelle],
+            ["Darlehenskonten", selectedProfile.darlehenskonten],
+            ["Exit / Uebertragung", selectedProfile.exitUebertragung],
+            ["Bankfaehigkeit", selectedProfile.bankfaehigkeit],
+            ["Nutzungsrechte", selectedProfile.nutzungsrechte],
+            ["USt-Komplexitaet", selectedProfile.umsatzsteuerKomplexitaet],
+            ["Pruefgatter", selectedProfile.pruefgatter],
             ["Eignung", selectedProfile.fit],
             ["Quellenstatus", selectedProfile.sourceStatus]
           ]}
@@ -718,6 +725,12 @@ function LegalFormEditor({
                 <th>Haftung</th>
                 <th>Steuerlogik</th>
                 <th>Aufwand</th>
+                <th>Beteiligungstabelle</th>
+                <th>Darlehenskonten</th>
+                <th>Exit / Uebertragung</th>
+                <th>Bankfaehigkeit</th>
+                <th>Nutzungsrechte</th>
+                <th>USt-Komplexitaet</th>
                 <th>Eignung</th>
               </tr>
             </thead>
@@ -728,6 +741,12 @@ function LegalFormEditor({
                   <td>{profile.liability}</td>
                   <td>{profile.tax}</td>
                   <td>{profile.effort}</td>
+                  <td>{profile.beteiligungstabelle}</td>
+                  <td>{profile.darlehenskonten}</td>
+                  <td>{profile.exitUebertragung}</td>
+                  <td>{profile.bankfaehigkeit}</td>
+                  <td>{profile.nutzungsrechte}</td>
+                  <td>{profile.umsatzsteuerKomplexitaet}</td>
                   <td>{profile.fit}</td>
                 </tr>
               ))}
@@ -2207,6 +2226,13 @@ type LegalFormProfile = {
   tax: string;
   governance: string;
   effort: string;
+  beteiligungstabelle: string;
+  darlehenskonten: string;
+  exitUebertragung: string;
+  bankfaehigkeit: string;
+  nutzungsrechte: string;
+  umsatzsteuerKomplexitaet: string;
+  pruefgatter: string;
   fit: string;
   sourceStatus: string;
 };
@@ -2222,8 +2248,35 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "transparent bei den Beteiligten",
     governance: "Benutzungs-, Kosten- und Exitvertrag zentral",
     effort: "niedrig bis mittel",
+    beteiligungstabelle: "vertraglich, Grundbuchquoten separat",
+    darlehenskonten: "privatrechtlich moeglich, aber konfliktanfaellig",
+    exitUebertragung: "Miteigentumsanteile und Vorkaufsrechte regeln",
+    bankfaehigkeit: "Einzel- oder Gesamthaftung stark bankabhaengig",
+    nutzungsrechte: "nur ueber Benutzungsvereinbarung sauber",
+    umsatzsteuerKomplexitaet: "mittel bis hoch bei Vermietung",
+    pruefgatter: "Benutzungs-, Kosten-, Exit- und Haftungsvertrag vor Kauf",
     fit: "einfacher Start, aber konflikt- und haftungsintensiv",
     sourceStatus: "Wiki 04_ownership, vor Kauf pruefen"
+  },
+  {
+    value: "gbr",
+    label: "GesbR-Syndikat",
+    liabilityModel: "unlimited",
+    taxModel: "transparent",
+    votingModel: "custom",
+    liability: "Gesellschafterhaftung vertraglich und gesetzlich pruefen",
+    tax: "transparent, keine eigene juristische Person",
+    governance: "Gesellschaftsvertrag zentral",
+    effort: "mittel",
+    beteiligungstabelle: "vertraglich gut moeglich",
+    darlehenskonten: "vertraglich moeglich, Rang und Rueckzahlung offen",
+    exitUebertragung: "Abtretung, Eintritt und Ausscheiden regeln",
+    bankfaehigkeit: "abh. von persoenlicher Haftung und Sicherheiten",
+    nutzungsrechte: "vertraglich gut regelbar",
+    umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
+    pruefgatter: "Haftung, Innenausgleich und Vertretung klaeren",
+    fit: "nur mit belastbarem Gesellschaftsvertrag pruefen",
+    sourceStatus: "Wiki 04_ownership, Rechtsberatung pruefen"
   },
   {
     value: "verein",
@@ -2235,6 +2288,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "nur bei stimmigem ideellem Zweck plausibel",
     governance: "Vereinsorgane, Mitgliederlogik",
     effort: "mittel",
+    beteiligungstabelle: "schwach, Mitgliedschaft ersetzt keine Beteiligung",
+    darlehenskonten: "moeglich, aber Zweck und Fremdueblichkeit pruefen",
+    exitUebertragung: "Mitgliedschaft nicht wie Anteil handelbar",
+    bankfaehigkeit: "offen, Zweck und Sicherheiten kritisch",
+    nutzungsrechte: "mitgliedschaftlich moeglich, investorisch schwach",
+    umsatzsteuerKomplexitaet: "hoch bei Entgelt und Drittvermietung",
+    pruefgatter: "ideeller Zweck, Gewerbe, Gemeinnuetzigkeit, Nutzung",
     fit: "meist Negativvergleich fuer eigentumsnahe Nutzung",
     sourceStatus: "Wiki 04_ownership, BMI/WKO pruefen"
   },
@@ -2248,6 +2308,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "Koerperschaftsteuer plus Ausschuettungsebene",
     governance: "Geschaeftsfuehrung, Gesellschafterbeschluesse",
     effort: "hoch",
+    beteiligungstabelle: "stark ueber Geschaeftsanteile",
+    darlehenskonten: "gut abbildbar, Fremdueblichkeit pruefen",
+    exitUebertragung: "Anteilsuebertragung notariell/vertraglich regeln",
+    bankfaehigkeit: "grundsaetzlich gut, Eigenmittel und Sicherheiten zentral",
+    nutzungsrechte: "separater Nutzungsvertrag erforderlich",
+    umsatzsteuerKomplexitaet: "hoch bei Eigennutzung und Vermietung",
+    pruefgatter: "Kapital, Ausschuettung, verdeckte Vorteile, USt",
     fit: "professioneller Rechtstraeger, laufend teurer",
     sourceStatus: "Wiki 04_ownership, WKO/USP pruefen"
   },
@@ -2261,6 +2328,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "Koerperschaftsteuer plus Ausschuettungsebene",
     governance: "aehnlich GmbH, flexiblere Beteiligung",
     effort: "hoch",
+    beteiligungstabelle: "stark, auch fuer Beteiligungsinstrumente",
+    darlehenskonten: "gut abbildbar, Fremdueblichkeit pruefen",
+    exitUebertragung: "flexibler als GmbH, Details pruefen",
+    bankfaehigkeit: "offen bis gut, Bankpraxis gesondert pruefen",
+    nutzungsrechte: "separater Nutzungsvertrag erforderlich",
+    umsatzsteuerKomplexitaet: "hoch bei Eigennutzung und Vermietung",
+    pruefgatter: "FlexCo-Eignung fuer Immobilienvehikel klaeren",
     fit: "moeglich, aber fuer Immo-Gruppe gesondert pruefen",
     sourceStatus: "Wiki/Quellen ergaenzen"
   },
@@ -2274,6 +2348,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "transparent, Gesellschaft fuer USt/Lohn relevant",
     governance: "Gesellschaftsvertrag kann Anteile gut abbilden",
     effort: "mittel",
+    beteiligungstabelle: "stark ueber Kapitalkonten und Vertrag",
+    darlehenskonten: "gut abbildbar",
+    exitUebertragung: "Kommanditanteile und Zustimmung regeln",
+    bankfaehigkeit: "mittel bis gut, Komplementaerhaftung zentral",
+    nutzungsrechte: "separater Nutzungs- und Kostenvertrag",
+    umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
+    pruefgatter: "Komplementaerhaftung, Kapitalkonten, Steuertransparenz",
     fit: "guter Kompromiss bei klarer Haftungsbereitschaft",
     sourceStatus: "Wiki 04_ownership, WKO pruefen"
   },
@@ -2287,6 +2368,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "KG-Transparenz plus GmbH-Ebene",
     governance: "zwei Ebenen, sauberer Gesellschaftsvertrag",
     effort: "hoch bis sehr hoch",
+    beteiligungstabelle: "stark ueber KG-Kapitalkonten",
+    darlehenskonten: "sehr gut abbildbar, Rang sauber regeln",
+    exitUebertragung: "mehrstufig, aber gut vertraglich regelbar",
+    bankfaehigkeit: "tendenziell gut, aber Strukturkosten hoeher",
+    nutzungsrechte: "separater Nutzungs- und Kostenvertrag",
+    umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
+    pruefgatter: "Kosten, zwei Ebenen, Bankakzeptanz, USt",
     fit: "stark fuer gemischtes Modell, aber teuer/komplex",
     sourceStatus: "Wiki 04_ownership, WKO pruefen"
   },
@@ -2300,6 +2388,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "eigener Rechtstraeger, Details offen",
     governance: "mitgliederorientiert, formal",
     effort: "hoch",
+    beteiligungstabelle: "mitglieder- und anteilsbezogen gesondert pruefen",
+    darlehenskonten: "moeglich, aber Satzung und Pruefung relevant",
+    exitUebertragung: "Austritt und Rueckverguetung satzungsabhaengig",
+    bankfaehigkeit: "offen, Zweck und Pruefverband relevant",
+    nutzungsrechte: "mitgliederorientiert plausibel, Details offen",
+    umsatzsteuerKomplexitaet: "hoch bei Entgelt und Vermietung",
+    pruefgatter: "Gruendungsaufwand, Pruefpflicht, Satzung, Zweck",
     fit: "nur als Sonderfall pruefen",
     sourceStatus: "Quellen im Wiki ergaenzen"
   },
@@ -2313,6 +2408,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     tax: "offen",
     governance: "offen",
     effort: "offen",
+    beteiligungstabelle: "offen",
+    darlehenskonten: "offen",
+    exitUebertragung: "offen",
+    bankfaehigkeit: "offen",
+    nutzungsrechte: "offen",
+    umsatzsteuerKomplexitaet: "offen",
+    pruefgatter: "Einzelfallentscheidung",
     fit: "nur mit Einzelfallpruefung",
     sourceStatus: "fehlt"
   }

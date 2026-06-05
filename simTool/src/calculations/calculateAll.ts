@@ -4,6 +4,7 @@ import {
   calculateCashflow
 } from "./calculateCashflow";
 import { calculateBankView } from "./calculateBankView";
+import { calculateBuchungslogik } from "./calculateBuchungslogik";
 import { calculateCapitalShares } from "./calculateCapitalShares";
 import {
   calculateInitialContributions,
@@ -16,6 +17,7 @@ import { calculateOccupancy } from "./calculateOccupancy";
 import { calculatePoints } from "./calculatePoints";
 import { calculateSichten } from "./calculateSichten";
 import { calculateTimeline } from "./calculateTimeline";
+import { calculateUmsatzsteuer } from "./calculateUmsatzsteuer";
 import { collectInputDiagnostics } from "./diagnostics";
 import { calculateCapitalNeed } from "./financialInputs";
 import type { CalculationResult, ProjectSnapshot } from "./types";
@@ -59,6 +61,8 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   const houseComparison = calculateHouseComparison(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
   const bank = calculateBankView(snapshot, debt, cashflow, capitalNeed);
+  const buchungslogik = calculateBuchungslogik(capitalNeed);
+  const umsatzsteuer = calculateUmsatzsteuer(snapshot);
   const sichten = calculateSichten(
     snapshot,
     {
@@ -70,6 +74,8 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       timeline,
       liquidity,
       contributions,
+      buchungslogik,
+      umsatzsteuer,
       cashflow,
       debt
     },
@@ -80,6 +86,8 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     sichten,
     capitalNeed,
     bank,
+    buchungslogik,
+    umsatzsteuer,
     capitalShares,
     points,
     occupancy,
@@ -96,6 +104,8 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
       ...debt.diagnostics,
       ...cashflow.diagnostics,
       ...bank.diagnostics,
+      ...buchungslogik.diagnostics,
+      ...umsatzsteuer.diagnostics,
       ...liquidity.diagnostics,
       ...capitalShares.diagnostics,
       ...points.diagnostics,
@@ -183,6 +193,14 @@ function emptyCalculationResult(
       laufzeitJahre: snapshot.financing.data.termYears,
       fmaBelastungsquoteRichtwertPct: 40,
       fmaLaufzeitRichtwertJahre: 35,
+      diagnostics: []
+    },
+    buchungslogik: {
+      rows: [],
+      diagnostics: []
+    },
+    umsatzsteuer: {
+      rows: [],
       diagnostics: []
     },
     capitalShares: {

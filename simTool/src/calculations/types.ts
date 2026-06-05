@@ -476,10 +476,49 @@ export type BankKennzahlResult = {
   diagnostics: DiagnosticMessage[];
 };
 
+export type BuchungRow = {
+  id: string;
+  quelle: "mittelherkunft" | "mittelverwendung";
+  vorgang: string;
+  zahlungsklasse?: Zahlungsklasse;
+  verwendungsklasse?: MittelverwendungKlasse;
+  soll: string;
+  haben: string;
+  betrag: number;
+  pruefhinweis: string;
+  umsatzsteuerHinweis: string;
+};
+
+export type BuchungslogikResult = {
+  rows: BuchungRow[];
+  diagnostics: DiagnosticMessage[];
+};
+
+export type UmsatzsteuerStatus = "ja" | "nein" | "offen";
+
+export type UmsatzsteuerMatrixRow = {
+  id: string;
+  leistungsart: string;
+  zahlungsklasse?: Zahlungsklasse;
+  angenommenerSteuersatz: string;
+  steuerbar: UmsatzsteuerStatus;
+  vorsteuerbezug: UmsatzsteuerStatus;
+  dokumentation: string;
+  pruefhinweis: string;
+  quellenstatus: string;
+};
+
+export type UmsatzsteuerResult = {
+  rows: UmsatzsteuerMatrixRow[];
+  diagnostics: DiagnosticMessage[];
+};
+
 export type CalculationResult = {
   sichten: SichtSummaryResult;
   capitalNeed: CapitalNeedResult;
   bank: BankKennzahlResult;
+  buchungslogik: BuchungslogikResult;
+  umsatzsteuer: UmsatzsteuerResult;
   capitalShares: CapitalShareResult;
   points: PointsResult;
   occupancy: OccupancyResult;

@@ -26,6 +26,12 @@ describe("App shell", () => {
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
     expect(screen.getByText("Nebenkosten")).toBeInTheDocument();
 
+    fireEvent.click(screen.getByRole("tab", { name: "Gesellschaftsform" }));
+    expect(screen.getAllByText("Beteiligungstabelle").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Darlehenskonten").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Exit / Uebertragung").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Bankfaehigkeit").length).toBeGreaterThanOrEqual(1);
+
     expect(screen.getByRole("tab", { name: "Uebersicht" })).toHaveAttribute(
       "aria-selected",
       "true"
@@ -92,6 +98,9 @@ describe("App shell", () => {
     expect(screen.getAllByText("Mittelverwendung").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("USt bei Kauf")).toBeInTheDocument();
     expect(screen.getAllByText("Pfandrecht / Eintragung").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Buchungslogik")).toBeInTheDocument();
+    expect(screen.getByText("Umsatzsteuer-Matrix")).toBeInTheDocument();
+    expect(screen.getByText("Nutzungsentgelt Beteiligte")).toBeInTheDocument();
   });
 
   it("adds and deletes owners, renovations, and opex blocks", () => {

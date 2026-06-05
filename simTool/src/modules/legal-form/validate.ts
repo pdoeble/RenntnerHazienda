@@ -18,6 +18,39 @@ export function validateLegalForm(
     );
   }
 
+  if (template.data.legalForm === "verein") {
+    diagnostics.push(
+      diagnostic(
+        "legal-form.verein-investor-structure-check",
+        "warning",
+        "legalForm",
+        "Verein ist fuer eigentumsnahe Immobiliennutzung pruefpflichtig; ideeller Zweck, Gewerbe, Entgelt und Mitgliedschaftsrechte klaeren."
+      )
+    );
+  }
+
+  if (template.data.legalForm === "gbr") {
+    diagnostics.push(
+      diagnostic(
+        "legal-form.gesbr-liability-check",
+        "warning",
+        "legalForm",
+        "GesbR-Syndikat braucht belastbaren Vertrag zu Haftung, Vertretung, Nutzung, Darlehen und Exit."
+      )
+    );
+  }
+
+  if (template.data.legalForm === "genossenschaft") {
+    diagnostics.push(
+      diagnostic(
+        "legal-form.genossenschaft-purpose-check",
+        "warning",
+        "legalForm",
+        "Genossenschaft ist nur mit gepruefter Satzung, Zweck, Austritt und Rueckverguetung belastbar."
+      )
+    );
+  }
+
   if (template.data.taxModel === "unknown") {
     diagnostics.push(
       diagnostic(
