@@ -38,8 +38,12 @@ export type ProjectPanelProps = {
   persistenceMessage: string;
   githubToken: string;
   githubConfigLabel: string;
+  githubOAuthConfigured: boolean;
+  githubOAuthLabel: string;
   onGithubTokenChange: (token: string) => void;
   onGithubTokenBlur: () => void;
+  onGithubOAuthLogin: () => void;
+  onGithubDisconnect: () => void;
   onLoadProject: () => void;
   onSaveProject: () => void;
   onExportProject: () => void;
@@ -342,10 +346,49 @@ function ProjectEditor({ projectPanel }: { projectPanel: ProjectPanelProps }) {
       </div>
       <div className="form-section">
         <h3>GitHub Speicher</h3>
+        <div className="github-oauth-box">
+          <div>
+            <strong>GitHub OAuth</strong>
+            <p className="muted">
+              OAuth vermeidet, dass ein Personal Access Token manuell kopiert
+              werden muss. Der geheime Client-Schluessel liegt im
+              Exchange-Endpunkt, nicht in GitHub Pages.
+            </p>
+            <span className="muted">{projectPanel.githubOAuthLabel}</span>
+          </div>
+          <div className="button-row">
+            <button
+              className="icon-button"
+              type="button"
+              disabled={!projectPanel.githubOAuthConfigured}
+              onClick={projectPanel.onGithubOAuthLogin}
+            >
+              Mit GitHub anmelden
+            </button>
+            <button
+              className="icon-button"
+              type="button"
+              disabled={!projectPanel.githubToken.trim()}
+              onClick={projectPanel.onGithubDisconnect}
+            >
+              Anmeldung entfernen
+            </button>
+          </div>
+          {!projectPanel.githubOAuthConfigured ? (
+            <p className="empty-state">
+              OAuth ist noch nicht konfiguriert. Benoetigt werden
+              `VITE_GITHUB_OAUTH_CLIENT_ID` und
+              `VITE_GITHUB_OAUTH_EXCHANGE_URL`.
+            </p>
+          ) : null}
+        </div>
         <label className="text-field github-token-field">
-          <span>GitHub Token</span>
+          <FieldLabel
+            label="GitHub Token-Fallback"
+            helpText="Fallback fuer lokale Tests. Bei OAuth wird das Token automatisch in dieser Sitzung gesetzt. Es wird nicht dauerhaft gespeichert."
+          />
           <input
-            aria-label="GitHub Token"
+            aria-label="GitHub Token-Fallback"
             type="password"
             value={projectPanel.githubToken}
             placeholder="ghp_..."

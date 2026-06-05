@@ -22,6 +22,11 @@ describe("App shell", () => {
       "aria-selected",
       "true"
     );
+    expect(screen.getByText("GitHub OAuth")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Mit GitHub anmelden" })
+    ).toBeDisabled();
+    expect(screen.getByPlaceholderText("ghp_...")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();

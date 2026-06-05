@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { calculateAll } from "../calculations/calculateAll";
 import { buildProjectSnapshot } from "../calculations/buildProjectSnapshot";
 import type { TemplateEnvelope } from "../domain/templates";
@@ -16,6 +16,14 @@ import {
   saveGithubProject,
   setStoredGithubToken
 } from "../persistence/githubProject";
+import {
+  beginGithubOAuthLogin,
+  clearGithubOAuthCallbackParams,
+  completeGithubOAuthCallback,
+  githubOAuthConfig,
+  hasGithubOAuthCallback,
+  isGithubOAuthConfigured
+} from "../persistence/githubOAuth";
 import {
   defaultProjectState,
   initialDirtyState,
@@ -44,6 +52,7 @@ export function App() {
   const [selectedVisualization, setSelectedVisualization] =
     useState<VisualizationTab>("dashboard");
   const [githubToken, setGithubToken] = useState(() => getStoredGithubToken() ?? "");
+  const githubOAuth = useMemo(() => githubOAuthConfig(), []);
   const snapshot = useMemo(() => buildProjectSnapshot(projectState), [projectState]);
   const result = useMemo(() => calculateAll(snapshot), [snapshot]);
   const diagnostics = useMemo(
@@ -54,6 +63,28 @@ export function App() {
     () => createProjectManifest(projectState, snapshot.metadata.calculatedAt),
     [projectState, snapshot.metadata.calculatedAt]
   );
+
+  useEffect(() => {
+    if (!hasGithubOAuthCallback()) {
+      return;
+    }
+
+    void completeGithubOAuthCallback(undefined, githubOAuth)
+      .then((result) => {
+        if (!result) {
+          return;
+        }
+        setGithubToken(result.token);
+        setStoredGithubToken(result.token);
+        setPersistenceMessage("GitHub OAuth-Anmeldung erfolgreich");
+      })
+      .catch((error: unknown) => {
+        setPersistenceMessage(githubErrorMessage(error, "GitHub OAuth fehlgeschlagen"));
+      })
+      .finally(() => {
+        clearGithubOAuthCallbackParams();
+      });
+  }, [githubOAuth]);
 
   function replaceTemplate(
     kind: TemplateKind,
@@ -149,6 +180,20 @@ export function App() {
     }
   }
 
+  function startGithubOAuth() {
+    try {
+      beginGithubOAuthLogin(githubOAuth);
+    } catch (error) {
+      setPersistenceMessage(githubErrorMessage(error, "GitHub OAuth starten fehlgeschlagen"));
+    }
+  }
+
+  function disconnectGithub() {
+    setGithubToken("");
+    setStoredGithubToken(null);
+    setPersistenceMessage("GitHub-Anmeldung entfernt");
+  }
+
   async function loadTemplate(kind: TemplateKind) {
     try {
       const raw = await pickTextFile(".json,application/json");
@@ -201,8 +246,14 @@ export function App() {
               persistenceMessage,
               githubToken,
               githubConfigLabel: `${githubProjectConfig().owner}/${githubProjectConfig().repo}:${githubProjectConfig().path}`,
+              githubOAuthConfigured: isGithubOAuthConfigured(githubOAuth),
+              githubOAuthLabel: githubOAuth.clientId
+                ? `OAuth App ${githubOAuth.clientId}, Scope ${githubOAuth.scope}`
+                : "OAuth nicht konfiguriert",
               onGithubTokenChange: setGithubToken,
               onGithubTokenBlur: () => setStoredGithubToken(githubToken),
+              onGithubOAuthLogin: startGithubOAuth,
+              onGithubDisconnect: disconnectGithub,
               onLoadProject: () => void loadProject(),
               onSaveProject: () => saveProject("projekt"),
               onExportProject: () => saveProject("projekt-portable"),

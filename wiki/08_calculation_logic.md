@@ -1078,3 +1078,44 @@ Die App kann rechnerische Zusammenhänge sichtbar machen, aber sie ersetzt keine
 - Abrufdatum: 2026-06-05
 - Geltungsbereich: Österreich, Umsatzsteuer
 - Stabilität: mittel
+
+## 19. GitHub-Speicherung und OAuth
+
+### Kernaussage
+Die App kann das aktuelle Projektmanifest über die GitHub Contents API schreiben. Neben der manuellen Token-Eingabe unterstützt sie einen GitHub-OAuth-Web-Flow. Da GitHub Pages statisch ist, darf der OAuth-Client-Secret nicht im Browser liegen. Der Browser kennt nur die öffentliche Client-ID und schickt den OAuth-Code an einen separaten Exchange-Endpunkt, der den Client-Secret als Server-Secret hält.
+
+### Ablauf im Modell
+```text
+1. Nutzer klickt "Mit GitHub anmelden".
+2. Browser öffnet GitHub OAuth Authorize URL.
+3. GitHub leitet mit code und state zurück zur App.
+4. App prüft state gegen sessionStorage.
+5. App sendet code und redirectUri an den Exchange-Endpunkt.
+6. Exchange-Endpunkt tauscht code + client_secret bei GitHub gegen access_token.
+7. App speichert das access_token nur in sessionStorage.
+8. GitHub laden/speichern nutzt dasselbe Token wie der manuelle Fallback.
+```
+
+### Sicherheitsgrenzen
+- Der Client-Secret darf nie in `VITE_...`-Variablen stehen.
+- Das Zugriffstoken wird nicht in Projektdateien gespeichert.
+- JSON-Download/-Upload bleibt als Fallback erhalten.
+- Ohne konfigurierten `VITE_GITHUB_OAUTH_CLIENT_ID` und `VITE_GITHUB_OAUTH_EXCHANGE_URL` bleibt OAuth deaktiviert.
+
+### Quelle
+- Quelle: GitHub OAuth Apps autorisieren
+- Herausgeber: GitHub Docs
+- Link: https://docs.github.com/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+- Stand/Veröffentlichungsdatum: laufend aktualisierte Dokumentation, abgerufen 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: GitHub OAuth Apps, Web Application Flow
+- Stabilität: mittel
+
+### Weitere Quelle
+- Quelle: GitHub Token Authentication Requirements
+- Herausgeber: GitHub Blog / GitHub
+- Link: https://github.blog/news-insights/company-news/token-authentication-requirements-for-api-and-git-operations/
+- Stand/Veröffentlichungsdatum: 2020/2021, weiterhin relevant für tokenbasierte Authentifizierung
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: GitHub API- und Git-Authentifizierung
+- Stabilität: mittel

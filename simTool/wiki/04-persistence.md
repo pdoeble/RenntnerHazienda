@@ -4,7 +4,7 @@
 
 This document defines how the app stores, loads, saves, imports, and exports data.
 
-The app is hosted as a static GitHub Pages website. It must not assume server-side storage.
+The app is hosted as a static GitHub Pages website. It must not assume server-side storage unless a separately deployed exchange or sync endpoint is explicitly configured.
 
 All persistence must work in a browser-only environment.
 
@@ -20,7 +20,7 @@ The app must support:
 - portable project export/import
 - browser compatibility fallbacks
 
-The app must not assume it can write back to its own GitHub repository.
+The app must not assume it can write back to its own GitHub repository without explicit authentication.
 
 ## Supported Storage Modes
 
@@ -32,7 +32,7 @@ The MVP supports these storage modes:
 | JSON upload/download | Universal import/export fallback | Yes |
 | File System Access API | Better local file workflow where supported | Optional but recommended |
 | ZIP import/export | Portable complete project package | Recommended |
-| GitHub repository adapter | Future remote sync | Not MVP |
+| GitHub repository adapter | Explicit authenticated remote sync | Optional |
 
 ## Browser Storage Reality
 
@@ -109,16 +109,21 @@ Purpose:
 
 This adapter is optional but recommended.
 
-### Future GithubRepoAdapter
+### GitHubRepoAdapter
 
 Purpose:
 
 - store project/template files in a GitHub repository
 - support explicit authenticated sync
 
-This is not part of the MVP.
+This adapter exists for the project manifest. It uses the GitHub Contents API and keeps JSON upload/download as fallback.
 
-It must not be added casually because it requires authentication, token handling, conflict handling, and privacy review.
+Supported authentication modes:
+
+- manual token in session storage
+- GitHub OAuth web flow with a separately deployed exchange endpoint
+
+GitHub Pages must not contain the OAuth client secret. The frontend only stores the returned access token for the current browser session.
 
 ## Autosave
 
@@ -526,13 +531,11 @@ Therefore:
 
 ## GitHub Sync Policy
 
-GitHub sync is not part of the MVP.
-
-If added later, it must be implemented as a separate adapter.
+GitHub sync is an explicit optional mode.
 
 Required design topics before implementation:
 
-- OAuth or GitHub App flow
+- OAuth exchange endpoint or manual token fallback
 - token storage
 - repository selection
 - private repository warning
@@ -546,6 +549,8 @@ Required design topics before implementation:
 Never hard-code a personal access token.
 
 Never put repository credentials in frontend source code.
+
+Never put a GitHub OAuth client secret into a `VITE_...` variable.
 
 ## UI Status Requirements
 
