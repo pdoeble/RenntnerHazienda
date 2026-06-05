@@ -747,13 +747,20 @@ function LegalFormEditor({
     });
   }
   const selectedProfile = legalFormProfile(projectState.legalForm.data.legalForm);
+  const selectedProfileAnnualCosts =
+    selectedProfile.annualAccountingCostAssumptionAmount +
+    selectedProfile.annualAdministrationCostAssumptionAmount +
+    selectedProfile.annualComplianceCostAssumptionAmount;
 
   return (
     <div className="form-grid">
       <div className="form-section">
         <h3>Rechtsform-Auswahl</h3>
         <label className="text-field">
-          <span>Gesellschaftsform</span>
+          <FieldLabel
+            label="Gesellschaftsform"
+            helpText="Die Gesellschaftsform steuert Haftungs-, Steuer-, Governance- und Kostenannahmen. Die Auswahl setzt nur Strukturmerkmale; Kosten werden erst mit 'Kostenprofil uebernehmen' in die aktiven Kostenfelder geschrieben."
+          />
           <select
             aria-label="Gesellschaftsform"
             value={projectState.legalForm.data.legalForm}
@@ -778,6 +785,11 @@ function LegalFormEditor({
             ))}
           </select>
         </label>
+        <ol className="legal-form-description">
+          {selectedProfile.shortDescription.map((sentence) => (
+            <li key={sentence}>{sentence}</li>
+          ))}
+        </ol>
         <DataPreview
           rows={[
             ["Haftung", selectedProfile.liability],
@@ -791,12 +803,55 @@ function LegalFormEditor({
             ["USt-Komplexitaet", selectedProfile.umsatzsteuerKomplexitaet],
             ["Pruefgatter", selectedProfile.pruefgatter],
             ["Eignung", selectedProfile.fit],
+            [
+              "Kostenprofil",
+              `${formatMoney(selectedProfile.foundingCostAssumptionAmount)} Gruendung, ${formatMoney(selectedProfileAnnualCosts)} laufend p.a.`
+            ],
+            ["Kostenstatus", selectedProfile.costConfidence],
             ["Quellenstatus", selectedProfile.sourceStatus]
           ]}
         />
       </div>
       <div className="form-section">
         <h3>Kostenannahmen</h3>
+        <button
+          type="button"
+          className="icon-button"
+          onClick={() =>
+            updateLegalFormData({
+              ...projectState.legalForm.data,
+              foundingCostAmount: selectedProfile.foundingCostAssumptionAmount,
+              annualAccountingCostAmount:
+                selectedProfile.annualAccountingCostAssumptionAmount,
+              annualAdministrationCostAmount:
+                selectedProfile.annualAdministrationCostAssumptionAmount,
+              annualComplianceCostAmount:
+                selectedProfile.annualComplianceCostAssumptionAmount,
+              costStatus: legalCostStatusFromConfidence(selectedProfile.costConfidence),
+              sourceRefs: selectedProfile.costSourceRefs,
+              notes: [
+                projectState.legalForm.data.notes,
+                `Kostenprofil ${selectedProfile.label}: ${selectedProfile.costConfidence}; Quellen: ${formatSourceLabels(selectedProfile.costSourceRefs)}.`
+              ]
+                .filter(Boolean)
+                .join("\n")
+            })
+          }
+        >
+          Kostenprofil uebernehmen
+        </button>
+        <DataPreview
+          rows={[
+            [
+              "Profil Gruendung",
+              formatMoney(selectedProfile.foundingCostAssumptionAmount)
+            ],
+            ["Profil Buchhaltung p.a.", formatMoney(selectedProfile.annualAccountingCostAssumptionAmount)],
+            ["Profil Verwaltung p.a.", formatMoney(selectedProfile.annualAdministrationCostAssumptionAmount)],
+            ["Profil Compliance p.a.", formatMoney(selectedProfile.annualComplianceCostAssumptionAmount)],
+            ["Profil Quellen", formatSourceLabels(selectedProfile.costSourceRefs)]
+          ]}
+        />
         <NumberSliderField
           label="Gruendungskosten"
           value={projectState.legalForm.data.foundingCostAmount}
@@ -906,9 +961,14 @@ function LegalFormEditor({
             <thead>
               <tr>
                 <th>Rechtsform</th>
+                <th>Kurzbeschreibung</th>
                 <th>Haftung</th>
                 <th>Steuerlogik</th>
                 <th>Aufwand</th>
+                <th>Gruendungskosten</th>
+                <th>Laufende Kosten p.a.</th>
+                <th>Kostenstatus</th>
+                <th>Kostenquellen</th>
                 <th>Beteiligungstabelle</th>
                 <th>Darlehenskonten</th>
                 <th>Exit / Uebertragung</th>
@@ -919,21 +979,32 @@ function LegalFormEditor({
               </tr>
             </thead>
             <tbody>
-              {LEGAL_FORM_PROFILES.map((profile) => (
-                <tr key={profile.value}>
-                  <td>{profile.label}</td>
-                  <td>{profile.liability}</td>
-                  <td>{profile.tax}</td>
-                  <td>{profile.effort}</td>
-                  <td>{profile.beteiligungstabelle}</td>
-                  <td>{profile.darlehenskonten}</td>
-                  <td>{profile.exitUebertragung}</td>
-                  <td>{profile.bankfaehigkeit}</td>
-                  <td>{profile.nutzungsrechte}</td>
-                  <td>{profile.umsatzsteuerKomplexitaet}</td>
-                  <td>{profile.fit}</td>
-                </tr>
-              ))}
+              {LEGAL_FORM_PROFILES.map((profile) => {
+                const annualCosts =
+                  profile.annualAccountingCostAssumptionAmount +
+                  profile.annualAdministrationCostAssumptionAmount +
+                  profile.annualComplianceCostAssumptionAmount;
+                return (
+                  <tr key={profile.value}>
+                    <td>{profile.label}</td>
+                    <td className="long-cell">{profile.shortDescription.join(" ")}</td>
+                    <td>{profile.liability}</td>
+                    <td>{profile.tax}</td>
+                    <td>{profile.effort}</td>
+                    <td>{formatMoney(profile.foundingCostAssumptionAmount)}</td>
+                    <td>{formatMoney(annualCosts)}</td>
+                    <td>{profile.costConfidence}</td>
+                    <td className="long-cell">{formatSourceLabels(profile.costSourceRefs)}</td>
+                    <td>{profile.beteiligungstabelle}</td>
+                    <td>{profile.darlehenskonten}</td>
+                    <td>{profile.exitUebertragung}</td>
+                    <td>{profile.bankfaehigkeit}</td>
+                    <td>{profile.nutzungsrechte}</td>
+                    <td>{profile.umsatzsteuerKomplexitaet}</td>
+                    <td>{profile.fit}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -2486,6 +2557,7 @@ function annualOpexPreview(
 type LegalFormProfile = {
   value: LegalFormValue;
   label: string;
+  shortDescription: string[];
   liabilityModel: ProjectState["legalForm"]["data"]["liabilityModel"];
   taxModel: ProjectState["legalForm"]["data"]["taxModel"];
   votingModel: NonNullable<ProjectState["legalForm"]["data"]["votingModel"]>;
@@ -2502,12 +2574,87 @@ type LegalFormProfile = {
   pruefgatter: string;
   fit: string;
   sourceStatus: string;
+  foundingCostAssumptionAmount: number;
+  annualAccountingCostAssumptionAmount: number;
+  annualAdministrationCostAssumptionAmount: number;
+  annualComplianceCostAssumptionAmount: number;
+  costConfidence: "quellenbasiert" | "Planungsspanne" | "Einzelfall pruefen";
+  costSourceRefs: ProjectState["legalForm"]["data"]["sourceRefs"];
 };
+
+const LEGAL_COST_SOURCES = {
+  wkoFoundingCosts: {
+    label: "WKO Gruendungskosten",
+    url: "https://www.wko.at/gruendung/gruendungskosten",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, Gruendungskosten nach Rechtsform"
+  },
+  wkoGmbh: {
+    label: "WKO GmbH",
+    url: "https://www.wko.at/gruendung/gesellschaft-beschraenkter-haftung-gmbh",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, GmbH"
+  },
+  wkoFlexCo: {
+    label: "WKO FlexCo",
+    url: "https://www.wko.at/gruendung/flexible-kapitalgesellschaft-flexkapg-",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, FlexKapG/FlexCo"
+  },
+  wkoKg: {
+    label: "WKO KG",
+    url: "https://www.wko.at/gruendung/kommanditgesellschaft-kg",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, Kommanditgesellschaft"
+  },
+  wkoGmbhCoKg: {
+    label: "WKO GmbH & Co KG",
+    url: "https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg-faq",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, GmbH & Co KG"
+  },
+  wkoGenossenschaft: {
+    label: "WKO Genossenschaft",
+    url: "https://www.wko.at/gruendung/genossenschaft",
+    publisher: "Wirtschaftskammer Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, Genossenschaft"
+  },
+  bmiVerein: {
+    label: "BMI Vereinswesen",
+    url: "https://www.bmi.gv.at/609/start.html",
+    publisher: "Bundesministerium fuer Inneres",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, ideeller Verein"
+  },
+  steuerberaterKosten: {
+    label: "Steuerberater Oesterreich Honorar-Auswertung",
+    url: "https://deine-steuerberater.at/wissenswertes/steuerberater-kosten",
+    publisher: "Steuerberater Oesterreich",
+    retrievedAt: "2026-06-05",
+    scope: "Oesterreich, sekundaere Marktorientierung 2026"
+  }
+} as const satisfies Record<
+  string,
+  ProjectState["legalForm"]["data"]["sourceRefs"][number]
+>;
 
 const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
   {
     value: "coOwnership",
     label: "Miteigentum",
+    shortDescription: [
+      "Miteigentum bedeutet, dass die Beteiligten direkt am Objekt beteiligt sind.",
+      "Die Rechtsform ist einfach, aber sie schafft keine eigene Haftungshuelle.",
+      "Nutzung, Kosten, Verkauf und Austritt muessen vertraglich geregelt werden.",
+      "Banken pruefen dabei oft die persoenliche Haftung und Sicherheiten der Beteiligten.",
+      "Fuer gemeinschaftliche Ferienhausnutzung ist sie nur mit sauberer Benutzungsvereinbarung belastbar."
+    ],
     liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "ownershipShare",
@@ -2523,11 +2670,24 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "mittel bis hoch bei Vermietung",
     pruefgatter: "Benutzungs-, Kosten-, Exit- und Haftungsvertrag vor Kauf",
     fit: "einfacher Start, aber konflikt- und haftungsintensiv",
-    sourceStatus: "Wiki 04_ownership, vor Kauf pruefen"
+    sourceStatus: "Wiki 04_ownership, vor Kauf pruefen",
+    foundingCostAssumptionAmount: 1500,
+    annualAccountingCostAssumptionAmount: 0,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 0,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [LEGAL_COST_SOURCES.wkoFoundingCosts]
   },
   {
     value: "gbr",
     label: "GesbR-Syndikat",
+    shortDescription: [
+      "Ein GesbR-Syndikat ist eine vertragliche Personengesellschaft ohne eigene Rechtspersoenlichkeit.",
+      "Es kann Innenregeln fuer Kapital, Nutzung und Ausstieg relativ flexibel abbilden.",
+      "Die Beteiligten muessen Haftung und Vertretung besonders klar regeln.",
+      "Fuer Banken bleibt die persoenliche Bonitaet der Beteiligten ein zentrales Thema.",
+      "Als Ferienhausstruktur ist sie eher Vertragsmodell als eigenstaendiger Rechtstraeger."
+    ],
     liabilityModel: "unlimited",
     taxModel: "transparent",
     votingModel: "custom",
@@ -2543,11 +2703,27 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
     pruefgatter: "Haftung, Innenausgleich und Vertretung klaeren",
     fit: "nur mit belastbarem Gesellschaftsvertrag pruefen",
-    sourceStatus: "Wiki 04_ownership, Rechtsberatung pruefen"
+    sourceStatus: "Wiki 04_ownership, Rechtsberatung pruefen",
+    foundingCostAssumptionAmount: 1500,
+    annualAccountingCostAssumptionAmount: 1500,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 0,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoFoundingCosts,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "verein",
     label: "Verein",
+    shortDescription: [
+      "Der Verein ist ein ideeller Rechtstraeger mit Mitgliedern und Organen.",
+      "Er entsteht ueber Statuten und das vereinsbehoerdliche Verfahren.",
+      "Mitgliedschaft ersetzt keine eigentumsnahe Beteiligungstabelle.",
+      "Entgeltliche Nutzung und Drittvermietung koennen den ideellen Charakter fachlich belasten.",
+      "Fuer das Ferienhausmodell ist er daher vor allem als Negativ- oder Pruefvergleich nuetzlich."
+    ],
     liabilityModel: "limited",
     taxModel: "association",
     votingModel: "equalPerOwner",
@@ -2563,11 +2739,27 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei Entgelt und Drittvermietung",
     pruefgatter: "ideeller Zweck, Gewerbe, Gemeinnuetzigkeit, Nutzung",
     fit: "meist Negativvergleich fuer eigentumsnahe Nutzung",
-    sourceStatus: "Wiki 04_ownership, BMI/WKO pruefen"
+    sourceStatus: "Wiki 04_ownership, BMI/WKO pruefen",
+    foundingCostAssumptionAmount: 57,
+    annualAccountingCostAssumptionAmount: 600,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 0,
+    costConfidence: "quellenbasiert",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.bmiVerein,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "gmbh",
     label: "GmbH",
+    shortDescription: [
+      "Die GmbH ist eine Kapitalgesellschaft mit eigener Rechtspersoenlichkeit.",
+      "Sie bildet Unternehmensanteile, Gesellschafterbeschluesse und Darlehenskonten strukturiert ab.",
+      "Die Haftung ist grundsaetzlich auf das Gesellschaftsvermoegen begrenzt, Bankgarantien koennen das praktisch relativieren.",
+      "Sie verursacht Gruendungs-, Buchhaltungs- und Mindeststeuerkosten.",
+      "Fuer ein investitionsnahes Ferienhausmodell ist sie professionell, aber laufend teurer."
+    ],
     liabilityModel: "limited",
     taxModel: "corporate",
     votingModel: "ownershipShare",
@@ -2583,11 +2775,28 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei Eigennutzung und Vermietung",
     pruefgatter: "Kapital, Ausschuettung, verdeckte Vorteile, USt",
     fit: "professioneller Rechtstraeger, laufend teurer",
-    sourceStatus: "Wiki 04_ownership, WKO/USP pruefen"
+    sourceStatus: "Wiki 04_ownership, WKO/USP pruefen",
+    foundingCostAssumptionAmount: 2450,
+    annualAccountingCostAssumptionAmount: 4200,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 500,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoFoundingCosts,
+      LEGAL_COST_SOURCES.wkoGmbh,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "flexCo",
     label: "FlexCo",
+    shortDescription: [
+      "Die FlexCo ist eine junge Kapitalgesellschaft, die stark an die GmbH angelehnt ist.",
+      "Sie erleichtert bestimmte Beteiligungsinstrumente und Anteilsuebertragungen.",
+      "Fuer Immobiliengruppen ist ihre konkrete Bank- und Beratungspraxis noch gesondert zu pruefen.",
+      "Haftung, Steuerlogik und Buchhaltung sind kapitalgesellschaftlich zu behandeln.",
+      "Im Ferienhausmodell ist sie nur sinnvoll, wenn die Beteiligungsflexibilitaet den Zusatzaufwand rechtfertigt."
+    ],
     liabilityModel: "limited",
     taxModel: "corporate",
     votingModel: "ownershipShare",
@@ -2603,11 +2812,28 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei Eigennutzung und Vermietung",
     pruefgatter: "FlexCo-Eignung fuer Immobilienvehikel klaeren",
     fit: "moeglich, aber fuer Immo-Gruppe gesondert pruefen",
-    sourceStatus: "Wiki/Quellen ergaenzen"
+    sourceStatus: "Wiki/Quellen ergaenzen",
+    foundingCostAssumptionAmount: 2450,
+    annualAccountingCostAssumptionAmount: 4200,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 500,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoFoundingCosts,
+      LEGAL_COST_SOURCES.wkoFlexCo,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "kg",
     label: "KG",
+    shortDescription: [
+      "Die KG ist eine Personengesellschaft mit Komplementaer und Kommanditisten.",
+      "Der Komplementaer haftet unbeschraenkt, Kommanditisten haften grundsaetzlich bis zur Haftsumme.",
+      "Kapitalkonten, Darlehenskonten und Exit-Regeln lassen sich vertraglich gut abbilden.",
+      "Die Struktur bleibt aber haftungsseitig sensibel, wenn natuerliche Personen Komplementaer sind.",
+      "Fuer das Ferienhausmodell ist sie ein transparenter Vergleich, wenn Haftung bewusst geregelt wird."
+    ],
     liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "custom",
@@ -2623,11 +2849,28 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
     pruefgatter: "Komplementaerhaftung, Kapitalkonten, Steuertransparenz",
     fit: "guter Kompromiss bei klarer Haftungsbereitschaft",
-    sourceStatus: "Wiki 04_ownership, WKO pruefen"
+    sourceStatus: "Wiki 04_ownership, WKO pruefen",
+    foundingCostAssumptionAmount: 1760,
+    annualAccountingCostAssumptionAmount: 1500,
+    annualAdministrationCostAssumptionAmount: 600,
+    annualComplianceCostAssumptionAmount: 0,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoFoundingCosts,
+      LEGAL_COST_SOURCES.wkoKg,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "gmbhCoKg",
     label: "GmbH & Co KG",
+    shortDescription: [
+      "Die GmbH & Co KG verbindet eine KG mit einer GmbH als Komplementaerin.",
+      "Dadurch wird die unbeschraenkte Komplementaerhaftung wirtschaftlich auf eine GmbH verlagert.",
+      "Kapitalkonten, Darlehenskonten und Beteiligtenrechte koennen sehr differenziert geregelt werden.",
+      "Die Struktur braucht zwei Ebenen und ist deshalb deutlich teurer und formaler.",
+      "Fuer ein gemischtes Kapital- und Nutzungsmodell ist sie stark, wenn Komplexitaet und Kosten akzeptiert werden."
+    ],
     liabilityModel: "mixed",
     taxModel: "transparent",
     votingModel: "custom",
@@ -2643,11 +2886,28 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei gemischter Nutzung",
     pruefgatter: "Kosten, zwei Ebenen, Bankakzeptanz, USt",
     fit: "stark fuer gemischtes Modell, aber teuer/komplex",
-    sourceStatus: "Wiki 04_ownership, WKO pruefen"
+    sourceStatus: "Wiki 04_ownership, WKO pruefen",
+    foundingCostAssumptionAmount: 4210,
+    annualAccountingCostAssumptionAmount: 6000,
+    annualAdministrationCostAssumptionAmount: 1200,
+    annualComplianceCostAssumptionAmount: 500,
+    costConfidence: "Planungsspanne",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoFoundingCosts,
+      LEGAL_COST_SOURCES.wkoGmbhCoKg,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "genossenschaft",
     label: "Genossenschaft",
+    shortDescription: [
+      "Die Genossenschaft ist ein mitgliederorientierter Rechtstraeger mit eigener Rechtspersoenlichkeit.",
+      "Sie dient der Foerderung des Erwerbs oder der Wirtschaft ihrer Mitglieder.",
+      "Gruendung und laufender Betrieb setzen Satzung, Wirtschaftlichkeitspruefung und Revisionsverband voraus.",
+      "Mitgliedschaft und Nutzungsrechte passen grundsaetzlich zusammen, muessen aber exakt satzungsmaessig gefasst werden.",
+      "Fuer das Ferienhausmodell ist sie ein Sonderfall mit hohem Pruef- und Kostenbedarf."
+    ],
     liabilityModel: "limited",
     taxModel: "corporate",
     votingModel: "equalPerOwner",
@@ -2663,11 +2923,27 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "hoch bei Entgelt und Vermietung",
     pruefgatter: "Gruendungsaufwand, Pruefpflicht, Satzung, Zweck",
     fit: "nur als Sonderfall pruefen",
-    sourceStatus: "Quellen im Wiki ergaenzen"
+    sourceStatus: "Quellen im Wiki ergaenzen",
+    foundingCostAssumptionAmount: 2500,
+    annualAccountingCostAssumptionAmount: 4200,
+    annualAdministrationCostAssumptionAmount: 1200,
+    annualComplianceCostAssumptionAmount: 2000,
+    costConfidence: "Einzelfall pruefen",
+    costSourceRefs: [
+      LEGAL_COST_SOURCES.wkoGenossenschaft,
+      LEGAL_COST_SOURCES.steuerberaterKosten
+    ]
   },
   {
     value: "other",
     label: "Sonstige / individuell",
+    shortDescription: [
+      "Sonstige Strukturen stehen fuer Einzelfallmodelle ausserhalb der Standardprofile.",
+      "Sie koennen vertraglich passend sein, sind aber ohne Beratung nicht belastbar.",
+      "Kosten, Haftung, Steuerlogik und Bankfaehigkeit sind offen.",
+      "Die App rechnet hier bewusst nicht mit verdeckten Standardwerten.",
+      "Vor Nutzung dieses Profils muss eine konkrete Struktur schriftlich entworfen werden."
+    ],
     liabilityModel: "unknown",
     taxModel: "unknown",
     votingModel: "unknown",
@@ -2683,7 +2959,13 @@ const LEGAL_FORM_PROFILES: LegalFormProfile[] = [
     umsatzsteuerKomplexitaet: "offen",
     pruefgatter: "Einzelfallentscheidung",
     fit: "nur mit Einzelfallpruefung",
-    sourceStatus: "fehlt"
+    sourceStatus: "fehlt",
+    foundingCostAssumptionAmount: 0,
+    annualAccountingCostAssumptionAmount: 0,
+    annualAdministrationCostAssumptionAmount: 0,
+    annualComplianceCostAssumptionAmount: 0,
+    costConfidence: "Einzelfall pruefen",
+    costSourceRefs: []
   }
 ];
 
@@ -2697,6 +2979,27 @@ function legalFormProfile(value: LegalFormValue): LegalFormProfile {
     LEGAL_FORM_PROFILES.find((profile) => profile.value === value) ??
     LEGAL_FORM_PROFILES.at(-1)!
   );
+}
+
+function legalCostStatusFromConfidence(
+  confidence: LegalFormProfile["costConfidence"]
+): ProjectState["legalForm"]["data"]["costStatus"] {
+  if (confidence === "quellenbasiert") {
+    return "sourceBacked";
+  }
+  if (confidence === "Planungsspanne") {
+    return "planningEstimate";
+  }
+  return "missing";
+}
+
+function formatSourceLabels(
+  sourceRefs: ProjectState["legalForm"]["data"]["sourceRefs"] | undefined
+): string {
+  if (!sourceRefs?.length) {
+    return "Einzelfall pruefen";
+  }
+  return sourceRefs.map((source) => source.label).join(", ");
 }
 
 const AUSTRIAN_STATE_OPTIONS: {
