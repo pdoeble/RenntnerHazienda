@@ -5,3 +5,6 @@ coverage/
 *.tsbuildinfo
 node_modules/.tmp/
 public/wiki/
+.env
+.env.local
+.env.*.local

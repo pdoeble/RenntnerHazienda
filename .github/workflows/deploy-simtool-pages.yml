@@ -50,6 +50,11 @@ jobs:
 
       - name: Build
         working-directory: simTool
+        env:
+          VITE_GITHUB_OAUTH_CLIENT_ID: ${{ vars.VITE_GITHUB_OAUTH_CLIENT_ID }}
+          VITE_GITHUB_OAUTH_EXCHANGE_URL: ${{ vars.VITE_GITHUB_OAUTH_EXCHANGE_URL }}
+          VITE_GITHUB_OAUTH_SCOPE: public_repo
+          VITE_GITHUB_OAUTH_REDIRECT_URI: https://pdoeble.github.io/RenntnerHazienda/
         run: npm run build
 
       - name: Upload GitHub Pages artifact
