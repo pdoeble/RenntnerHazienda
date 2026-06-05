@@ -780,6 +780,7 @@ const WIKI_DOCS = [
   { path: "wiki/05_finance.md", title: "Finanzierung" },
   { path: "wiki/06_usage.md", title: "Nutzung" },
   { path: "wiki/07_operational.md", title: "Betrieb" },
+  { path: "wiki/08_calculation_logic.md", title: "Berechnungslogik" },
   { path: "references/260515-DeepResearch1.md", title: "DeepResearch 1" },
   { path: "references/260515-DeepResearch2.md", title: "DeepResearch 2" }
 ];
