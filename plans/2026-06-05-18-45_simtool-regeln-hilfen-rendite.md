@@ -32,10 +32,10 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
 - [x] (2026-06-05 18:45) Punkt- und Einkommensdefaults sowie Migration anpassen.
 - [x] (2026-06-05 18:45) Eingabe-Hilfen mit Formeln ausbauen.
 - [x] (2026-06-05 18:45) 25-Jahres-Renditeansicht in `Mein Anteil` ergaenzen.
-- [ ] (2026-06-05 18:45) Rechtsform-Kostenprofile mit Quellenstatus ergaenzen.
-- [ ] (2026-06-05 18:45) Diagramme fuer Bankkonto, Beitraege und Punkte umbauen.
-- [ ] (2026-06-05 18:45) Wiki und Audit aktualisieren.
-- [ ] (2026-06-05 18:45) Tests ergaenzen/anpassen.
+- [x] (2026-06-05 18:45) Rechtsform-Kostenprofile mit Quellenstatus ergaenzen.
+- [x] (2026-06-05 18:45) Diagramme fuer Bankkonto, Beitraege und Punkte umbauen.
+- [x] (2026-06-05 18:45) Wiki und Audit aktualisieren.
+- [x] (2026-06-05 18:45) Tests ergaenzen/anpassen.
 - [ ] (2026-06-05 18:45) `npm run lint`, `npm run typecheck`, `npm test`, `npm run build` erfolgreich ausfuehren.
 - [ ] (2026-06-05 18:45) Sinnvolle Einzelcommits erstellen.
 - [ ] (2026-06-05 18:45) Move this file to `plans/Archive/2026-06-05-18-45_simtool-regeln-hilfen-rendite.md` as final completion step.
@@ -53,6 +53,10 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
   - `HelpPopover` existiert bereits, wird aber fast nur in Ergebniszeilen verwendet.
 - Evidence:
   - `simTool/src/ui/HelpPopover.tsx`, `simTool/src/ui/forms/NumberSliderField.tsx`.
+- Observation:
+  - Der parallele Vitest-Standardlauf kann auf dieser Windows-Umgebung mit `Zone Allocation failed` abbrechen, bevor Tests ausgefuehrt werden.
+- Evidence:
+  - `npm test` vor Anpassung: Vitest-Worker-Forks stiegen mit Out-of-Memory aus; einzelne Dateien und der Lauf mit `--maxWorkers=1` waren gruen.
 
 ## Decision Log
 - Decision:
@@ -71,6 +75,12 @@ This ExecPlan is a living document. Keep `Progress`, `Surprises & Discoveries`, 
   - Rechtsformkosten bleiben Planungsannahmen mit Quellenstatus und Uebernahme-Button.
 - Rationale:
   - Auswahl einer Rechtsform soll nicht stillschweigend manuelle Kostenfelder ueberschreiben.
+- Date/Author:
+  - 2026-06-05 / Codex.
+- Decision:
+  - `npm test` wird auf `vitest run --maxWorkers=1` gesetzt.
+- Rationale:
+  - Die Testinhalte laufen stabil; die Worker-Parallelisierung ist in der aktuellen Umgebung der Fehlerausloeser.
 - Date/Author:
   - 2026-06-05 / Codex.
 

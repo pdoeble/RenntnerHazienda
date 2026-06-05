@@ -677,6 +677,147 @@ Die Belegungsrechnung trennt Eigennutzung und Fremdvermietung. Eigennutzung wird
 - Geltungsbereich: internes App-Modell
 - Stabilität: niedrig
 
+## 24. Aktuelle Erweiterung: Regeln-Tab und steuerbare Berechnungsvorschriften
+
+### Kernaussage
+Der linke Tab `Regeln` bündelt die steuerbaren Berechnungsvorschriften. Dort liegen seit Projektstand 2026-06-05 die Punktregeln, die Anteilregeln und die Nutzungs-/Belegungsregeln. Der Immobilien-Tab enthält dadurch wieder überwiegend Objektdaten, und der Strategie-Tab bleibt auf Liquiditätsziele, Bank-Zielquote, Mietertrags-Offset und Entscheidungsprüfpunkte konzentriert.
+
+### Punkt- und Nutzungsregeln
+Der Basispreis je Zimmernacht beträgt im Default `6 EUR`. Eine Zimmernacht ist ein Zimmer für eine Nacht, nicht das ganze Haus. Die App berechnet daraus beispielhafte Zimmernachtkosten über Wochenend- und Saisonfaktoren.
+
+```text
+Zimmernachtkosten =
+  Basispreis je Zimmernacht
+  * Wochenendfaktor
+  * Saisonfaktor
+
+Jahres-Nutzungsbudget =
+  Nutzungsentgelt monatlich
+  * 12
+
+Nutzungsanteil =
+  Jahres-Nutzungsbudget Eigner
+  / Summe Jahres-Nutzungsbudget aller Eigner
+  * 100
+
+leistbare Zimmernächte =
+  Jahres-Nutzungsbudget
+  / gewichteter Zimmernachtpreis
+```
+
+### Anteilregeln
+Die Anteilregeln steuern, ob die App laufende Tilgung oder manuelle Kapitalrücklagen als anteilswirksame Kapitalwerte behandelt. Nutzungsentgelt und Kostenbeitrag verändern Unternehmensanteile nicht. Der Bewertungszins ist eine interne Planungsannahme, mit der Zahlungen zu unterschiedlichen Zeitpunkten vergleichbar gemacht werden.
+
+```text
+Unternehmensanteil =
+  anteilswirksamer Kapitalwert Eigner
+  / Summe anteilswirksamer Kapitalwerte
+  * 100
+```
+
+### Monatsnettoeinkommen und Belastungsquote
+Alle Default-Eigner haben seit dieser Änderung ein Monatsnettoeinkommen von `2.900 EUR`. Fehlende oder nicht-positive alte Demo-Werte werden bei Migration auf diesen Wert gesetzt. Positive manuell eingetragene Werte bleiben unverändert.
+
+```text
+Persönliche Belastungsquote =
+  Summe modellierte Monatszahlungen der Beteiligten
+  / Summe Monatsnettoeinkommen der Beteiligten
+  * 100
+```
+
+### Quelle
+- Quelle: Regeln-Tab und Berechnungsfunktionen
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/app/layout/InputTabs.tsx
+- Link: ../simTool/src/calculations/calculatePoints.ts
+- Link: ../simTool/src/calculations/calculateCapitalShares.ts
+- Link: ../simTool/src/calculations/calculateBankView.ts
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 25. Aktuelle Erweiterung: 25-Jahres-Wert in `Mein Anteil`
+
+### Kernaussage
+Der Tab `Mein Anteil` zeigt zusätzlich eine feste 25-Jahres-Betrachtung. Sie trennt Vermögenswert, investiertes Kapital und nicht vermögenswirksame Zahlungen. Kostenumlage und Nutzungsentgelt werden deshalb gezeigt, aber nicht in die Renditebasis gemischt.
+
+### Formeln
+```text
+Objektwert nach 25 Jahren =
+  Objektwert heute
+  * (1 + Wertsteigerung p.a.)^25
+
+Projekt-Nettovermögen nach 25 Jahren =
+  Objektwert nach 25 Jahren
+  + Bankkonto-Endstand nach 25 Jahren
+  - Restschuld nach 25 Jahren
+
+Eigener Vermögenswert nach 25 Jahren =
+  Unternehmensanteil
+  * Projekt-Nettovermögen nach 25 Jahren
+
+Investiertes Kapital =
+  Start-EK
+  + vermögenswirksame Kapitalrücklage / Anlage bis Jahr 25
+
+Nicht vermögenswirksame Zahlungen =
+  Kostenumlage bis Jahr 25
+  + Nutzungsentgelt bis Jahr 25
+```
+
+Die durchschnittliche Jahresrendite wird bevorzugt als interner Zinsfuß aus Start-EK, jährlichen vermögenswirksamen Zahlungen und Endwert berechnet. Wenn die numerische Lösung nicht stabil möglich ist, nutzt die App die vereinfachte Ersatzformel:
+
+```text
+Durchschnittliche Jahresrendite =
+  (Eigener Vermögenswert nach 25 Jahren / Investiertes Kapital)^(1/25)
+  - 1
+```
+
+### Quelle
+- Quelle: Persönliche Renditeberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/calculations/calculatePersonalReturns.ts
+- Link: ../simTool/src/app/layout/VisualizationTabs.tsx
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 26. Aktuelle Erweiterung: Diagrammachsen und Anteilsdiagramme
+
+### Kernaussage
+Die Diagramme sind so angepasst, dass große Einmalbeträge kleinere laufende Beträge nicht optisch überdecken. Im Bankkonto-Zahlungsfluss erhält Jahr 1 eine eigene Achse für Erwerb und Finanzierung, Folgejahre erhalten eine zweite Achse für laufende Einzahlungen und Auszahlungen. In `Beiträge / Nutzung` hat Start-EK eine eigene Achse, während monatliche Zahlungen auf der Monatsachse bleiben. Der Tab `Punkte` zeigt statt eines Balkendiagramms zwei Kreisdiagramme: Nutzungsanteil und Unternehmensanteil.
+
+### Anzeige-Logik
+```text
+Bankkonto-Zahlungsfluss:
+  Jahr-1-Stapel -> linke Achse
+  Folgejahr-Stapel -> rechte Achse
+
+Beiträge / Nutzung:
+  Start-EK einmalig -> rechte Achse
+  Kostenbeitrag, Kapitalrücklage, Nutzungsentgelt monatlich -> linke Achse
+
+Punkte:
+  Kreisdiagramm Nutzungsanteil =
+    Nutzungsbudget Eigner / Summe Nutzungsbudgets
+
+  Kreisdiagramm Unternehmensanteil =
+    Unternehmensanteil aus Kapitalanteilsberechnung
+```
+
+Der Tooltip zeigt weiterhin echte Euro- oder Prozentwerte. Die Achsentrennung ist nur eine Darstellungsentscheidung und ändert keine Berechnung.
+
+### Quelle
+- Quelle: Visualisierungslogik
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: ../simTool/src/app/layout/VisualizationTabs.tsx
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-05
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
 ## 13. Nutzungsentgelt, Nutzungspunkte und Zimmernächte
 
 ### Kernaussage

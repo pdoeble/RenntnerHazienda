@@ -506,3 +506,67 @@ Der Rechtsformvergleich soll neutral bleiben, aber jede Rechtsform braucht fachl
 - Abrufdatum: 2026-06-05
 - Geltungsbereich: interne Strukturprüfung
 - Stabilität: niedrig
+
+## 15. Rechtsform-Kostenprofile im simTool
+
+### Kernaussage
+Das `simTool` führt je Rechtsform ein Kostenprofil mit Gründungskosten, laufender Buchhaltung, laufender Verwaltung und laufender Compliance. Diese Werte sind Planungsannahmen. Sie ersetzen keine Angebote von Notariat, Rechtsberatung, Steuerberatung, Bank oder Revisionsverband. Die App übernimmt die Werte nicht automatisch beim Wechsel der Rechtsform, sondern erst über den Button `Kostenprofil übernehmen`.
+
+### Kurzbeschreibungen der Rechtsformen
+Miteigentum bedeutet, dass die Beteiligten direkt am Objekt beteiligt sind. Die Rechtsform ist einfach, schafft aber keine eigene Haftungshülle. Nutzung, Kosten, Verkauf und Austritt müssen vertraglich geregelt werden. Banken prüfen dabei häufig die persönliche Haftung und Sicherheiten der Beteiligten. Für gemeinschaftliche Ferienhausnutzung ist Miteigentum nur mit sauberer Benützungsvereinbarung belastbar.
+
+Ein GesbR-Syndikat ist eine vertragliche Personengesellschaft ohne eigene Rechtspersönlichkeit. Es kann Innenregeln für Kapital, Nutzung und Ausstieg relativ flexibel abbilden. Die Beteiligten müssen Haftung und Vertretung besonders klar regeln. Für Banken bleibt die persönliche Bonität der Beteiligten ein zentrales Thema. Als Ferienhausstruktur ist die GesbR eher Vertragsmodell als eigenständiger Rechtsträger.
+
+Der Verein ist ein ideeller Rechtsträger mit Mitgliedern und Organen. Er entsteht über Statuten und das vereinsbehördliche Verfahren. Mitgliedschaft ersetzt keine eigentumsnahe Beteiligungstabelle. Entgeltliche Nutzung und Drittvermietung können den ideellen Charakter fachlich belasten. Für das Ferienhausmodell ist der Verein daher vor allem als Negativ- oder Prüfvergleich nützlich.
+
+Die GmbH ist eine Kapitalgesellschaft mit eigener Rechtspersönlichkeit. Sie bildet Unternehmensanteile, Gesellschafterbeschlüsse und Darlehenskonten strukturiert ab. Die Haftung ist grundsätzlich auf das Gesellschaftsvermögen begrenzt, Bankgarantien können das praktisch relativieren. Sie verursacht Gründungs-, Buchhaltungs- und Mindeststeuerkosten. Für ein investitionsnahes Ferienhausmodell ist sie professionell, aber laufend teurer.
+
+Die FlexCo ist eine junge Kapitalgesellschaft, die stark an die GmbH angelehnt ist. Sie erleichtert bestimmte Beteiligungsinstrumente und Anteilsübertragungen. Für Immobiliengruppen ist ihre konkrete Bank- und Beratungspraxis gesondert zu prüfen. Haftung, Steuerlogik und Buchhaltung sind kapitalgesellschaftlich zu behandeln. Im Ferienhausmodell ist sie nur sinnvoll, wenn die Beteiligungsflexibilität den Zusatzaufwand rechtfertigt.
+
+Die KG ist eine Personengesellschaft mit Komplementär und Kommanditisten. Der Komplementär haftet unbeschränkt, Kommanditisten haften grundsätzlich bis zur Haftsumme. Kapitalkonten, Darlehenskonten und Exit-Regeln lassen sich vertraglich gut abbilden. Die Struktur bleibt haftungsseitig sensibel, wenn natürliche Personen Komplementär sind. Für das Ferienhausmodell ist die KG ein transparenter Vergleich, wenn Haftung bewusst geregelt wird.
+
+Die GmbH & Co KG verbindet eine KG mit einer GmbH als Komplementärin. Dadurch wird die unbeschränkte Komplementärhaftung wirtschaftlich auf eine GmbH verlagert. Kapitalkonten, Darlehenskonten und Beteiligtenrechte können sehr differenziert geregelt werden. Die Struktur braucht zwei Ebenen und ist deshalb deutlich teurer und formaler. Für ein gemischtes Kapital- und Nutzungsmodell ist sie stark, wenn Komplexität und Kosten akzeptiert werden.
+
+Die Genossenschaft ist ein mitgliederorientierter Rechtsträger mit eigener Rechtspersönlichkeit. Sie dient der Förderung des Erwerbs oder der Wirtschaft ihrer Mitglieder. Gründung und laufender Betrieb setzen Satzung, Wirtschaftlichkeitsprüfung und Revisionsverband voraus. Mitgliedschaft und Nutzungsrechte passen grundsätzlich zusammen, müssen aber exakt satzungsmäßig gefasst werden. Für das Ferienhausmodell ist sie ein Sonderfall mit hohem Prüf- und Kostenbedarf.
+
+Sonstige Strukturen stehen für Einzelfallmodelle außerhalb der Standardprofile. Sie können vertraglich passend sein, sind aber ohne Beratung nicht belastbar. Kosten, Haftung, Steuerlogik und Bankfähigkeit sind offen. Die App rechnet hier bewusst nicht mit verdeckten Standardwerten. Vor Nutzung dieses Profils muss eine konkrete Struktur schriftlich entworfen werden.
+
+### Kostenprofile in der App
+| Rechtsform | Gründung | Buchhaltung p.a. | Verwaltung p.a. | Compliance p.a. | Quellenstatus |
+|---|---:|---:|---:|---:|---|
+| Miteigentum | 1.500 EUR | 0 EUR | 600 EUR | 0 EUR | Planungsspanne |
+| GesbR-Syndikat | 1.500 EUR | 1.500 EUR | 600 EUR | 0 EUR | Planungsspanne |
+| Verein | 57 EUR | 600 EUR | 600 EUR | 0 EUR | Gebühren quellenbasiert, laufend Planungsspanne |
+| GmbH | 2.450 EUR | 4.200 EUR | 600 EUR | 500 EUR | Planungsspanne |
+| FlexCo | 2.450 EUR | 4.200 EUR | 600 EUR | 500 EUR | Planungsspanne |
+| KG | 1.760 EUR | 1.500 EUR | 600 EUR | 0 EUR | Planungsspanne |
+| GmbH & Co KG | 4.210 EUR | 6.000 EUR | 1.200 EUR | 500 EUR | Planungsspanne |
+| Genossenschaft | 2.500 EUR | 4.200 EUR | 1.200 EUR | 2.000 EUR | Einzelfall prüfen |
+| Sonstige | 0 EUR | 0 EUR | 0 EUR | 0 EUR | Einzelfall prüfen |
+
+### Einordnung
+Die WKO nennt für OG/KG-Gesellschaftsverträge, Firmenbucheintragungen, GmbH-Vertragserrichtungen und GmbH-Firmenbucheintragungen nur Orientierungswerte oder abhängigkeitsbezogene Angaben. Die Werte in der App runden diese Angaben zu Planungsannahmen. Laufende Buchhaltungs- und Jahresabschlusskosten beruhen zusätzlich auf einer sekundären Honorar-Auswertung für Österreich und müssen durch konkrete Angebote ersetzt werden. Vereinsspesen sind teilweise gebührenbasiert quellenbasiert, laufende Vereinsverwaltung bleibt aber ebenfalls eine Schätzung. Die Genossenschaft ist wegen Revisionsverband, Satzung und Prüfung besonders einzelfallabhängig.
+
+### Quelle
+- Quelle: Gründungskosten
+- Herausgeber: Wirtschaftskammer Österreich
+- Link: https://www.wko.at/gruendung/gruendungskosten
+- Stand/Veröffentlichungsdatum: 06.02.2025
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich, Gründungskosten nach Unternehmensform
+- Stabilität: mittel
+
+### Weitere Quellen
+- Quelle: GmbH / FlexCo / KG / GmbH & Co KG / Genossenschaft / Vereinswesen / Steuerberater-Honorar-Auswertung
+- Herausgeber: WKO / Bundesministerium für Inneres / Steuerberater Österreich
+- Link: https://www.wko.at/gruendung/gesellschaft-beschraenkter-haftung-gmbh
+- Link: https://www.wko.at/gruendung/flexible-kapitalgesellschaft-flexkapg-
+- Link: https://www.wko.at/gruendung/kommanditgesellschaft-kg
+- Link: https://www.wko.at/wirtschaftsrecht/gmbh-und-co-kg-faq
+- Link: https://www.wko.at/gruendung/genossenschaft
+- Link: https://www.bmi.gv.at/609/start.html
+- Link: https://deine-steuerberater.at/wissenswertes/steuerberater-kosten
+- Stand/Veröffentlichungsdatum: WKO/BMI Websites 2025/2026 bzw. laufend; Honorar-Auswertung 22.05.2026
+- Abrufdatum: 2026-06-05
+- Geltungsbereich: Österreich
+- Stabilität: mittel für Rechtsformmerkmale, niedrig bis mittel für Kostenwerte
