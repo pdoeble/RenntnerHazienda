@@ -15,6 +15,7 @@ describe("App shell", () => {
       screen.queryByRole("tab", { name: "Nebenkosten" })
     ).not.toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Finanzierung" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Regeln" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Strategie" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Hausvergleich" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Projekt" })).toHaveAttribute(
@@ -25,8 +26,23 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
     expect(screen.getByText("Nebenkosten")).toBeInTheDocument();
+    expect(
+      screen.queryByText("Punktregeln fuer Zimmernaechte")
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("tab", { name: "Regeln" }));
+    expect(screen.getByText("Punktregeln fuer Zimmernaechte")).toBeInTheDocument();
+    expect(screen.getByLabelText("Basispreis je Zimmernacht")).toHaveValue(6);
+    expect(
+      screen.getByText("Tilgung veraendert Unternehmensanteile")
+    ).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Gesellschaftsform" }));
+    expect(screen.getByRole("button", { name: "Kostenprofil uebernehmen" })).toBeInTheDocument();
+    expect(
+      screen.getByText("Miteigentum bedeutet, dass die Beteiligten direkt am Objekt beteiligt sind.")
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Planungsspanne").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Beteiligungstabelle").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Darlehenskonten").length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText("Exit / Uebertragung").length).toBeGreaterThanOrEqual(1);
@@ -53,9 +69,12 @@ describe("App shell", () => {
 
     fireEvent.click(screen.getByRole("tab", { name: "Punkte" }));
     expect(screen.getByText("Theoretischer Zimmernacht-Pool")).toBeInTheDocument();
+    expect(screen.getAllByText("Nutzungsanteil").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("Unternehmensanteil").length).toBeGreaterThanOrEqual(1);
 
     fireEvent.click(screen.getByRole("tab", { name: "Mein Anteil" }));
     expect(screen.getByText("Projektionsjahre")).toBeInTheDocument();
+    expect(screen.getByText("Wert nach 25 Jahren")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Belegung" }));
     expect(screen.getByText("Belegungsdruck")).toBeInTheDocument();
@@ -91,13 +110,8 @@ describe("App shell", () => {
   it("updates strategy targets and shows the capital bridge", () => {
     render(<App />);
 
+    fireEvent.click(screen.getByRole("tab", { name: "Regeln" }));
     fireEvent.click(screen.getByRole("tab", { name: "Strategie" }));
-    expect(
-      screen.getByText("Tilgung veraendert Unternehmensanteile")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("Kapitalruecklage / Anlage veraendert Unternehmensanteile")
-    ).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText("Zielliquiditaet"), {
       target: { value: "60000" }
     });
@@ -118,6 +132,9 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Eignerschaft" }));
     fireEvent.click(screen.getByRole("button", { name: "Eigner hinzufuegen" }));
     expect(screen.getByDisplayValue("Eigner 12")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Monatsnettoeinkommen").at(-1)).toHaveValue(
+      2900
+    );
     fireEvent.click(screen.getAllByRole("button", { name: "Loeschen" }).at(-1)!);
     expect(screen.queryByDisplayValue("Eigner 12")).not.toBeInTheDocument();
 

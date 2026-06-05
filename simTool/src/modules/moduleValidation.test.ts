@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import { defaultOwnershipTemplate } from "./ownership/defaults";
+import { migrateOwnership } from "./ownership/migrations";
 import { ownershipTemplateSchema } from "./ownership/schema";
 import { defaultOpexTemplate } from "./opex/defaults";
+import { defaultPropertyTemplate } from "./property/defaults";
+import { propertyTemplateSchema } from "./property/schema";
 import { defaultFinancingTemplate } from "./financing/defaults";
 import { financingTemplateSchema } from "./financing/schema";
 import { defaultStrategyTemplate } from "./strategy/defaults";
@@ -26,6 +29,43 @@ describe("module validation contracts", () => {
     expect(parsed.id).toBeTruthy();
     expect(parsed.name).toBeTruthy();
     expect(parsed.data.owners).toHaveLength(11);
+    expect(
+      parsed.data.owners.every((owner) => owner.monthlyNetIncomeAmount === 2900)
+    ).toBe(true);
+  });
+
+  it("defaults schema owner income and room-night base price", () => {
+    const legacyOwnership = structuredClone(defaultOwnershipTemplate);
+    delete (
+      legacyOwnership.data.owners[0] as Partial<
+        (typeof legacyOwnership.data.owners)[number]
+      >
+    ).monthlyNetIncomeAmount;
+    legacyOwnership.data.owners[1]!.monthlyNetIncomeAmount = 0;
+
+    const parsedOwnership = ownershipTemplateSchema.parse(legacyOwnership);
+    const parsedProperty = propertyTemplateSchema.parse(defaultPropertyTemplate);
+
+    expect(parsedOwnership.data.owners[0]?.monthlyNetIncomeAmount).toBe(2900);
+    expect(parsedOwnership.data.owners[1]?.monthlyNetIncomeAmount).toBe(0);
+    expect(parsedProperty.data.pointRules.basePerBedPerNight).toBe(6);
+  });
+
+  it("migrates missing or non-positive owner income to the current default", () => {
+    const legacyOwnership = structuredClone(defaultOwnershipTemplate);
+    delete (
+      legacyOwnership.data.owners[0] as Partial<
+        (typeof legacyOwnership.data.owners)[number]
+      >
+    ).monthlyNetIncomeAmount;
+    legacyOwnership.data.owners[1]!.monthlyNetIncomeAmount = 0;
+    legacyOwnership.data.owners[2]!.monthlyNetIncomeAmount = 3100;
+
+    const migrated = migrateOwnership(legacyOwnership);
+
+    expect(migrated.data.owners[0]?.monthlyNetIncomeAmount).toBe(2900);
+    expect(migrated.data.owners[1]?.monthlyNetIncomeAmount).toBe(2900);
+    expect(migrated.data.owners[2]?.monthlyNetIncomeAmount).toBe(3100);
   });
 
   it("validates the financing template envelope", () => {

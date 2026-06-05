@@ -41,6 +41,17 @@ describe("calculation pipeline", () => {
     ).toBe(false);
   });
 
+  it("uses current default rules for room-night price and owner income", () => {
+    const project = projectFixture();
+
+    expect(project.property.data.pointRules.basePerBedPerNight).toBe(6);
+    expect(
+      project.ownership.data.owners.every(
+        (owner) => owner.monthlyNetIncomeAmount === 2900
+      )
+    ).toBe(true);
+  });
+
   it("derives ownership shares and initial contributions from owner equity", () => {
     const snapshot = buildProjectSnapshot(projectFixture(), {
       timeHorizonMonths: 12
@@ -461,7 +472,7 @@ describe("calculation pipeline", () => {
         companySharePct: 17.7778,
         pointSharePct: 15.3846,
         annualPoints: 1200,
-        affordableNightsAverage: 738
+        affordableNightsAverage: 123
       })
     );
     expect(points.owners[8]).toEqual(
@@ -471,8 +482,8 @@ describe("calculation pipeline", () => {
         annualPoints: 600
       })
     );
-    expect(nightPoints(new Date(2026, 3, 8), snapshot)).toBe(1);
-    expect(nightPoints(new Date(2026, 0, 10), snapshot)).toBeCloseTo(2.7);
+    expect(nightPoints(new Date(2026, 3, 8), snapshot)).toBe(6);
+    expect(nightPoints(new Date(2026, 0, 10), snapshot)).toBeCloseTo(16.2);
   });
 
   it("calculates occupancy pressure from room-nights and weekend demand", () => {
@@ -528,7 +539,9 @@ describe("calculation pipeline", () => {
     expect(result.bank.zielBeleihungsauslaufPct).toBe(90);
     expect(result.bank.fmaBelastungsquoteRichtwertPct).toBe(40);
     expect(result.bank.fmaLaufzeitRichtwertJahre).toBe(35);
-    expect(result.bank.persoenlicheBelastungsquotePct).toBeNull();
+    expect(result.bank.persoenlichesMonatsnettoeinkommen).toBe(31900);
+    expect(result.bank.persoenlicheBelastungsquotePct).toBeGreaterThan(0);
+    expect(result.bank.persoenlicheBelastungsquotePct).toBeLessThan(40);
     expect(result.bank.stressfaelle).toHaveLength(4);
     expect(result.bank.stressfaelle).toContainEqual(
       expect.objectContaining({
@@ -557,6 +570,24 @@ describe("calculation pipeline", () => {
           diagnostic.id === "bank.persoenliche-belastungsquote-hoch"
       )
     ).toBe(true);
+  });
+
+  it("calculates the 25-year personal value and return view", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 300 })
+    );
+    const phil = result.personalReturns.owners.find(
+      (owner) => owner.ownerId === "phil"
+    );
+
+    expect(result.personalReturns.years).toBe(25);
+    expect(result.personalReturns.propertyValueToday).toBe(670000);
+    expect(phil?.projectedPropertyValue).toBeGreaterThan(670000);
+    expect(phil?.projectedRemainingDebt).toBeCloseTo(0, 1);
+    expect(phil?.projectedOwnerValue).toBeGreaterThan(0);
+    expect(phil?.investedCapital).toBeGreaterThanOrEqual(40000);
+    expect(phil?.nonWealthPayments).toBeGreaterThan(0);
+    expect(phil?.averageAnnualReturnPct).not.toBeNaN();
   });
 
   it("aggregates bank account cashflow with yearly account balance", () => {
