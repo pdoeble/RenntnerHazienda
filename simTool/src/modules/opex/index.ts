@@ -7,7 +7,7 @@ import type { OpexTemplate } from "./types";
 
 export const opexModule: InputModule<OpexTemplate> = {
   kind: "opex",
-  label: "Opex",
+  label: "Betriebskosten",
   schemaId: TEMPLATE_SCHEMA_IDS.opex,
   fileSuffix: TEMPLATE_FILE_SUFFIXES.opex,
   defaultTemplate: defaultOpexTemplate,

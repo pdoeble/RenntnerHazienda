@@ -447,7 +447,7 @@ function OwnershipEditor({
             </button>
           </div>
           <NumberSliderField
-            label="Nutzungsbeitrag mtl."
+            label="Nutzungsentgelt mtl."
             value={owner.monthlyUsageContribution}
             min={0}
             max={1000}
@@ -491,7 +491,7 @@ function OwnershipEditor({
           />
           {projectState.strategy.data.capitalShareMode === "manualMonthly" ? (
             <NumberSliderField
-              label="Anlagebeitrag mtl."
+              label="Kapitalruecklage / Anlage mtl."
               value={owner.monthlyCapitalContribution}
               min={0}
               max={5000}
@@ -690,8 +690,8 @@ function LegalFormEditor({
         </label>
         <p className="muted">
           Gruendungskosten erhoehen den Kapitalbedarf. Laufende Rechtsform-,
-          Buchhaltungs- und Compliancekosten laufen monatlich in Cashflow,
-          Liquiditaet und Beitraege.
+          Buchhaltungs- und Compliancekosten laufen monatlich in
+          Bankkonto-Zahlungsfluss, Liquiditaet und Beitraege.
         </p>
         <label className="text-field">
           <span>Notizen</span>
@@ -1487,7 +1487,7 @@ function StrategyEditor({
             }
           >
             <option value="scheduledPrincipal">Tilgung nach Start-EK-Anteil</option>
-            <option value="manualMonthly">Manuelle Anlagebeitraege</option>
+            <option value="manualMonthly">Manuelle Kapitalruecklagen</option>
           </select>
         </label>
         <NumberSliderField
@@ -1516,14 +1516,14 @@ function StrategyEditor({
               })
             }
           >
-            <option value="usage">Aus Nutzungsbeitrag berechnen</option>
-            <option value="blended">Legacy: Mischanteil</option>
-            <option value="tier">Legacy: Nutzungsgewicht</option>
-            <option value="equity">Legacy: Unternehmensanteil</option>
+            <option value="usage">Aus Nutzungsentgelt berechnen</option>
+            <option value="blended">Altbestand: Mischanteil</option>
+            <option value="tier">Altbestand: Nutzungsgewicht</option>
+            <option value="equity">Altbestand: Unternehmensanteil</option>
           </select>
         </label>
         <NumberSliderField
-          label="Legacy Nutzungsgewicht"
+          label="Altbestand Nutzungsgewicht"
           value={projectState.strategy.data.pointTierWeight}
           min={0}
           max={100}
@@ -1537,7 +1537,7 @@ function StrategyEditor({
           }
         />
         <NumberSliderField
-          label="Legacy Unternehmensgewicht"
+          label="Altbestand Unternehmensgewicht"
           value={projectState.strategy.data.pointEquityWeight}
           min={0}
           max={100}
@@ -1592,9 +1592,79 @@ function StrategyEditor({
             })
           }
         />
+        <NumberSliderField
+          label="Externe Auslastung"
+          value={projectState.strategy.data.externalOccupancyRatePct}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(externalOccupancyRatePct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              externalOccupancyRatePct
+            })
+          }
+        />
+        <NumberSliderField
+          label="Durchschnittspreis Fremdnacht"
+          value={projectState.strategy.data.averageGrossPricePerExternalRoomNight}
+          min={0}
+          max={500}
+          step={5}
+          unit="EUR"
+          onChange={(averageGrossPricePerExternalRoomNight) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              averageGrossPricePerExternalRoomNight
+            })
+          }
+        />
+        <NumberSliderField
+          label="Verdraengungsfaktor Eigennutzung"
+          value={projectState.strategy.data.ownerUseDisplacementFactorPct}
+          min={0}
+          max={100}
+          step={5}
+          unit="%"
+          onChange={(ownerUseDisplacementFactorPct) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              ownerUseDisplacementFactorPct
+            })
+          }
+        />
+        <NumberSliderField
+          label="Variable Kosten je Zimmernacht"
+          value={projectState.strategy.data.variableCostPerRoomNightAmount}
+          min={0}
+          max={200}
+          step={5}
+          unit="EUR"
+          onChange={(variableCostPerRoomNightAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              variableCostPerRoomNightAmount
+            })
+          }
+        />
+        <NumberSliderField
+          label="Ruecklage je Zimmernacht"
+          value={projectState.strategy.data.reservePerRoomNightAmount}
+          min={0}
+          max={200}
+          step={5}
+          unit="EUR"
+          onChange={(reservePerRoomNightAmount) =>
+            updateStrategyData({
+              ...projectState.strategy.data,
+              reservePerRoomNightAmount
+            })
+          }
+        />
       </div>
       <div className="form-section">
-        <h3>Go/No-Go-Pruefpunkte</h3>
+        <h3>Entscheidungs-Pruefpunkte</h3>
         {projectState.strategy.data.goNoGoChecks.map((check) => (
           <div className="nested-item" key={check.id}>
             <label className="text-field">
@@ -1880,7 +1950,7 @@ function OpexEditor({
   return (
     <div className="form-grid">
       <div className="form-section">
-        <h3>Opex-Plausibilitaet</h3>
+        <h3>Betriebskosten-Plausibilitaet</h3>
         <DataPreview
           rows={[
             ["Modelliert pro Jahr", formatMoney(opexSummary.annualTotal)],
@@ -1890,8 +1960,8 @@ function OpexEditor({
           ]}
         />
         <p className="muted">
-          Nur angelegte Kostenbloecke gehen in Cashflow und Beitraege ein.
-          Fehlende Kategorien sind offene Annahmen.
+          Nur angelegte Kostenbloecke gehen in Bankkonto-Zahlungsfluss und
+          Beitraege ein. Fehlende Kategorien sind offene Annahmen.
         </p>
       </div>
       <button
@@ -1915,7 +1985,7 @@ function OpexEditor({
         }
       >
         <Plus aria-hidden="true" size={16} />
-        <span>Opex-Block hinzufuegen</span>
+        <span>Betriebskostenblock hinzufuegen</span>
       </button>
       {projectState.opex.data.recurringItems.map((item) => (
         <div className="form-section" key={item.id}>

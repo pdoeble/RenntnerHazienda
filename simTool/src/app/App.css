@@ -469,6 +469,62 @@ button:disabled {
   margin-bottom: 6px;
 }
 
+.metric-label {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}
+
+.help-popover {
+  display: inline-flex;
+  position: relative;
+}
+
+.help-popover-button,
+.help-popover-close {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #c9d2dc;
+  border-radius: 999px;
+  color: #44515f;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 24px;
+  min-width: 24px;
+  padding: 0;
+}
+
+.help-popover-button:hover,
+.help-popover-close:hover {
+  border-color: #748494;
+}
+
+.help-popover-panel {
+  background: #ffffff;
+  border: 1px solid #c9d2dc;
+  border-radius: 6px;
+  box-shadow: 0 12px 30px rgb(15 23 42 / 16%);
+  color: #243447;
+  font-size: 0.88rem;
+  font-weight: 400;
+  left: 0;
+  line-height: 1.45;
+  min-width: 240px;
+  padding: 12px 36px 12px 12px;
+  position: absolute;
+  top: 30px;
+  white-space: normal;
+  z-index: 20;
+}
+
+.help-popover-close {
+  min-height: 22px;
+  min-width: 22px;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+}
+
 .metric strong {
   font-size: 1.18rem;
 }

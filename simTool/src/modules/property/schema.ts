@@ -213,6 +213,7 @@ export const propertyRenovationItemSchema = z
 
 export const propertyDataSchema = z
   .object({
+    objektkennung: z.string().optional(),
     title: z.string().optional(),
     sourceUrl: z.string().optional(),
     sourcePortal: z.string().optional(),

@@ -32,7 +32,7 @@ export function calculatePoints(
           "points.zero-weights",
           "error",
           "strategy",
-          "Point weights are zero; point shares cannot be allocated."
+          "Punkte-Gewichte sind null; Nutzungsrechte koennen nicht verteilt werden."
         )
       );
     }
@@ -50,7 +50,7 @@ export function calculatePoints(
         "points.no-usage-budget",
         "warning",
         "ownership",
-        "Keine Nutzungsbeitraege hinterlegt; Nutzung kann nicht in Zimmernaechte umgerechnet werden."
+        "Keine Nutzungsentgelte hinterlegt; Nutzung kann nicht in Zimmernaechte umgerechnet werden."
       )
     );
   }

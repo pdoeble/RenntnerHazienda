@@ -11,6 +11,7 @@ import {
   calculateReserveTarget
 } from "./calculateContributions";
 import { calculateDebt } from "./calculateDebt";
+import { calculateFundingBalance } from "./financialInputs";
 import { calculatePoints, nightPoints } from "./calculatePoints";
 import type { ProjectState } from "../state/projectStore";
 import { defaultProjectState } from "../state/projectStore";
@@ -182,6 +183,74 @@ describe("calculation pipeline", () => {
     expect(result.capitalNeed.debtPrincipal).toBe(523910);
   });
 
+  it("balances Mittelherkunft and Mittelverwendung with an automatic bank loan", () => {
+    const snapshot = buildProjectSnapshot(projectFixture(), {
+      timeHorizonMonths: 12
+    });
+    const funding = calculateFundingBalance(snapshot);
+
+    expect(funding.istSaldierend).toBe(true);
+    expect(funding.gesamtMittelverwendung).toBe(748910);
+    expect(funding.nichtBankMittelherkunft).toBe(225000);
+    expect(funding.bankdarlehen).toBe(523910);
+    expect(funding.gesamtMittelherkunft).toBe(funding.gesamtMittelverwendung);
+    expect(funding.mittelherkunft).toContainEqual(
+      expect.objectContaining({
+        id: "bankdarlehen-auto",
+        zahlungsklasse: "bankdarlehen",
+        rueckzahlbar: true,
+        besichert: true
+      })
+    );
+  });
+
+  it("shows a financing gap when the manual bank loan is too low", () => {
+    const project = projectFixture();
+    project.financing.data.bankdarlehenModus = "manuell";
+    project.financing.data.mittelherkunft = [
+      {
+        id: "start-ek-manuell",
+        bezeichnung: "Start-EK der Beteiligten",
+        zahlungsklasse: "echtesEigenkapital",
+        bruttoBetrag: 225000,
+        monat: 0,
+        rang: "eigenkapitalnah",
+        rueckzahlbar: false,
+        zinssatzPct: 0,
+        besichert: false,
+        wirktAufUnternehmensanteil: true,
+        wirktAufNutzungsrechte: false,
+        umsatzsteuerRelevant: false
+      },
+      {
+        id: "bankdarlehen-manuell",
+        bezeichnung: "Manuell zugesagtes Bankdarlehen",
+        zahlungsklasse: "bankdarlehen",
+        bruttoBetrag: 100000,
+        monat: 0,
+        rang: "vorrangig",
+        rueckzahlbar: true,
+        zinssatzPct: 4,
+        besichert: true,
+        wirktAufUnternehmensanteil: false,
+        wirktAufNutzungsrechte: false,
+        umsatzsteuerRelevant: false
+      }
+    ];
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+
+    expect(result.capitalNeed.funding.istSaldierend).toBe(false);
+    expect(result.capitalNeed.funding.finanzierungsluecke).toBe(423910);
+    expect(
+      result.diagnostics.some(
+        (diagnostic) => diagnostic.id === "funding.sources-uses-not-balanced"
+      )
+    ).toBe(true);
+  });
+
   it("reconciles capital need, cashflow signs, and month-zero liquidity", () => {
     const result = calculateAll(
       buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
@@ -317,6 +386,43 @@ describe("calculation pipeline", () => {
     expect(result.occupancy.weekendOccupancyPct).toBeGreaterThan(
       result.occupancy.weekdayOccupancyPct
     );
+  });
+
+  it("values owner use separately from external rental nights", () => {
+    const project = projectFixture();
+    project.property.data.candidateHouses = [];
+    project.property.data.bedrooms = 30;
+    project.property.data.guestNightsPerYear = 60;
+
+    const result = calculateAll(
+      buildProjectSnapshot(project, { timeHorizonMonths: 12 })
+    );
+
+    expect(result.occupancy.externalRentableRoomNights).toBeGreaterThan(0);
+    expect(result.occupancy.externalOccupiedRoomNights).toBe(60);
+    expect(result.occupancy.netExternalRevenue).toBe(
+      result.occupancy.externalOccupiedRoomNights *
+        result.occupancy.averageGrossPricePerExternalRoomNight
+    );
+    expect(result.occupancy.ownerUseEconomicValue).toBe(
+      Math.max(
+        result.occupancy.ownerUseMarketOffsetValue,
+        result.occupancy.ownerUseCostFloorValue
+      )
+    );
+  });
+
+  it("calculates bank-facing indicators from debt and operating waterfall", () => {
+    const result = calculateAll(
+      buildProjectSnapshot(projectFixture(), { timeHorizonMonths: 12 })
+    );
+
+    expect(result.bank.beleihungsauslaufPct).toBeCloseTo(78.1955, 4);
+    expect(result.bank.kapitaldienstJahr1).toBeGreaterThan(0);
+    expect(result.bank.bankpruefungsZahlungsflussJahr1).toBeDefined();
+    expect(result.bank.zielBeleihungsauslaufPct).toBe(90);
+    expect(result.bank.fmaBelastungsquoteRichtwertPct).toBe(40);
+    expect(result.bank.fmaLaufzeitRichtwertJahre).toBe(35);
   });
 
   it("aggregates bank account cashflow with yearly account balance", () => {

@@ -14,6 +14,7 @@ export const defaultPropertyTemplate: PropertyTemplate = {
   createdAt: DEFAULT_TEMPLATE_TIMESTAMP,
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,
   data: {
+    objektkennung: "objekt-waldchalet-pfunds-demo",
     title:
       "Waldchalet Pfunds - provisionsfrei - inmitten der atemberaubenden Berglandschaft Tirols",
     sourceUrl:

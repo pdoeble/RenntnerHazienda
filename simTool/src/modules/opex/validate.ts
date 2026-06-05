@@ -13,7 +13,7 @@ export function validateOpex(template: OpexTemplate): ValidationResult {
         `opex.duplicate-item.${duplicateId}`,
         "error",
         "opex",
-        `Opex item id "${duplicateId}" is used more than once.`
+        `Betriebskostenblock "${duplicateId}" wird mehrfach verwendet.`
       )
     );
   }
@@ -28,7 +28,7 @@ export function validateOpex(template: OpexTemplate): ValidationResult {
           `opex.unusual-inflation.${item.id}`,
           "warning",
           "opex",
-          `Inflation assumption for "${item.label}" is ${item.inflationPct.toFixed(2)}%.`,
+          `Inflationsannahme fuer "${item.label}" betraegt ${item.inflationPct.toFixed(2)}%.`,
           [{ kind: "opex", itemId: item.id, field: "inflationPct" }]
         )
       );

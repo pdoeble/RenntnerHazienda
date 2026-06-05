@@ -8,7 +8,7 @@ export const defaultOpexTemplate: OpexTemplate = {
   schema: "immo-finance.opex",
   version: CURRENT_TEMPLATE_VERSION,
   id: "opex-demo-standard",
-  name: "Demo Opex",
+  name: "Demo Betriebskosten",
   description: "Neutrale Beispielwerte fuer laufende Kosten.",
   createdAt: DEFAULT_TEMPLATE_TIMESTAMP,
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,

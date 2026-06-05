@@ -26,20 +26,20 @@ describe("App shell", () => {
     expect(screen.getByText("Renovierungen")).toBeInTheDocument();
     expect(screen.getByText("Nebenkosten")).toBeInTheDocument();
 
-    expect(screen.getByRole("tab", { name: "Dashboard" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "Uebersicht" })).toHaveAttribute(
       "aria-selected",
       "true"
     );
 
-    fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Beitraege / Nutzung" }));
     expect(screen.getByText("Monatszahlung gesamt")).toBeInTheDocument();
-    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Uebersicht")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Cashflow" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Bankkonto-Zahlungsfluss" }));
     expect(screen.getByText("Bankrate Monat 1")).toBeInTheDocument();
     expect(screen.getByText("Bank Zins")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Darlehen" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Darlehen / Banksicht" }));
     expect(screen.getByText("Rate Monat 1")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Punkte" }));
@@ -73,7 +73,7 @@ describe("App shell", () => {
       target: { value: "100000" }
     });
 
-    fireEvent.click(screen.getByRole("tab", { name: "Beitraege" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Beitraege / Nutzung" }));
 
     expect(screen.getAllByText(/285\.000/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("Monatlich gesamt")).toBeInTheDocument();
@@ -87,11 +87,11 @@ describe("App shell", () => {
       target: { value: "60000" }
     });
 
-    fireEvent.click(screen.getByRole("tab", { name: "Kapitalbedarf" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Mittelherkunft / Mittelverwendung" }));
 
-    expect(screen.getByText("Gesamtbedarf")).toBeInTheDocument();
+    expect(screen.getAllByText("Mittelverwendung").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText("USt bei Kauf")).toBeInTheDocument();
-    expect(screen.getByText("Pfandrecht / Eintragung")).toBeInTheDocument();
+    expect(screen.getAllByText("Pfandrecht / Eintragung").length).toBeGreaterThanOrEqual(1);
   });
 
   it("adds and deletes owners, renovations, and opex blocks", () => {
@@ -109,10 +109,10 @@ describe("App shell", () => {
     fireEvent.click(screen.getAllByRole("button", { name: "Loeschen" }).at(-1)!);
     expect(screen.queryByDisplayValue("Renovierung 1")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("tab", { name: "Opex" }));
-    expect(screen.getByText("Opex-Plausibilitaet")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("tab", { name: "Betriebskosten" }));
+    expect(screen.getByText("Betriebskosten-Plausibilitaet")).toBeInTheDocument();
     fireEvent.click(
-      screen.getByRole("button", { name: "Opex-Block hinzufuegen" })
+      screen.getByRole("button", { name: "Betriebskostenblock hinzufuegen" })
     );
     expect(screen.getByDisplayValue("Kostenblock 3")).toBeInTheDocument();
   });

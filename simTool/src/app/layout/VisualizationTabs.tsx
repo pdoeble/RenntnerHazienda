@@ -18,6 +18,7 @@ import {
   VISUALIZATION_TAB_ORDER,
   type VisualizationTab
 } from "../../state/uiStore";
+import { HelpPopover } from "../../ui/HelpPopover";
 import { formatMoney } from "../../utils/money";
 import { clampItems } from "../../utils/numbers";
 
@@ -119,7 +120,7 @@ function PointsView({ result }: { result: CalculationResult }) {
       <DataTable
         headers={[
           "Eigner",
-          "Nutzungsbeitrag mtl.",
+          "Nutzungsentgelt mtl.",
           "Jahres-Nutzungsbudget",
           "Nutzungsanteil",
           "Unternehmensanteil",
@@ -164,11 +165,14 @@ function MyShareView({ result }: { result: CalculationResult }) {
     result.contributions.recurringContributions[0]?.contributions.find(
       (contribution) => contribution.ownerId === owner?.ownerId
     );
-  const monthlyContribution = recurringContribution?.totalMonthlyContribution ?? 0;
   const monthlyCostContribution =
     recurringContribution?.costContributionMonthly ??
     recurringContribution?.baseMonthlyObligation ??
     0;
+  const monthlyCapitalContribution =
+    recurringContribution?.capitalContributionMonthly ?? 0;
+  const monthlyUsageContribution =
+    recurringContribution?.usageContributionMonthly ?? owner?.monthlyUsageContribution ?? 0;
   const capitalShareOwner = result.capitalShares.owners.find(
     (candidate) => candidate.ownerId === owner?.ownerId
   );
@@ -177,7 +181,12 @@ function MyShareView({ result }: { result: CalculationResult }) {
     (companySharePct / 100) *
     result.points.propertyValue *
     Math.pow(1 + result.points.appreciationPercentPerYear / 100, projectionYears);
-  const cumulativePayments = monthlyContribution * 12 * projectionYears;
+  const cumulativeCostPayments = monthlyCostContribution * 12 * projectionYears;
+  const cumulativeCapitalPayments =
+    monthlyCapitalContribution * 12 * projectionYears;
+  const cumulativeUsagePayments = monthlyUsageContribution * 12 * projectionYears;
+  const cumulativePayments =
+    cumulativeCostPayments + cumulativeCapitalPayments + cumulativeUsagePayments;
 
   if (!owner) {
     return <p className="empty-state">Keine Eigner fuer die Anteilsansicht vorhanden.</p>;
@@ -204,12 +213,12 @@ function MyShareView({ result }: { result: CalculationResult }) {
           ["Unternehmensanteil", `${owner.companySharePct.toFixed(2)}%`],
           ["Start-EK", formatMoney(initialContribution?.amount ?? 0)],
           [
-            "Anlagebeitrag mtl.",
+            "Kapitalruecklage / Anlage mtl.",
             `${formatMoney(capitalShareOwner?.monthlyCapitalContribution ?? 0)}/Monat`
           ],
           ["Kostenbeitrag mtl.", `${formatMoney(monthlyCostContribution)}/Monat`],
           [
-            "Nutzungsbeitrag mtl.",
+            "Nutzungsentgelt mtl.",
             `${formatMoney(owner.monthlyUsageContribution)}/Monat`
           ],
           ["Jahres-Nutzungsbudget", formatMoney(owner.annualUsageBudget)],
@@ -226,7 +235,9 @@ function MyShareView({ result }: { result: CalculationResult }) {
         />
         <MetricGrid
           metrics={[
-            ["Kumulierte Monatsbeitraege", formatMoney(cumulativePayments)],
+            ["Kumulierte Kostenumlage", formatMoney(cumulativeCostPayments)],
+            ["Kumulierte Kapitalzahlungen", formatMoney(cumulativeCapitalPayments)],
+            ["Kumuliertes Nutzungsentgelt", formatMoney(cumulativeUsagePayments)],
             [
               `Vermoegensanteil (${projectionYears} J.)`,
               formatMoney(projectedValue)
@@ -256,8 +267,21 @@ function OccupancyView({ result }: { result: CalculationResult }) {
           ["Eigennutzung", `${occupancy.ownerDemandRoomNights} Zimmernaechte/Jahr`],
           ["Fremdgaeste", `${occupancy.guestRoomNights} Zimmernaechte/Jahr`],
           ["Freie Zimmernaechte", occupancy.freeRoomNights.toString()],
+          [
+            "Extern vermietbar",
+            `${occupancy.externalRentableRoomNights} Zimmernaechte/Jahr`
+          ],
+          [
+            "Extern belegt",
+            `${occupancy.externalOccupiedRoomNights} Zimmernaechte/Jahr`
+          ],
+          [
+            "Externe Auslastung",
+            `${occupancy.externalOccupancyPct.toFixed(1)}%`
+          ],
           ["Auslastung gesamt", `${occupancy.occupancyPct.toFixed(1)}%`],
           ["Wochenenddruck", `${occupancy.weekendOccupancyPct.toFixed(1)}%`],
+          ["Eigennutzungswert", formatMoney(occupancy.ownerUseEconomicValue)],
           ["Belegungsdruck", occupancy.pressureLabel],
           [
             "Punkte je verfuegb. Zimmernacht",
@@ -285,6 +309,18 @@ function OccupancyView({ result }: { result: CalculationResult }) {
             `${occupancy.ownerDemandRoomNights} Zimmernaechte`
           ],
           ["Fremdgaeste", `${occupancy.guestRoomNights} Zimmernaechte`],
+          [
+            "Netto-Fremderloes",
+            formatMoney(occupancy.netExternalRevenue)
+          ],
+          [
+            "Eigennutzung Kostenuntergrenze",
+            formatMoney(occupancy.ownerUseCostFloorValue)
+          ],
+          [
+            "Eigennutzung Marktwertverdraengung",
+            formatMoney(occupancy.ownerUseMarketOffsetValue)
+          ],
           [
             "Blockierte Zimmernaechte gesamt",
             `${occupancy.blockedRoomNights} Zimmernaechte`
@@ -317,7 +353,7 @@ function DashboardView({ result }: { result: CalculationResult }) {
   const equityOk =
     result.capitalNeed.actualEquityRatioPct >=
     result.capitalNeed.targetEquityRatioPct;
-  const ltv =
+  const beleihungsauslauf =
     result.capitalNeed.totalProjectNeed > 0
       ? (result.capitalNeed.debtPrincipal /
           result.capitalNeed.totalProjectNeed) *
@@ -328,9 +364,26 @@ function DashboardView({ result }: { result: CalculationResult }) {
     <div className="visualization-view">
       <MetricGrid
         metrics={[
+          ["Objektkennung", result.sichten.objektkennung ?? "offen"],
+          ["Fall", result.sichten.fallkennung],
+          ["Szenario", result.sichten.szenariokennung],
           ["EK-Ziel erreicht", equityOk ? "ja" : "offen"],
-          ["EK-Quote", `${result.capitalNeed.actualEquityRatioPct.toFixed(1)}%`],
-          ["LTV", `${ltv.toFixed(1)}%`],
+          ["Eigenmittelquote", `${result.capitalNeed.actualEquityRatioPct.toFixed(1)}%`],
+          ["Beleihungsauslauf", `${beleihungsauslauf.toFixed(1)}%`],
+          [
+            "Kapitaldienstdeckungsgrad",
+            result.bank.kapitaldienstdeckungsgrad.toFixed(2)
+          ],
+          [
+            "Bankkonto-Endstand",
+            formatMoney(result.sichten.rechtstraeger.bankkontoEndstand)
+          ],
+          [
+            "Ausschuettbarer Ueberschuss",
+            formatMoney(
+              result.sichten.rechtstraeger.ausschuettbarerZahlungsueberschussJahr1
+            )
+          ],
           ["Monatlicher Restbedarf", formatMoney(monthlyNeed)],
           ["Kritische Diagnosen", criticalChecks.toString()]
         ]}
@@ -342,7 +395,7 @@ function DashboardView({ result }: { result: CalculationResult }) {
           ["Eigenkapital reicht plausibel", equityOk ? "schriftlich pruefen" : "offen"],
           [
             "Bankfaehigkeit plausibel",
-            ltv <= 85 ? "vorbereitbar" : "kritisch/offen"
+            beleihungsauslauf <= 85 ? "vorbereitbar" : "kritisch/offen"
           ],
           [
             "Groesste Risiken",
@@ -364,9 +417,20 @@ function CapitalNeedView({ result }: { result: CalculationResult }) {
     <div className="visualization-view">
       <MetricGrid
         metrics={[
-          ["Gesamtbedarf", formatMoney(result.capitalNeed.totalProjectNeed)],
-          ["Eigner-EK", formatMoney(result.capitalNeed.ownerEquity)],
-          ["Darlehen", formatMoney(result.capitalNeed.debtPrincipal)],
+          [
+            "Mittelverwendung",
+            formatMoney(result.capitalNeed.funding.gesamtMittelverwendung)
+          ],
+          [
+            "Mittelherkunft",
+            formatMoney(result.capitalNeed.funding.gesamtMittelherkunft)
+          ],
+          [
+            "Finanzierungsluecke",
+            formatMoney(result.capitalNeed.funding.finanzierungsluecke)
+          ],
+          ["Start-EK", formatMoney(result.capitalNeed.ownerEquity)],
+          ["Bankdarlehen", formatMoney(result.capitalNeed.debtPrincipal)],
           ["USt-Erstattung", formatMoney(result.capitalNeed.vatRefund)]
         ]}
       />
@@ -382,10 +446,30 @@ function CapitalNeedView({ result }: { result: CalculationResult }) {
         </ResponsiveContainer>
       </ChartFrame>
       <DataTable
-        headers={["Baustein", "Betrag"]}
+        headers={["Bisheriger Baustein", "Betrag"]}
         rows={result.capitalNeed.items.map((item) => [
           item.label,
           formatMoney(item.amount)
+        ])}
+      />
+      <DataTable
+        headers={["Mittelverwendung", "Klasse", "Netto", "USt", "Brutto"]}
+        rows={result.capitalNeed.funding.mittelverwendung.map((item) => [
+          item.label,
+          readableUseClass(item.klasse),
+          formatMoney(item.nettoBetrag),
+          formatMoney(item.umsatzsteuerBetrag),
+          formatMoney(item.bruttoBetrag)
+        ])}
+      />
+      <DataTable
+        headers={["Mittelherkunft", "Zahlungsklasse", "Betrag", "Rang", "Rueckzahlbar"]}
+        rows={result.capitalNeed.funding.mittelherkunft.map((item) => [
+          item.label,
+          readablePaymentClass(item.zahlungsklasse),
+          formatMoney(item.betrag),
+          item.rang,
+          item.rueckzahlbar ? "ja" : "nein"
         ])}
       />
     </div>
@@ -453,7 +537,7 @@ function ContributionsView({ result }: { result: CalculationResult }) {
             <Bar dataKey="startEk" name="Start-EK" fill="#0f766e" />
             <Bar dataKey="kosten" name="Kostenbeitrag mtl." fill="#b45309" />
             <Bar dataKey="anlage" name="Anlagebeitrag mtl." fill="#7c3aed" />
-            <Bar dataKey="nutzung" name="Nutzungsbeitrag mtl." fill="#2563eb" />
+            <Bar dataKey="nutzung" name="Nutzungsentgelt mtl." fill="#2563eb" />
           </BarChart>
         </ResponsiveContainer>
       </ChartFrame>
@@ -464,7 +548,7 @@ function ContributionsView({ result }: { result: CalculationResult }) {
           "Start-EK",
           "Kostenbeitrag mtl.",
           "Anlagebeitrag mtl.",
-          "Nutzungsbeitrag mtl.",
+          "Nutzungsentgelt mtl.",
           "Liquiditaetsreserve mtl.",
           "Sonderumlage",
           "Monatlich gesamt"
@@ -556,7 +640,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
           ["Bankrate Monat 1", formatMoney(firstMonth?.debtService ?? 0)],
           ["Zins Monat 1", formatMoney(firstMonth?.interest ?? 0)],
           ["Tilgung Monat 1", formatMoney(firstMonth?.principalRepayment ?? 0)],
-          ["Opex Monat 1", formatMoney(firstMonthOpex)],
+          ["Betriebskosten Monat 1", formatMoney(firstMonthOpex)],
           [
             "Einnahmen Jahr 1",
             formatMoney(result.cashflow.bankAccountYearly[0]?.totalIncome ?? 0)
@@ -578,14 +662,14 @@ function CashflowView({ result }: { result: CalculationResult }) {
             <Bar dataKey="startEk" name="Start-EK" stackId="einnahmen" fill="#0f766e" />
             <Bar dataKey="kostenbeitraege" name="Kostenbeitrag" stackId="einnahmen" fill="#14b8a6" />
             <Bar dataKey="anlagebeitraege" name="Anlagebeitrag" stackId="einnahmen" fill="#7c3aed" />
-            <Bar dataKey="nutzungsbeitraege" name="Nutzungsbeitrag" stackId="einnahmen" fill="#2563eb" />
+            <Bar dataKey="nutzungsbeitraege" name="Nutzungsentgelt" stackId="einnahmen" fill="#2563eb" />
             <Bar dataKey="reservebeitraege" name="Liquiditaetsreserve" stackId="einnahmen" fill="#64748b" />
             <Bar dataKey="darlehen" name="Darlehen" stackId="einnahmen" fill="#0891b2" />
             <Bar dataKey="miete" name="Miete" stackId="einnahmen" fill="#22c55e" />
             <Bar dataKey="erstattung" name="Erstattung" stackId="einnahmen" fill="#84cc16" />
             <Bar dataKey="kauf" name="Kauf/Nebenkosten" stackId="ausgaben" fill="#991b1b" />
             <Bar dataKey="renovierung" name="Renovierung" stackId="ausgaben" fill="#dc2626" />
-            <Bar dataKey="opex" name="Opex" stackId="ausgaben" fill="#b45309" />
+            <Bar dataKey="opex" name="Betriebskosten" stackId="ausgaben" fill="#b45309" />
             <Bar dataKey="zins" name="Zins" stackId="ausgaben" fill="#f97316" />
             <Bar dataKey="tilgung" name="Tilgung" stackId="ausgaben" fill="#6d28d9" />
           </BarChart>
@@ -630,6 +714,44 @@ function CashflowView({ result }: { result: CalculationResult }) {
         headers={["Monat 1 Kostenblock", "Art", "Betrag"]}
         rows={firstMonthCostRows(firstMonth)}
       />
+      <DataTable
+        headers={[
+          "Jahr",
+          "Bankpruefungs-Zahlungsfluss",
+          "Zins",
+          "Tilgung",
+          "Ausschuettbarer Ueberschuss"
+        ]}
+        rows={clampItems(result.cashflow.operatingWaterfallYearly, 10).map((year) => [
+          year.year.toString(),
+          formatMoney(year.bankpruefungsZahlungsfluss),
+          formatMoney(year.zins),
+          formatMoney(year.planmaessigeTilgung),
+          formatMoney(year.ausschuettbarerZahlungsueberschuss)
+        ])}
+      />
+      <DataTable
+        headers={["Jahr", "Erloese", "Betriebskosten", "Abschreibung", "Zinsaufwand", "Ergebnis vor Steuern"]}
+        rows={clampItems(result.cashflow.ergebnisrechnungYearly, 10).map((year) => [
+          year.year.toString(),
+          formatMoney(year.erloese),
+          formatMoney(year.betriebskosten),
+          formatMoney(year.abschreibung),
+          formatMoney(year.zinsaufwand),
+          formatMoney(year.ergebnisVorSteuern)
+        ])}
+      />
+      <DataTable
+        headers={["Jahr", "Vermoegen", "Bankguthaben", "Verbindlichkeiten", "Eigenkapital", "Saldendifferenz"]}
+        rows={clampItems(result.cashflow.vermoegensuebersichtYearly, 10).map((year) => [
+          year.year.toString(),
+          formatMoney(year.vermoegen),
+          formatMoney(year.bankguthaben),
+          formatMoney(year.verbindlichkeiten),
+          formatMoney(year.eigenkapital),
+          formatMoney(year.saldendifferenz)
+        ])}
+      />
     </div>
   );
 }
@@ -671,7 +793,23 @@ function DebtView({ result }: { result: CalculationResult }) {
           ["Zins Monat 1", formatMoney(firstMonth?.interest ?? 0)],
           ["Tilgung Monat 1", formatMoney(firstMonth?.principalRepayment ?? 0)],
           ["Restschuld", formatMoney(result.debt.totalRemainingDebt)],
-          ["Gezahlte Zinsen", formatMoney(result.debt.totalInterestPaid)]
+          ["Gezahlte Zinsen", formatMoney(result.debt.totalInterestPaid)],
+          [
+            "Kapitaldienstdeckungsgrad",
+            result.bank.kapitaldienstdeckungsgrad.toFixed(2)
+          ],
+          [
+            "Beleihungsauslauf",
+            `${result.bank.beleihungsauslaufPct.toFixed(1)}%`
+          ],
+          [
+            "FMA-Leitplanke Beleihung",
+            `${result.bank.zielBeleihungsauslaufPct.toFixed(0)}%`
+          ],
+          [
+            "FMA-Leitplanke Laufzeit",
+            `${result.bank.fmaLaufzeitRichtwertJahre} Jahre`
+          ]
         ]}
       />
       <ChartFrame>
@@ -868,13 +1006,51 @@ function MetricGrid({ metrics }: { metrics: [string, string][] }) {
     <div className="metric-grid">
       {metrics.map(([label, value]) => (
         <div className="metric" key={label}>
-          <span>{label}</span>
+          <span className="metric-label">
+            {label}
+            {HELP_TEXTS[label] ? (
+              <HelpPopover label={label}>{HELP_TEXTS[label]}</HelpPopover>
+            ) : null}
+          </span>
           <strong>{value}</strong>
         </div>
       ))}
     </div>
   );
 }
+
+const HELP_TEXTS: Record<string, string> = {
+  "Mittelherkunft":
+    "Mittelherkunft zeigt, woher das Projekt Geld bekommt, zum Beispiel Start-EK, Bankdarlehen oder Gesellschafterdarlehen.",
+  "Mittelverwendung":
+    "Mittelverwendung zeigt, wofuer Geld gebraucht wird, zum Beispiel Kaufpreis, Nebenkosten, Ruecklage oder Ausbau.",
+  "Finanzierungsluecke":
+    "Eine Finanzierungsluecke entsteht, wenn Mittelverwendung und Mittelherkunft nicht saldieren.",
+  "Start-EK":
+    "Start-EK ist die einmalige Anfangseinlage und kann Unternehmensanteile begruenden.",
+  "Eigenmittelquote":
+    "Die Eigenmittelquote zeigt den Anteil echter Eigenmittel an der Gesamtmittelverwendung.",
+  "Beleihungsauslauf":
+    "Der Beleihungsauslauf setzt Bankdarlehen ins Verhaeltnis zur Wertbasis des Objekts.",
+  "Kapitaldienstdeckungsgrad":
+    "Der Kapitaldienstdeckungsgrad vergleicht Bankpruefungs-Zahlungsfluss mit Zins und Tilgung.",
+  "Nutzungsentgelt mtl.":
+    "Das Nutzungsentgelt bezahlt Nutzungsrechte oder Zimmernaechte und erzeugt keine Unternehmensanteile.",
+  "Kostenbeitrag mtl.":
+    "Der Kostenbeitrag deckt laufende Kosten wie Zins, Betriebskosten, Verwaltung und Buchhaltung.",
+  "Anlagebeitrag mtl.":
+    "Der Anlagebeitrag ist Vermoegensaufbau oder Kapitalzufuehrung; seine Anteilsauswirkung muss geregelt sein.",
+  "Bankkonto-Endstand":
+    "Der Bankkonto-Endstand ist Liquiditaet auf dem Projektkonto, nicht steuerlicher Gewinn.",
+  "Betriebskosten Monat 1":
+    "Betriebskosten sind laufende Ausgaben fuer Betrieb, Verwaltung und Abgaben.",
+  "Eigennutzungswert":
+    "Der Eigennutzungswert bewertet die Nutzung durch Beteiligte als Kostenuntergrenze oder verdraengten Fremdertrag.",
+  "Zimmernacht-Kapazitaet":
+    "Eine Zimmernacht ist ein Schlafzimmer oder buchbares Zimmer fuer eine Nacht.",
+  "Ausschuettbarer Ueberschuss":
+    "Der ausschuettbare Ueberschuss bleibt nach Betrieb, Ruecklagen, Verwaltung, Kapitaldienst und Mindestliquiditaet."
+};
 
 function ChartFrame({ children }: { children: ReactNode }) {
   return <div className="chart-frame">{children}</div>;
@@ -925,13 +1101,13 @@ function firstMonthCostRows(
     ...month.opexBreakdown.map((item) => [
       item.label,
       item.recoverableFromTenants
-        ? "Opex umlagefaehig"
-        : "Opex nicht umlagefaehig",
+        ? "Betriebskosten umlagefaehig"
+        : "Betriebskosten nicht umlagefaehig",
       formatMoney(item.amount)
     ]),
     [
-      "Saldo nach Opex und Bank",
-      "Cashflow",
+      "Saldo nach Betriebskosten und Bank",
+      "Zahlungsfluss",
       formatMoney(month.netCashflowAfterDebtService)
     ]
   ];
@@ -963,6 +1139,48 @@ function NumberInput({
       />
     </label>
   );
+}
+
+function readablePaymentClass(value: string): string {
+  const labels: Record<string, string> = {
+    echtesEigenkapital: "echtes Eigenkapital",
+    kapitalruecklage: "Kapitalruecklage",
+    nachschuss: "Nachschuss",
+    gesellschafterdarlehen: "Gesellschafterdarlehen",
+    bankdarlehen: "Bankdarlehen",
+    nutzungsentgelt: "Nutzungsentgelt",
+    kostenumlage: "Kostenumlage",
+    liquiditaetsreserve: "Liquiditaetsreserve",
+    vermietungserloes: "Vermietungserloes",
+    foerderung: "Foerderung",
+    sonstige: "sonstige Zahlung"
+  };
+
+  return labels[value] ?? value;
+}
+
+function readableUseClass(value: string): string {
+  const labels: Record<string, string> = {
+    kaufpreis: "Kaufpreis",
+    grunderwerbsteuer: "Grunderwerbsteuer",
+    grundbuchEigentum: "Grundbuch Eigentum",
+    pfandrecht: "Pfandrecht",
+    eingabegebuehr: "Eingabegebuehr",
+    makler: "Makler",
+    vertragNotar: "Vertrag / Notar",
+    beglaubigung: "Beglaubigung",
+    technischePruefung: "technische Pruefung",
+    renovierung: "Renovierung",
+    einrichtung: "Einrichtung",
+    finanzierungsgebuehr: "Finanzierungsgebuehr",
+    sicherheitspuffer: "Sicherheitspuffer",
+    anfangsliquiditaet: "Anfangsliquiditaet",
+    anfangsruecklage: "Anfangsruecklage",
+    gruendungskosten: "Gruendungskosten",
+    sonstige: "sonstige Verwendung"
+  };
+
+  return labels[value] ?? value;
 }
 
 function looksLikeHtml(text: string): boolean {

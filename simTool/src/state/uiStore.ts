@@ -37,14 +37,14 @@ export const VISUALIZATION_TAB_ORDER: VisualizationTab[] = [
 ];
 
 export const VISUALIZATION_LABELS: Record<VisualizationTab, string> = {
-  dashboard: "Dashboard",
-  capitalNeed: "Kapitalbedarf",
-  contributions: "Beitraege",
+  dashboard: "Uebersicht",
+  capitalNeed: "Mittelherkunft / Mittelverwendung",
+  contributions: "Beitraege / Nutzung",
   points: "Punkte",
   myShare: "Mein Anteil",
   occupancy: "Belegung",
-  cashflow: "Cashflow",
-  debt: "Darlehen",
+  cashflow: "Bankkonto-Zahlungsfluss",
+  debt: "Darlehen / Banksicht",
   wiki: "Wiki",
   timeline: "Zeitachse"
 };

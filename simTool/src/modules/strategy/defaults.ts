@@ -13,6 +13,9 @@ export const defaultStrategyTemplate: StrategyTemplate = {
   createdAt: DEFAULT_TEMPLATE_TIMESTAMP,
   updatedAt: DEFAULT_TEMPLATE_TIMESTAMP,
   data: {
+    fallkennung: "fall-waldchalet-pfunds-basis",
+    szenariokennung: "szenario-demo-basis",
+    annahmenquelle: "Demo-/Szenario-Daten, keine Beratung",
     reserveMonths: 3,
     minimumLiquidityAmount: 15000,
     targetLiquidityAmount: 30000,
@@ -27,6 +30,11 @@ export const defaultStrategyTemplate: StrategyTemplate = {
     appreciationPercentPerYear: 2,
     ownerWeekendUsagePct: 80,
     guestWeekendUsagePct: 50,
+    externalOccupancyRatePct: 35,
+    averageGrossPricePerExternalRoomNight: 120,
+    ownerUseDisplacementFactorPct: 50,
+    variableCostPerRoomNightAmount: 25,
+    reservePerRoomNightAmount: 15,
     goNoGoChecks: [
       {
         id: "check-leisure-residence",

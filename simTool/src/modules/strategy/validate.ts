@@ -16,7 +16,7 @@ export function validateStrategy(template: StrategyTemplate): ValidationResult {
         `strategy.duplicate-check.${duplicateId}`,
         "error",
         "strategy",
-        `Go/No-Go check id "${duplicateId}" is used more than once.`
+        `Pruefpunkt "${duplicateId}" wird mehrfach verwendet.`
       )
     );
   }
@@ -27,7 +27,7 @@ export function validateStrategy(template: StrategyTemplate): ValidationResult {
         "strategy.target-below-minimum",
         "warning",
         "strategy",
-        "Target liquidity is below minimum liquidity; minimum liquidity is used as floor."
+        "Zielliquiditaet liegt unter der Mindestliquiditaet; die Mindestliquiditaet wird als Untergrenze verwendet."
       )
     );
   }
@@ -44,7 +44,7 @@ export function validateStrategy(template: StrategyTemplate): ValidationResult {
         "strategy.point-weights-total",
         "warning",
         "strategy",
-        `Point weights sum to ${(template.data.pointTierWeight + template.data.pointEquityWeight).toFixed(2)}% instead of 100%.`
+        `Punkte-Gewichte ergeben ${(template.data.pointTierWeight + template.data.pointEquityWeight).toFixed(2)}% statt 100%.`
       )
     );
   }

@@ -42,6 +42,9 @@ export const goNoGoCheckSchema = z
 
 export const strategyDataSchema = z
   .object({
+    fallkennung: z.string().default("fall-basis"),
+    szenariokennung: z.string().default("szenario-basis"),
+    annahmenquelle: z.string().default("Demo-/Szenario-Daten"),
     reserveMonths: nonNegativeNumberSchema.default(3),
     minimumLiquidityAmount: nonNegativeNumberSchema.default(15000),
     targetLiquidityAmount: nonNegativeNumberSchema.default(30000),
@@ -58,6 +61,11 @@ export const strategyDataSchema = z
     appreciationPercentPerYear: z.number().finite().default(2),
     ownerWeekendUsagePct: percentSchema.default(80),
     guestWeekendUsagePct: percentSchema.default(50),
+    externalOccupancyRatePct: percentSchema.default(35),
+    averageGrossPricePerExternalRoomNight: nonNegativeNumberSchema.default(120),
+    ownerUseDisplacementFactorPct: percentSchema.default(50),
+    variableCostPerRoomNightAmount: nonNegativeNumberSchema.default(25),
+    reservePerRoomNightAmount: nonNegativeNumberSchema.default(15),
     goNoGoChecks: z.array(goNoGoCheckSchema).default([])
   })
   .strict();

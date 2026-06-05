@@ -2,6 +2,7 @@ import type { OpexItem } from "../modules/opex/types";
 import {
   calculateAnnualLegalOngoingCosts,
   calculateClosingCostsTotal,
+  calculateFundingBalance,
   calculateMortgageRegistrationFee,
   calculateVatAtPurchase,
   calculateVatRefund
@@ -16,9 +17,12 @@ import type {
   BankAccountYear,
   ContributionResult,
   DebtResult,
+  ErgebnisrechnungYear,
   LiquidityResult,
   OpexBreakdownItem,
-  ProjectSnapshot
+  OperatingWaterfallYear,
+  ProjectSnapshot,
+  VermoegensuebersichtYear
 } from "./types";
 
 export function calculateCashflow(
@@ -89,6 +93,9 @@ export function calculateCashflow(
     yearly: aggregateCashflowYears(monthly),
     bankAccountMonthly: [],
     bankAccountYearly: [],
+    operatingWaterfallYearly: [],
+    ergebnisrechnungYearly: [],
+    vermoegensuebersichtYearly: [],
     cumulativeCashflow: roundMoney(
       monthly.reduce(
         (total, month) => total + month.netCashflowAfterDebtService,
@@ -105,7 +112,14 @@ export function calculateBankAccountCashflow(
   cashflow: CashflowResult,
   debt: DebtResult,
   liquidity: LiquidityResult
-): Pick<CashflowResult, "bankAccountMonthly" | "bankAccountYearly"> {
+): Pick<
+  CashflowResult,
+  | "bankAccountMonthly"
+  | "bankAccountYearly"
+  | "operatingWaterfallYearly"
+  | "ergebnisrechnungYearly"
+  | "vermoegensuebersichtYearly"
+> {
   const purchaseMonth = snapshot.property.data.purchaseMonth ?? 0;
   const initialContributionTotal = contributions.initialContributions.reduce(
     (total, contribution) => total + contribution.amount,
@@ -178,7 +192,22 @@ export function calculateBankAccountCashflow(
 
   return {
     bankAccountMonthly,
-    bankAccountYearly: aggregateBankAccountYears(bankAccountMonthly)
+    bankAccountYearly: aggregateBankAccountYears(bankAccountMonthly),
+    operatingWaterfallYearly: aggregateOperatingWaterfallYears(
+      snapshot,
+      cashflow,
+      bankAccountMonthly
+    ),
+    ergebnisrechnungYearly: aggregateErgebnisrechnungYears(
+      snapshot,
+      cashflow,
+      bankAccountMonthly
+    ),
+    vermoegensuebersichtYearly: aggregateVermoegensuebersichtYears(
+      snapshot,
+      debt,
+      bankAccountMonthly
+    )
   };
 }
 
@@ -368,6 +397,175 @@ function getRecurringContributionBreakdown(
       reserveContributions: 0
     }
   );
+}
+
+function aggregateOperatingWaterfallYears(
+  snapshot: ProjectSnapshot,
+  cashflow: CashflowResult,
+  bankAccountMonthly: readonly BankAccountMonth[]
+): OperatingWaterfallYear[] {
+  return cashflow.yearly.map((year) => {
+    const months = cashflow.monthly.filter(
+      (month) => Math.floor(month.month / 12) + 1 === year.year
+    );
+    const bankMonths = bankAccountMonthly.filter(
+      (month) => Math.floor(month.month / 12) + 1 === year.year
+    );
+    const usageContributions = bankMonths.reduce(
+      (total, month) => total + month.usageContributions,
+      0
+    );
+    const reserve = bankMonths.reduce(
+      (total, month) => total + month.reserveContributions,
+      0
+    );
+    const admin = months.reduce(
+      (total, month) =>
+        total +
+        month.opexBreakdown
+          .filter((item) => item.category === "accounting")
+          .reduce((sum, item) => sum + item.amount, 0),
+      0
+    );
+    const variableCosts = year.recoverableOpex;
+    const fixedCosts = Math.max(0, year.nonRecoverableOpex - admin);
+    const bruttoOperativeEinzahlungen = roundMoney(
+      year.effectiveIncome + usageContributions
+    );
+    const betriebsergebnisVorRuecklagen = roundMoney(
+      bruttoOperativeEinzahlungen - variableCosts - fixedCosts
+    );
+    const bankpruefungsZahlungsfluss = roundMoney(
+      betriebsergebnisVorRuecklagen - reserve - admin
+    );
+    const zahlungsflussNachKapitaldienst = roundMoney(
+      bankpruefungsZahlungsfluss - year.interest - year.principalRepayment
+    );
+    const steuerzahlungenUndErstattungen = roundMoney(
+      bankMonths.reduce((total, month) => total + month.vatRefund, 0)
+    );
+    const closingBalance = bankMonths.at(-1)?.closingBalance ?? 0;
+    const auffuellungMindestliquiditaet = roundMoney(
+      Math.max(0, snapshot.strategy.data.minimumLiquidityAmount - closingBalance)
+    );
+
+    return {
+      year: year.year,
+      bruttoOperativeEinzahlungen,
+      vertriebUndZahlungsgebuehren: 0,
+      variableBetriebskosten: roundMoney(variableCosts),
+      fixeBetriebskosten: roundMoney(fixedCosts),
+      betriebsergebnisVorRuecklagen,
+      instandhaltungsUndAusbaureserve: roundMoney(reserve),
+      verwaltungRechtBuchhaltung: roundMoney(admin),
+      bankpruefungsZahlungsfluss,
+      zins: roundMoney(year.interest),
+      planmaessigeTilgung: roundMoney(year.principalRepayment),
+      zahlungsflussNachKapitaldienst,
+      steuerzahlungenUndErstattungen,
+      auffuellungMindestliquiditaet,
+      ausschuettbarerZahlungsueberschuss: roundMoney(
+        Math.max(
+          0,
+          zahlungsflussNachKapitaldienst +
+            steuerzahlungenUndErstattungen -
+            auffuellungMindestliquiditaet
+        )
+      )
+    };
+  });
+}
+
+function aggregateErgebnisrechnungYears(
+  snapshot: ProjectSnapshot,
+  cashflow: CashflowResult,
+  bankAccountMonthly: readonly BankAccountMonth[]
+): ErgebnisrechnungYear[] {
+  const depreciableBasis =
+    snapshot.property.data.purchasePrice +
+    snapshot.property.data.renovationItems.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+  const annualDepreciation = depreciableBasis > 0 ? depreciableBasis / 50 : 0;
+
+  return cashflow.yearly.map((year) => {
+    const bankMonths = bankAccountMonthly.filter(
+      (month) => Math.floor(month.month / 12) + 1 === year.year
+    );
+    const usageContributions = bankMonths.reduce(
+      (total, month) => total + month.usageContributions,
+      0
+    );
+    const erloese = roundMoney(year.effectiveIncome + usageContributions);
+    const betriebskosten = roundMoney(year.recoverableOpex + year.nonRecoverableOpex);
+    const abschreibung = roundMoney(annualDepreciation);
+    const zinsaufwand = roundMoney(year.interest);
+
+    return {
+      year: year.year,
+      erloese,
+      betriebskosten,
+      abschreibung,
+      zinsaufwand,
+      ergebnisVorSteuern: roundMoney(
+        erloese - betriebskosten - abschreibung - zinsaufwand
+      )
+    };
+  });
+}
+
+function aggregateVermoegensuebersichtYears(
+  snapshot: ProjectSnapshot,
+  debt: DebtResult,
+  bankAccountMonthly: readonly BankAccountMonth[]
+): VermoegensuebersichtYear[] {
+  const funding = calculateFundingBalance(snapshot);
+  const shareholderLoans = funding.mittelherkunft
+    .filter((source) => source.zahlungsklasse === "gesellschafterdarlehen")
+    .reduce((total, source) => total + source.betrag, 0);
+  const propertyBasis =
+    snapshot.property.data.purchasePrice +
+    snapshot.property.data.renovationItems.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+  const annualDepreciation = propertyBasis > 0 ? propertyBasis / 50 : 0;
+  const years = new Map<number, BankAccountMonth>();
+
+  for (const month of bankAccountMonthly) {
+    years.set(Math.floor(month.month / 12) + 1, month);
+  }
+
+  return [...years.entries()].map(([year, lastMonth]) => {
+    const remainingDebt =
+      debt.monthlyDebtService
+        .filter((month) => Math.floor(month.month / 12) + 1 === year)
+        .at(-1)?.remainingDebt ?? debt.totalRemainingDebt;
+    const immobilienwert = roundMoney(
+      Math.max(0, propertyBasis - annualDepreciation * year)
+    );
+    const bankguthaben = roundMoney(lastMonth.closingBalance);
+    const zweckgebundeneReserve = roundMoney(
+      Math.min(bankguthaben, snapshot.strategy.data.targetLiquidityAmount)
+    );
+    const vermoegen = roundMoney(immobilienwert + bankguthaben);
+    const verbindlichkeiten = roundMoney(remainingDebt + shareholderLoans);
+    const eigenkapital = roundMoney(vermoegen - verbindlichkeiten);
+
+    return {
+      year,
+      vermoegen,
+      immobilienwert,
+      bankguthaben,
+      zweckgebundeneReserve,
+      verbindlichkeiten,
+      bankdarlehen: roundMoney(remainingDebt),
+      gesellschafterdarlehen: roundMoney(shareholderLoans),
+      eigenkapital,
+      saldendifferenz: roundMoney(vermoegen - verbindlichkeiten - eigenkapital)
+    };
+  });
 }
 
 function aggregateBankAccountYears(

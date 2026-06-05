@@ -86,8 +86,80 @@ export type CapitalNeedItem = {
   amount: number;
 };
 
+export type Zahlungsklasse =
+  | "echtesEigenkapital"
+  | "kapitalruecklage"
+  | "nachschuss"
+  | "gesellschafterdarlehen"
+  | "bankdarlehen"
+  | "nutzungsentgelt"
+  | "kostenumlage"
+  | "liquiditaetsreserve"
+  | "vermietungserloes"
+  | "foerderung"
+  | "sonstige";
+
+export type MittelverwendungKlasse =
+  | "kaufpreis"
+  | "grunderwerbsteuer"
+  | "grundbuchEigentum"
+  | "pfandrecht"
+  | "eingabegebuehr"
+  | "makler"
+  | "vertragNotar"
+  | "beglaubigung"
+  | "technischePruefung"
+  | "renovierung"
+  | "einrichtung"
+  | "finanzierungsgebuehr"
+  | "sicherheitspuffer"
+  | "anfangsliquiditaet"
+  | "anfangsruecklage"
+  | "gruendungskosten"
+  | "sonstige";
+
+export type MittelverwendungResult = {
+  id: string;
+  label: string;
+  klasse: MittelverwendungKlasse;
+  nettoBetrag: number;
+  umsatzsteuerBetrag: number;
+  bruttoBetrag: number;
+  monat: number;
+  aktivierbar: boolean;
+  umsatzsteuerRelevant: boolean;
+};
+
+export type MittelherkunftResult = {
+  id: string;
+  label: string;
+  zahlungsklasse: Zahlungsklasse;
+  betrag: number;
+  monat: number;
+  rueckzahlbar: boolean;
+  zinssatzPct: number;
+  rang: "vorrangig" | "gleichrangig" | "nachrangig" | "eigenkapitalnah" | "offen";
+  besichert: boolean;
+  wirktAufUnternehmensanteil: boolean;
+  wirktAufNutzungsrechte: boolean;
+  umsatzsteuerRelevant: boolean;
+};
+
+export type FundingBalanceResult = {
+  mittelverwendung: MittelverwendungResult[];
+  mittelherkunft: MittelherkunftResult[];
+  gesamtMittelverwendung: number;
+  gesamtMittelherkunft: number;
+  nichtBankMittelherkunft: number;
+  bankdarlehen: number;
+  finanzierungsluecke: number;
+  finanzierungsueberschuss: number;
+  istSaldierend: boolean;
+};
+
 export type CapitalNeedResult = {
   items: CapitalNeedItem[];
+  funding: FundingBalanceResult;
   purchasePrice: number;
   vatAtPurchase: number;
   vatRefund: number;
@@ -185,11 +257,54 @@ export type BankAccountYear = BankAccountStack & {
   closingBalance: number;
 };
 
+export type OperatingWaterfallYear = {
+  year: number;
+  bruttoOperativeEinzahlungen: number;
+  vertriebUndZahlungsgebuehren: number;
+  variableBetriebskosten: number;
+  fixeBetriebskosten: number;
+  betriebsergebnisVorRuecklagen: number;
+  instandhaltungsUndAusbaureserve: number;
+  verwaltungRechtBuchhaltung: number;
+  bankpruefungsZahlungsfluss: number;
+  zins: number;
+  planmaessigeTilgung: number;
+  zahlungsflussNachKapitaldienst: number;
+  steuerzahlungenUndErstattungen: number;
+  auffuellungMindestliquiditaet: number;
+  ausschuettbarerZahlungsueberschuss: number;
+};
+
+export type ErgebnisrechnungYear = {
+  year: number;
+  erloese: number;
+  betriebskosten: number;
+  abschreibung: number;
+  zinsaufwand: number;
+  ergebnisVorSteuern: number;
+};
+
+export type VermoegensuebersichtYear = {
+  year: number;
+  vermoegen: number;
+  immobilienwert: number;
+  bankguthaben: number;
+  zweckgebundeneReserve: number;
+  verbindlichkeiten: number;
+  bankdarlehen: number;
+  gesellschafterdarlehen: number;
+  eigenkapital: number;
+  saldendifferenz: number;
+};
+
 export type CashflowResult = {
   monthly: CashflowMonth[];
   yearly: CashflowYear[];
   bankAccountMonthly: BankAccountMonth[];
   bankAccountYearly: BankAccountYear[];
+  operatingWaterfallYearly: OperatingWaterfallYear[];
+  ergebnisrechnungYearly: ErgebnisrechnungYear[];
+  vermoegensuebersichtYearly: VermoegensuebersichtYear[];
   cumulativeCashflow: number;
   diagnostics: DiagnosticMessage[];
 };
@@ -283,6 +398,14 @@ export type OccupancyResult = {
   weekdayOccupancyPct: number;
   occupancyPct: number;
   pointsPerAvailableNight: number;
+  ownerUseMarketOffsetValue: number;
+  ownerUseCostFloorValue: number;
+  ownerUseEconomicValue: number;
+  externalRentableRoomNights: number;
+  externalOccupiedRoomNights: number;
+  externalOccupancyPct: number;
+  averageGrossPricePerExternalRoomNight: number;
+  netExternalRevenue: number;
   pressureLabel: string;
   diagnostics: DiagnosticMessage[];
 };
@@ -312,8 +435,51 @@ export type HouseComparisonResult = {
   diagnostics: DiagnosticMessage[];
 };
 
+export type SichtSummaryResult = {
+  objektkennung?: string;
+  fallkennung: string;
+  szenariokennung: string;
+  annahmenquelle: string;
+  objekte: {
+    kaufpreis: number;
+    gesamtmittelverwendung: number;
+    zimmernachtKapazitaet: number;
+    externeAuslastungPct: number;
+  };
+  rechtstraeger: {
+    bankkontoEndstand: number;
+    ausschuettbarerZahlungsueberschussJahr1: number;
+    eigenkapital: number;
+    verbindlichkeiten: number;
+  };
+  mitglieder: {
+    anzahl: number;
+    startEk: number;
+    nutzungsentgeltJahr: number;
+  };
+  bank: {
+    bankdarlehen: number;
+    beleihungsauslaufPct: number;
+    kapitaldienstdeckungsgrad: number;
+  };
+};
+
+export type BankKennzahlResult = {
+  bankpruefungsZahlungsflussJahr1: number;
+  kapitaldienstJahr1: number;
+  kapitaldienstdeckungsgrad: number;
+  beleihungsauslaufPct: number;
+  zielBeleihungsauslaufPct: number;
+  laufzeitJahre: number;
+  fmaBelastungsquoteRichtwertPct: number;
+  fmaLaufzeitRichtwertJahre: number;
+  diagnostics: DiagnosticMessage[];
+};
+
 export type CalculationResult = {
+  sichten: SichtSummaryResult;
   capitalNeed: CapitalNeedResult;
+  bank: BankKennzahlResult;
   capitalShares: CapitalShareResult;
   points: PointsResult;
   occupancy: OccupancyResult;

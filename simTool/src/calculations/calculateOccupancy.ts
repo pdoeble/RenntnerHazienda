@@ -1,5 +1,5 @@
 import { diagnostic } from "../validation/diagnostics";
-import { roundPct } from "./rounding";
+import { roundMoney, roundPct } from "./rounding";
 import type { OccupancyResult, PointsResult, ProjectSnapshot } from "./types";
 
 export function calculateOccupancy(
@@ -37,6 +37,38 @@ export function calculateOccupancy(
     activeHouse?.guestNightsPerYear ??
     snapshot.property.data.guestNightsPerYear ??
     60;
+  const externalRentableRoomNights = Math.max(
+    0,
+    roomNightCapacity - ownerDemandRoomNights
+  );
+  const modeledExternalOccupiedRoomNights =
+    guestRoomNights > 0
+      ? guestRoomNights
+      : externalRentableRoomNights *
+        (snapshot.strategy.data.externalOccupancyRatePct / 100);
+  const externalOccupiedRoomNights = Math.min(
+    externalRentableRoomNights,
+    modeledExternalOccupiedRoomNights
+  );
+  const averageGrossPricePerExternalRoomNight =
+    snapshot.strategy.data.averageGrossPricePerExternalRoomNight;
+  const netExternalRevenue = roundMoney(
+    externalOccupiedRoomNights * averageGrossPricePerExternalRoomNight
+  );
+  const ownerUseMarketOffsetValue = roundMoney(
+    ownerDemandRoomNights *
+      averageGrossPricePerExternalRoomNight *
+      (snapshot.strategy.data.ownerUseDisplacementFactorPct / 100)
+  );
+  const ownerUseCostFloorValue = roundMoney(
+    ownerDemandRoomNights *
+      (snapshot.strategy.data.variableCostPerRoomNightAmount +
+        snapshot.strategy.data.reservePerRoomNightAmount)
+  );
+  const ownerUseEconomicValue = Math.max(
+    ownerUseMarketOffsetValue,
+    ownerUseCostFloorValue
+  );
   const ownerWeekendShare = snapshot.strategy.data.ownerWeekendUsagePct / 100;
   const guestWeekendShare = snapshot.strategy.data.guestWeekendUsagePct / 100;
   const weekendDemandRoomNights =
@@ -58,6 +90,10 @@ export function calculateOccupancy(
   const occupancyPct =
     roomNightCapacity > 0
       ? roundPct((blockedRoomNights / roomNightCapacity) * 100)
+      : 0;
+  const externalOccupancyPct =
+    externalRentableRoomNights > 0
+      ? roundPct((externalOccupiedRoomNights / externalRentableRoomNights) * 100)
       : 0;
   const weekendOccupancyPct =
     weekendRoomNightCapacity > 0
@@ -113,6 +149,16 @@ export function calculateOccupancy(
     weekdayOccupancyPct,
     occupancyPct,
     pointsPerAvailableNight: Math.round(pointsPerAvailableNight * 10) / 10,
+    ownerUseMarketOffsetValue,
+    ownerUseCostFloorValue,
+    ownerUseEconomicValue,
+    externalRentableRoomNights: Math.round(externalRentableRoomNights),
+    externalOccupiedRoomNights: Math.round(externalOccupiedRoomNights),
+    externalOccupancyPct,
+    averageGrossPricePerExternalRoomNight: roundMoney(
+      averageGrossPricePerExternalRoomNight
+    ),
+    netExternalRevenue,
     pressureLabel: pressureLabel(Math.max(occupancyPct, weekendOccupancyPct)),
     diagnostics
   };

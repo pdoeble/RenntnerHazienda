@@ -3,6 +3,7 @@ import {
   calculateBankAccountCashflow,
   calculateCashflow
 } from "./calculateCashflow";
+import { calculateBankView } from "./calculateBankView";
 import { calculateCapitalShares } from "./calculateCapitalShares";
 import {
   calculateInitialContributions,
@@ -13,6 +14,7 @@ import { calculateHouseComparison } from "./calculateHouseComparison";
 import { calculateLiquidity } from "./calculateLiquidity";
 import { calculateOccupancy } from "./calculateOccupancy";
 import { calculatePoints } from "./calculatePoints";
+import { calculateSichten } from "./calculateSichten";
 import { calculateTimeline } from "./calculateTimeline";
 import { collectInputDiagnostics } from "./diagnostics";
 import { calculateCapitalNeed } from "./financialInputs";
@@ -56,9 +58,28 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
   const occupancy = calculateOccupancy(snapshot, points);
   const houseComparison = calculateHouseComparison(snapshot);
   const timeline = calculateTimeline(snapshot, debt, liquidity);
+  const bank = calculateBankView(snapshot, debt, cashflow, capitalNeed);
+  const sichten = calculateSichten(
+    snapshot,
+    {
+      capitalNeed,
+      capitalShares,
+      points,
+      occupancy,
+      houseComparison,
+      timeline,
+      liquidity,
+      contributions,
+      cashflow,
+      debt
+    },
+    bank
+  );
 
   return {
+    sichten,
     capitalNeed,
+    bank,
     capitalShares,
     points,
     occupancy,
@@ -70,9 +91,11 @@ export function calculateAll(snapshot: ProjectSnapshot): CalculationResult {
     debt,
     diagnostics: [
       ...inputDiagnostics,
+      ...capitalNeed.diagnostics,
       ...contributions.diagnostics,
       ...debt.diagnostics,
       ...cashflow.diagnostics,
+      ...bank.diagnostics,
       ...liquidity.diagnostics,
       ...capitalShares.diagnostics,
       ...points.diagnostics,
@@ -87,6 +110,34 @@ function emptyCalculationResult(
   diagnostics: CalculationResult["diagnostics"]
 ): CalculationResult {
   return {
+    sichten: {
+      objektkennung: snapshot.property.data.objektkennung,
+      fallkennung: snapshot.strategy.data.fallkennung,
+      szenariokennung: snapshot.strategy.data.szenariokennung,
+      annahmenquelle: snapshot.strategy.data.annahmenquelle,
+      objekte: {
+        kaufpreis: 0,
+        gesamtmittelverwendung: 0,
+        zimmernachtKapazitaet: 0,
+        externeAuslastungPct: 0
+      },
+      rechtstraeger: {
+        bankkontoEndstand: 0,
+        ausschuettbarerZahlungsueberschussJahr1: 0,
+        eigenkapital: 0,
+        verbindlichkeiten: 0
+      },
+      mitglieder: {
+        anzahl: 0,
+        startEk: 0,
+        nutzungsentgeltJahr: 0
+      },
+      bank: {
+        bankdarlehen: 0,
+        beleihungsauslaufPct: 0,
+        kapitaldienstdeckungsgrad: 0
+      }
+    },
     contributions: {
       initialContributions: [],
       recurringContributions: [],
@@ -97,6 +148,17 @@ function emptyCalculationResult(
     },
     capitalNeed: {
       items: [],
+      funding: {
+        mittelverwendung: [],
+        mittelherkunft: [],
+        gesamtMittelverwendung: 0,
+        gesamtMittelherkunft: 0,
+        nichtBankMittelherkunft: 0,
+        bankdarlehen: 0,
+        finanzierungsluecke: 0,
+        finanzierungsueberschuss: 0,
+        istSaldierend: true
+      },
       purchasePrice: 0,
       vatAtPurchase: 0,
       vatRefund: 0,
@@ -110,6 +172,17 @@ function emptyCalculationResult(
       debtPrincipal: 0,
       actualEquityRatioPct: 0,
       targetEquityRatioPct: 0,
+      diagnostics: []
+    },
+    bank: {
+      bankpruefungsZahlungsflussJahr1: 0,
+      kapitaldienstJahr1: 0,
+      kapitaldienstdeckungsgrad: 0,
+      beleihungsauslaufPct: 0,
+      zielBeleihungsauslaufPct: 90,
+      laufzeitJahre: snapshot.financing.data.termYears,
+      fmaBelastungsquoteRichtwertPct: 40,
+      fmaLaufzeitRichtwertJahre: 35,
       diagnostics: []
     },
     capitalShares: {
@@ -155,6 +228,14 @@ function emptyCalculationResult(
       weekdayOccupancyPct: 0,
       occupancyPct: 0,
       pointsPerAvailableNight: 0,
+      ownerUseMarketOffsetValue: 0,
+      ownerUseCostFloorValue: 0,
+      ownerUseEconomicValue: 0,
+      externalRentableRoomNights: 0,
+      externalOccupiedRoomNights: 0,
+      externalOccupancyPct: 0,
+      averageGrossPricePerExternalRoomNight: 0,
+      netExternalRevenue: 0,
       pressureLabel: "offen",
       diagnostics: []
     },
@@ -177,6 +258,9 @@ function emptyCalculationResult(
       yearly: [],
       bankAccountMonthly: [],
       bankAccountYearly: [],
+      operatingWaterfallYearly: [],
+      ergebnisrechnungYearly: [],
+      vermoegensuebersichtYearly: [],
       cumulativeCashflow: 0,
       diagnostics: []
     },

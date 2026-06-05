@@ -24,7 +24,7 @@ export function validateLegalForm(
         "legal-form.tax-model-unknown",
         "warning",
         "legalForm",
-        "Tax model is unknown; cashflow outputs remain assumption-based."
+        "Steuermodell ist offen; Zahlungsfluss und Ergebnisrechnung bleiben Annahmen."
       )
     );
   }
@@ -41,7 +41,7 @@ export function validateLegalForm(
         "legal-form.costs-missing",
         "warning",
         "legalForm",
-        "Rechtsformkosten fehlen oder sind nicht belastbar; Kapitalbedarf und Opex koennen zu niedrig sein."
+        "Rechtsformkosten fehlen oder sind nicht belastbar; Kapitalbedarf und Betriebskosten koennen zu niedrig sein."
       )
     );
   }

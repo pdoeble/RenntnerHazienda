@@ -18,6 +18,9 @@ export const defaultFinancingTemplate: FinancingTemplate = {
     annualInterestRatePct: 4,
     termYears: 25,
     startMonth: 0,
-    additionalMonthlyRepayment: 0
+    additionalMonthlyRepayment: 0,
+    bankdarlehenModus: "automatischSaldieren",
+    mittelherkunft: [],
+    mittelverwendung: []
   }
 };
