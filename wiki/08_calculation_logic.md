@@ -1119,3 +1119,128 @@ Die App kann das aktuelle Projektmanifest über die GitHub Contents API schreibe
 - Abrufdatum: 2026-06-05
 - Geltungsbereich: GitHub API- und Git-Authentifizierung
 - Stabilität: mittel
+
+## 27. Jährliche Eigentümer-Wertentwicklung
+
+### Kernaussage
+`Mein Anteil` verwendet für die Projektion von Jahr 0 bis Jahr 30 eine gemeinsame
+Jahresreihe. Diagramm und Kennzahlen greifen auf dieselben Daten zu. Dadurch
+werden Einzahlungen, Gesamtzahlungen und persönlicher Gegenwert nicht mehr mit
+unterschiedlichen linearen Hilfsrechnungen dargestellt.
+
+### App-Formeln
+```text
+Vermögenswirksam eingezahlt Jahr n =
+  Start-EK
+  + Summe Kapitalrücklage / Anlage bis Jahr n
+
+Insgesamt gezahlt Jahr n =
+  Start-EK
+  + Summe Kapitalzahlungen
+  + Summe Kostenbeiträge
+  + Summe Nutzungsentgelte
+  + Summe Liquiditätsreservebeiträge
+
+Immobilienwert Jahr n =
+  Kaufpreis * (1 + Wertsteigerung p.a.) ^ n
+
+Projekt-Nettovermögen Jahr n =
+  Immobilienwert Jahr n
+  + Bankkonto-Endstand Jahr n
+  - Restschuld Jahr n
+
+Persönlicher Nettovermögenswert Jahr n =
+  Unternehmensanteil
+  * Projekt-Nettovermögen Jahr n
+```
+
+Kostenbeiträge, Nutzungsentgelte und Reservebeiträge werden in den
+Gesamtzahlungen sichtbar, aber nicht als vermögenswirksame Einzahlung
+behandelt. Negative Projekt- oder Eigentümerwerte werden nicht auf null
+begrenzt. Jahr 0 enthält bereits das Start-EK.
+
+### Quelle
+- Quelle: Eigentümer-Renditeberechnung
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: [calculatePersonalReturns.ts](../simTool/src/calculations/calculatePersonalReturns.ts)
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-06
+- Abrufdatum: 2026-06-06
+- Geltungsbereich: internes App-Modell
+- Stabilität: niedrig
+
+## 28. Mobile Diagrammbreite
+
+### Kernaussage
+Zeitreihen-, Balken- und Punktdiagramme erhalten auf kleinen Bildschirmen eine
+lesbare Mindestbreite. Nur der jeweilige Diagrammrahmen scrollt horizontal; die
+Seite selbst bleibt auf die Gerätebreite begrenzt. Kuchendiagramme und Karte
+bleiben responsiv.
+
+### App-Regeln
+```text
+Mindestbreite Zeitreihe =
+  max(720 px, Anzahl Datenpunkte * 38 px + 160 px Achsenraum)
+
+Mindestbreite Kategorien =
+  max(720 px, Anzahl Kategorien * 70 px + 160 px Achsenraum)
+
+Mindestbreite Haus-Punktplot =
+  680 px
+```
+
+### Quelle
+- Quelle: Diagrammrahmen und mobile App-Stile
+- Herausgeber: Projektteam RenntnerHazienda
+- Link: [VisualizationTabs.tsx](../simTool/src/app/layout/VisualizationTabs.tsx)
+- Link: [App.css](../simTool/src/app/App.css)
+- Stand/Veröffentlichungsdatum: Projektstand 2026-06-06
+- Abrufdatum: 2026-06-06
+- Geltungsbereich: interne Darstellung
+- Stabilität: niedrig
+
+## 29. Interaktive Karte und Straßenrouten
+
+### Kernaussage
+Der Hausvergleich verwendet Leaflet für die interaktive Karte und die
+OpenStreetMap-Standardkacheln als sichtbare Straßenkarte. Alle Kandidatenhäuser
+und die sechs Wohnorte Esslingen am Neckar, München, Neuburg an der Donau,
+Innsbruck, Zürich und Hinwil werden markiert. Echte Fahrtrouten werden nur vom
+jeweiligen Wohnort zum aktiven Haus abgefragt.
+
+Der Browser erhält keinen OpenRouteService-Schlüssel. Er sendet Ursprünge und
+Ziel an den Cloudflare-Worker. Der Worker geocodiert eine fehlende Zielposition
+einmalig, ruft die Fahrtrouten ab und liefert normalisierte GeoJSON-Linien,
+Entfernung, Fahrzeit sowie Teilfehler zurück. Hauskoordinaten können im
+Projektzustand gespeichert werden; die vollständigen Routen werden nur
+sitzungsweise zwischengespeichert.
+
+Fehlen Worker-URL oder Schlüssel, bleibt die Karte mit vorhandenen Markern
+nutzbar. OpenStreetMap-Kacheln sind ein bestmöglicher öffentlicher Dienst ohne
+Verfügbarkeitsgarantie. Die App lädt nur Kacheln des aktuell sichtbaren
+Kartenausschnitts und zeigt die vorgeschriebene Attribution.
+
+### Quellen
+- Quelle: Leaflet Quick Start Guide
+- Herausgeber: Leaflet-Projekt
+- Link: https://leafletjs.com/examples/quick-start/
+- Stand/Veröffentlichungsdatum: laufend aktualisierte Dokumentation
+- Abrufdatum: 2026-06-06
+- Geltungsbereich: Leaflet-Karte, Marker, Linien, Popups und Attribution
+- Stabilität: mittel
+
+- Quelle: Tile Usage Policy
+- Herausgeber: OpenStreetMap Foundation Operations Working Group
+- Link: https://operations.osmfoundation.org/policies/tiles/
+- Stand/Veröffentlichungsdatum: laufend aktualisierte Richtlinie
+- Abrufdatum: 2026-06-06
+- Geltungsbereich: Nutzung von `tile.openstreetmap.org`
+- Stabilität: mittel; Richtlinie kann geändert werden
+
+- Quelle: Directions Service und Geocoder Endpoint
+- Herausgeber: openrouteservice / HeiGIT gGmbH
+- Link: https://giscience.github.io/openrouteservice/api-reference/endpoints/directions/
+- Link: https://giscience.github.io/openrouteservice/api-reference/endpoints/geocoder/
+- Stand/Veröffentlichungsdatum: Directions-Dokumentation aktualisiert 20.01.2025; Geocoder laufend aktualisiert
+- Abrufdatum: 2026-06-06
+- Geltungsbereich: OpenRouteService-Fahrtrouten und Geocoding
+- Stabilität: mittel

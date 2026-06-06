@@ -4,27 +4,44 @@ export const OWNER_HOME_LOCATIONS = [
   {
     id: "esslingen",
     label: "Esslingen am Neckar",
-    query: "Esslingen am Neckar"
+    query: "Esslingen am Neckar",
+    latitude: 48.742,
+    longitude: 9.311
   },
   {
     id: "muenchen",
     label: "Muenchen",
-    query: "Muenchen"
+    query: "Muenchen",
+    latitude: 48.137,
+    longitude: 11.576
   },
   {
     id: "neuburg",
     label: "Neuburg an der Donau",
-    query: "Neuburg an der Donau"
+    query: "Neuburg an der Donau",
+    latitude: 48.733,
+    longitude: 11.187
   },
   {
     id: "hinwil",
     label: "Hinwil CH",
-    query: "Hinwil CH"
+    query: "Hinwil CH",
+    latitude: 47.303,
+    longitude: 8.844
   },
   {
     id: "innsbruck",
     label: "Innsbruck",
-    query: "Innsbruck"
+    query: "Innsbruck",
+    latitude: 47.269,
+    longitude: 11.404
+  },
+  {
+    id: "zuerich",
+    label: "Zuerich",
+    query: "Zuerich",
+    latitude: 47.376,
+    longitude: 8.541
   }
 ] as const;
 

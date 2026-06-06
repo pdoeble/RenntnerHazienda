@@ -1,9 +1,16 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 
 describe("App shell", () => {
+  beforeEach(() => {
+    vi.stubEnv("VITE_GITHUB_OAUTH_CLIENT_ID", "");
+    vi.stubEnv("VITE_GITHUB_OAUTH_EXCHANGE_URL", "");
+    vi.stubEnv("VITE_ROUTE_PROXY_URL", "");
+  });
+
   afterEach(() => {
+    vi.unstubAllEnvs();
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
@@ -84,13 +91,20 @@ describe("App shell", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Mein Anteil" }));
     expect(screen.getByText("Projektionsjahre")).toBeInTheDocument();
     expect(screen.getByText("Wert nach 25 Jahren")).toBeInTheDocument();
+    expect(screen.getByText("Persoenliche Wertentwicklung")).toBeInTheDocument();
+    expect(screen.getByText("Vermoegenswirksam eingezahlt")).toBeInTheDocument();
+    expect(screen.getByText("Insgesamt gezahlt")).toBeInTheDocument();
+    expect(screen.getByText(/Eigener Nettovermoegenswert/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Belegung" }));
     expect(screen.getByText("Belegungsdruck")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("tab", { name: "Hausvergleich" }));
     expect(screen.getByText("Punktplot")).toBeInTheDocument();
-    expect(screen.getByText("Schematische Strassenkarte")).toBeInTheDocument();
+    expect(screen.getByText("Interaktive Strassenkarte")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Interaktive Karte mit Wohnorten und Kandidatenhaeusern")
+    ).toBeInTheDocument();
 
     vi.stubGlobal(
       "fetch",

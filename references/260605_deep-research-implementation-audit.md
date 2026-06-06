@@ -30,6 +30,9 @@ Dieses Audit verfolgt, welche Erkenntnisse aus den beiden Tiefenrecherchebericht
 | 13 | Persoenliche Tragfaehigkeit soll mit Monatsnettoeinkommen modelliert werden. | Nutzer / Update 2026-06-05 | Default `2.900 EUR` je Eigner | `08_calculation_logic.md` | umgesetzt | fehlende/nicht-positive alte Werte werden migriert, positive manuelle Werte bleiben |
 | 14 | `Mein Anteil` soll Vermoegenswert und Rendite nach 25 Jahren zeigen. | Nutzer / Update 2026-06-05 | 25-Jahres-Auswertung | `08_calculation_logic.md` | umgesetzt | Kostenumlage und Nutzungsentgelt bleiben getrennt von investiertem Kapital |
 | 15 | Diagramme sollen Einmal- und laufende Werte lesbar trennen. | Nutzer / Update 2026-06-05 | getrennte Achsen und Kreisdiagramme | `08_calculation_logic.md` | umgesetzt | Achsentrennung aendert keine Berechnung |
+| 16 | Mobile Diagramme muessen lesbar verschiebbar sein. | Nutzer / Update 2026-06-06 | mobile Diagrammrahmen | `08_calculation_logic.md` | umgesetzt | nur Diagrammrahmen scrollen horizontal |
+| 17 | Hauskandidaten und Wohnorte sollen auf einer echten Strassenkarte vergleichbar sein. | Nutzer / Update 2026-06-06 | Leaflet, OpenStreetMap und Routing-Worker | `08_calculation_logic.md` | umgesetzt | Routen nur zum aktiven Haus; Teilfehler lassen Markerkarte bestehen |
+| 18 | Eigentuemereinzahlungen und Gegenwert muessen ueber die Jahre aus derselben Datenreihe kommen. | Nutzer / Update 2026-06-06 | Jahresprojektion in `Mein Anteil` | `08_calculation_logic.md` | umgesetzt | negative Nettovermoegenswerte bleiben sichtbar |
 
 ## Offene Quellenpruefung
 

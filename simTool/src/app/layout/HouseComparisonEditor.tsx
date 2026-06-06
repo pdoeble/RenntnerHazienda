@@ -7,6 +7,7 @@ import {
 import type { CandidateHouse } from "../../modules/property/types";
 import type { ProjectState } from "../../state/projectStore";
 import { formatMoney } from "../../utils/money";
+import { InteractiveRoadMap } from "../maps/InteractiveRoadMap";
 
 type HouseComparisonEditorProps = {
   projectState: ProjectState;
@@ -121,9 +122,15 @@ export function HouseComparisonEditor({
           </button>
         </div>
         {status ? <p className="muted">{status}</p> : null}
-        <SchematicRoadMap
+        <InteractiveRoadMap
           houses={houses}
-          activeHouseId={projectState.property.data.activeHouseId}
+          activeHouse={activeHouse}
+          onCoordinatesResolved={(houseId, coordinates) => {
+            const house = houses.find((candidate) => candidate.id === houseId);
+            if (house) {
+              updateHouse({ ...house, coordinates });
+            }
+          }}
         />
         <div className="table-wrap">
           <table>
@@ -217,174 +224,6 @@ export function HouseComparisonEditor({
       </div>
     </div>
   );
-}
-
-type MapPoint = {
-  id: string;
-  label: string;
-  kind: "Wohnort" | "Haus";
-  lat: number;
-  lon: number;
-  active?: boolean;
-};
-
-const HOME_LOCATION_POINTS: MapPoint[] = [
-  { id: "home-esslingen", label: "Esslingen", kind: "Wohnort", lat: 48.742, lon: 9.311 },
-  { id: "home-neuburg", label: "Neuburg a.d. Donau", kind: "Wohnort", lat: 48.733, lon: 11.187 },
-  { id: "home-muenchen", label: "Muenchen", kind: "Wohnort", lat: 48.137, lon: 11.576 },
-  { id: "home-innsbruck", label: "Innsbruck", kind: "Wohnort", lat: 47.269, lon: 11.404 },
-  { id: "home-zuerich", label: "Zuerich", kind: "Wohnort", lat: 47.376, lon: 8.541 },
-  { id: "home-hinwil", label: "Hinwil", kind: "Wohnort", lat: 47.303, lon: 8.844 }
-];
-
-const HOUSE_PLACE_COORDINATES: Record<string, { lat: number; lon: number }> = {
-  telfes: { lat: 47.166, lon: 11.358 },
-  flaurling: { lat: 47.291, lon: 11.122 },
-  axams: { lat: 47.228, lon: 11.278 },
-  omes: { lat: 47.222, lon: 11.273 },
-  faggen: { lat: 47.083, lon: 10.667 },
-  pfunds: { lat: 46.969, lon: 10.541 },
-  oetz: { lat: 47.204, lon: 10.897 },
-  taxegg: { lat: 47.191, lon: 10.874 },
-  sautens: { lat: 47.209, lon: 10.864 }
-};
-
-function SchematicRoadMap({
-  houses,
-  activeHouseId
-}: {
-  houses: CandidateHouse[];
-  activeHouseId?: string;
-}) {
-  const housePoints = houses.map((house) => {
-    const coordinate = coordinateForHouse(house);
-    return {
-      id: house.id,
-      label: shortHouseLabel(house),
-      kind: "Haus" as const,
-      lat: coordinate.lat,
-      lon: coordinate.lon,
-      active: house.id === activeHouseId
-    };
-  });
-  const points = [...HOME_LOCATION_POINTS, ...housePoints];
-  const projection = createMapProjection(points);
-  const innsbruck = HOME_LOCATION_POINTS.find((point) => point.id === "home-innsbruck")!;
-
-  return (
-    <div className="schematic-map-card">
-      <div className="subsection-header">
-        <div>
-          <h3>Schematische Strassenkarte</h3>
-          <p className="muted">
-            Grobe Lagebeziehungen der Wohnorte und Kandidatenhaeuser; keine
-            Navigation und keine echte Kartenkachel.
-          </p>
-        </div>
-      </div>
-      <svg
-        className="schematic-map"
-        role="img"
-        aria-label="Schematische Karte mit Wohnorten und Kandidatenhaeusern"
-        viewBox="0 0 760 360"
-      >
-        <rect x="0" y="0" width="760" height="360" rx="8" />
-        {HOME_LOCATION_POINTS.filter((point) => point.id !== innsbruck.id).map(
-          (home) => (
-            <SchematicLine
-              key={`${home.id}-innsbruck`}
-              from={projection(home)}
-              to={projection(innsbruck)}
-              className="schematic-road major"
-            />
-          )
-        )}
-        {housePoints.map((house) => (
-          <SchematicLine
-            key={`${house.id}-route`}
-            from={projection(innsbruck)}
-            to={projection(house)}
-            className={house.active ? "schematic-road active" : "schematic-road"}
-          />
-        ))}
-        {points.map((point) => {
-          const projected = projection(point);
-          const isHome = point.kind === "Wohnort";
-          return (
-            <g
-              key={point.id}
-              className={[
-                "schematic-map-point",
-                isHome ? "home" : "house",
-                point.active ? "active" : ""
-              ].join(" ")}
-              transform={`translate(${projected.x} ${projected.y})`}
-            >
-              <circle r={isHome ? 7 : 8} />
-              <text x={10} y={point.active ? -10 : 4}>
-                {point.label}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-      <div className="map-legend">
-        <span><i className="home" /> Wohnort</span>
-        <span><i className="house" /> Kandidatenhaus</span>
-        <span><i className="active" /> aktives Objekt</span>
-      </div>
-    </div>
-  );
-}
-
-function SchematicLine({
-  from,
-  to,
-  className
-}: {
-  from: { x: number; y: number };
-  to: { x: number; y: number };
-  className: string;
-}) {
-  const midX = (from.x + to.x) / 2;
-  const midY = Math.min(from.y, to.y) - 18;
-  return (
-    <path
-      className={className}
-      d={`M ${from.x} ${from.y} Q ${midX} ${midY} ${to.x} ${to.y}`}
-    />
-  );
-}
-
-function createMapProjection(points: MapPoint[]) {
-  const padding = 44;
-  const width = 760;
-  const height = 360;
-  const latitudes = points.map((point) => point.lat);
-  const longitudes = points.map((point) => point.lon);
-  const minLat = Math.min(...latitudes) - 0.08;
-  const maxLat = Math.max(...latitudes) + 0.08;
-  const minLon = Math.min(...longitudes) - 0.12;
-  const maxLon = Math.max(...longitudes) + 0.12;
-  const latSpan = maxLat - minLat || 1;
-  const lonSpan = maxLon - minLon || 1;
-
-  return (point: Pick<MapPoint, "lat" | "lon">) => ({
-    x: padding + ((point.lon - minLon) / lonSpan) * (width - padding * 2),
-    y: padding + ((maxLat - point.lat) / latSpan) * (height - padding * 2)
-  });
-}
-
-function coordinateForHouse(house: CandidateHouse): { lat: number; lon: number } {
-  const normalized = house.place.toLowerCase();
-  const match = Object.entries(HOUSE_PLACE_COORDINATES).find(([key]) =>
-    normalized.includes(key)
-  );
-  return match?.[1] ?? { lat: 47.2, lon: 10.95 };
-}
-
-function shortHouseLabel(house: CandidateHouse): string {
-  return house.place.split("/")[0]?.trim() || house.title;
 }
 
 function applyHouse(
@@ -500,12 +339,13 @@ function ScatterPlot({
   const yAxisX = padding.left;
 
   return (
-    <svg
-      className="scatter-plot"
-      role="img"
-      aria-label="Interaktiver Hausvergleich Punktplot"
-      viewBox={`0 0 ${plotWidth} ${plotHeight}`}
-    >
+    <div className="scatter-plot-scroll">
+      <svg
+        className="scatter-plot"
+        role="img"
+        aria-label="Interaktiver Hausvergleich Punktplot"
+        viewBox={`0 0 ${plotWidth} ${plotHeight}`}
+      >
       <defs>
         <linearGradient id="plot-color-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
           <stop offset="0%" stopColor={colorScale(colorScale.min)} />
@@ -579,7 +419,8 @@ function ScatterPlot({
         <text x="0" y="28">{formatPlotTick(colorScale.min)}</text>
         <text x="128" y="28" textAnchor="end">{formatPlotTick(colorScale.max)}</text>
       </g>
-    </svg>
+      </svg>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import { Download, Plus, Save, Trash2, Upload } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import type { TemplateEnvelope, TemplateKind } from "../../domain/templates";
 import type { ExtractResult } from "../../listingAssist/extractListing";
 import { extractListingFromText } from "../../listingAssist/extractListing";
@@ -24,6 +24,7 @@ import type { DirtyState, ProjectState } from "../../state/projectStore";
 import { FileActionButton } from "../../ui/buttons/FileActionButton";
 import { NumberSliderField } from "../../ui/forms/NumberSliderField";
 import { HelpPopover } from "../../ui/HelpPopover";
+import { ownerColor, ownerPastelColor } from "../../ui/ownerColors";
 import { DirtyStateIndicator } from "../../ui/status/DirtyStateIndicator";
 import { formatDateTime } from "../../utils/dates";
 import { formatMoney, formatPercent } from "../../utils/money";
@@ -624,12 +625,21 @@ function OwnershipEditor({
 
   return (
     <div className="form-grid">
-      {projectState.ownership.data.owners.map((owner) => {
+      {projectState.ownership.data.owners.map((owner, ownerIndex) => {
         const capitalShare = calculationResult.capitalShares.owners.find(
           (candidate) => candidate.ownerId === owner.id
         );
         return (
-        <div className="form-section owner-section" key={owner.id}>
+        <div
+          className="form-section owner-section"
+          key={owner.id}
+          style={
+            {
+              "--owner-color": ownerColor(ownerIndex),
+              "--owner-background": ownerPastelColor(ownerIndex)
+            } as CSSProperties
+          }
+        >
           <div className="subsection-header">
             <label className="text-field">
               <span>Name</span>

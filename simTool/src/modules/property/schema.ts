@@ -111,6 +111,17 @@ export const skiAreaSchema = z
   })
   .strict();
 
+export const houseCoordinatesSchema = z
+  .object({
+    latitude: z.number().finite().min(-90).max(90),
+    longitude: z.number().finite().min(-180).max(180),
+    source: z
+      .enum(["default", "openRouteService", "manual"])
+      .default("default"),
+    fetchedAt: z.string().optional()
+  })
+  .strict();
+
 export const candidateHouseSchema = z
   .object({
     id: idSchema,
@@ -147,6 +158,7 @@ export const candidateHouseSchema = z
     risks: z.string().optional(),
     sourceUrl: z.string().optional(),
     guestNightsPerYear: nonNegativeNumberSchema.default(60),
+    coordinates: houseCoordinatesSchema.optional(),
     travelTimes: z.array(travelTimeSchema).default([]),
     skiAreas: z.array(skiAreaSchema).default([])
   })

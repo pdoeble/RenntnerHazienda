@@ -595,6 +595,26 @@ describe("calculation pipeline", () => {
     expect(phil?.investedCapital).toBeGreaterThanOrEqual(40000);
     expect(phil?.nonWealthPayments).toBeGreaterThan(0);
     expect(phil?.averageAnnualReturnPct).not.toBeNaN();
+    expect(phil?.annualProjection).toHaveLength(31);
+    expect(phil?.annualProjection[0]).toEqual(
+      expect.objectContaining({
+        year: 0,
+        cumulativeInvestedCapital: 40000,
+        cumulativeTotalPayments: 40000
+      })
+    );
+    const yearOne = phil?.annualProjection[1];
+    expect(yearOne?.cumulativeTotalPayments).toBeGreaterThan(
+      yearOne?.cumulativeInvestedCapital ?? 0
+    );
+    expect(yearOne?.projectedOwnerValue).toBeCloseTo(
+      ((phil?.companySharePct ?? 0) / 100) *
+        (yearOne?.projectedProjectNetWorth ?? 0),
+      2
+    );
+    expect(phil?.projectedOwnerValue).toBe(
+      phil?.annualProjection[25]?.projectedOwnerValue
+    );
   });
 
   it("aggregates bank account cashflow with yearly account balance", () => {

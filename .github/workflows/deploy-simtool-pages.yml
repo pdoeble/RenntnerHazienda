@@ -55,6 +55,7 @@ jobs:
           VITE_GITHUB_OAUTH_EXCHANGE_URL: ${{ vars.VITE_GITHUB_OAUTH_EXCHANGE_URL }}
           VITE_GITHUB_OAUTH_SCOPE: public_repo
           VITE_GITHUB_OAUTH_REDIRECT_URI: https://pdoeble.github.io/RenntnerHazienda/
+          VITE_ROUTE_PROXY_URL: ${{ vars.VITE_ROUTE_PROXY_URL }}
         run: npm run build
 
       - name: Upload GitHub Pages artifact

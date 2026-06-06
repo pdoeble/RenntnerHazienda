@@ -5,10 +5,12 @@ import type {
   ContributionResult,
   DebtResult,
   PersonalReturnResult,
+  PersonalReturnYearPoint,
   ProjectSnapshot
 } from "./types";
 
 const DEFAULT_RETURN_YEARS = 25;
+const MAX_PROJECTION_YEARS = 30;
 
 export function calculatePersonalReturns(
   snapshot: ProjectSnapshot,
@@ -18,58 +20,40 @@ export function calculatePersonalReturns(
   contributions: ContributionResult,
   years = DEFAULT_RETURN_YEARS
 ): PersonalReturnResult {
-  const projectedPropertyValue = roundMoney(
-    snapshot.property.data.purchasePrice *
-      (1 + snapshot.strategy.data.appreciationPercentPerYear / 100) ** years
-  );
-  const targetMonth = Math.max(0, years * 12 - 1);
-  const projectedRemainingDebt = roundMoney(
-    debt.monthlyDebtService[targetMonth]?.remainingDebt ??
-      debt.monthlyDebtService.at(-1)?.remainingDebt ??
-      debt.totalRemainingDebt
-  );
-  const projectedBankBalance = roundMoney(
-    cashflow.bankAccountYearly.find((year) => year.year === years)?.closingBalance ??
-      cashflow.bankAccountYearly.at(-1)?.closingBalance ??
-      0
-  );
-  const projectedProjectNetWorth = roundMoney(
-    projectedPropertyValue + projectedBankBalance - projectedRemainingDebt
-  );
-
   return {
     years,
     propertyValueToday: roundMoney(snapshot.property.data.purchasePrice),
     appreciationPercentPerYear:
       snapshot.strategy.data.appreciationPercentPerYear,
     owners: capitalShares.owners.map((owner) => {
-      const recurring = contributions.recurringContributions[0]?.contributions.find(
-        (candidate) => candidate.ownerId === owner.ownerId
+      const annualProjection = buildAnnualProjection({
+        snapshot,
+        ownerId: owner.ownerId,
+        companySharePct: owner.companySharePct,
+        startEquityContribution: owner.startEquityContribution,
+        debt,
+        cashflow,
+        contributions
+      });
+      const target = projectionPoint(annualProjection, years);
+      const capitalPayments = roundMoney(
+        target.cumulativeInvestedCapital - owner.startEquityContribution
       );
-      const monthlyCapital =
-        recurring?.capitalContributionMonthly ?? owner.monthlyCapitalContribution;
-      const monthlyCost =
-        recurring?.costContributionMonthly ??
-        recurring?.baseMonthlyObligation ??
-        0;
-      const monthlyUsage =
-        recurring?.usageContributionMonthly ?? owner.monthlyUsageContribution;
-      const capitalPayments = roundMoney(monthlyCapital * 12 * years);
-      const investedCapital = roundMoney(
-        owner.startEquityContribution + capitalPayments
-      );
-      const nonWealthPayments = roundMoney(
-        (monthlyCost + monthlyUsage) * 12 * years
-      );
-      const projectedOwnerValue = roundMoney(
-        (owner.companySharePct / 100) * projectedProjectNetWorth
-      );
+      const annualCapitalPayments = annualProjection
+        .filter((point) => point.year > 0 && point.year <= years)
+        .map((point, index, points) =>
+          roundMoney(
+            point.cumulativeInvestedCapital -
+              (points[index - 1]?.cumulativeInvestedCapital ??
+                owner.startEquityContribution)
+          )
+        );
       const returnResult = averageAnnualReturn({
         startEquity: owner.startEquityContribution,
-        annualCapitalPayment: monthlyCapital * 12,
-        projectedOwnerValue,
+        annualCapitalPayments,
+        projectedOwnerValue: target.projectedOwnerValue,
         years,
-        investedCapital
+        investedCapital: target.cumulativeInvestedCapital
       });
 
       return {
@@ -77,32 +61,134 @@ export function calculatePersonalReturns(
         ownerName: owner.ownerName,
         years,
         companySharePct: owner.companySharePct,
-        projectedPropertyValue,
-        projectedBankBalance,
-        projectedRemainingDebt,
-        projectedProjectNetWorth,
-        projectedOwnerValue,
-        investedCapital,
+        projectedPropertyValue: target.projectedPropertyValue,
+        projectedBankBalance: target.projectedBankBalance,
+        projectedRemainingDebt: target.projectedRemainingDebt,
+        projectedProjectNetWorth: target.projectedProjectNetWorth,
+        projectedOwnerValue: target.projectedOwnerValue,
+        investedCapital: target.cumulativeInvestedCapital,
         startEquityContribution: owner.startEquityContribution,
         capitalPayments,
-        nonWealthPayments,
+        nonWealthPayments: target.cumulativeNonWealthPayments,
         averageAnnualReturnPct: roundPct(returnResult.rate * 100),
-        returnMethod: returnResult.method
+        returnMethod: returnResult.method,
+        annualProjection
       };
     }),
     diagnostics: []
   };
 }
 
+function buildAnnualProjection({
+  snapshot,
+  ownerId,
+  companySharePct,
+  startEquityContribution,
+  debt,
+  cashflow,
+  contributions
+}: {
+  snapshot: ProjectSnapshot;
+  ownerId: string;
+  companySharePct: number;
+  startEquityContribution: number;
+  debt: DebtResult;
+  cashflow: CashflowResult;
+  contributions: ContributionResult;
+}): PersonalReturnYearPoint[] {
+  let cumulativeInvestedCapital = roundMoney(startEquityContribution);
+  let cumulativeTotalPayments = roundMoney(startEquityContribution);
+
+  return Array.from({ length: MAX_PROJECTION_YEARS + 1 }, (_value, year) => {
+    if (year > 0) {
+      const recurring = contributionForYear(contributions, ownerId, year);
+      const capitalPayment = roundMoney(
+        (recurring?.capitalContributionMonthly ?? 0) * 12
+      );
+      const totalPayment = roundMoney(
+        (recurring?.totalMonthlyContribution ?? recurring?.amount ?? 0) * 12
+      );
+      cumulativeInvestedCapital = roundMoney(
+        cumulativeInvestedCapital + capitalPayment
+      );
+      cumulativeTotalPayments = roundMoney(
+        cumulativeTotalPayments + totalPayment
+      );
+    }
+
+    const projectedPropertyValue = roundMoney(
+      snapshot.property.data.purchasePrice *
+        (1 + snapshot.strategy.data.appreciationPercentPerYear / 100) ** year
+    );
+    const targetMonth = Math.max(0, year * 12 - 1);
+    const projectedRemainingDebt = roundMoney(
+      debt.monthlyDebtService[targetMonth]?.remainingDebt ??
+        debt.monthlyDebtService.at(-1)?.remainingDebt ??
+        debt.totalRemainingDebt
+    );
+    const projectedBankBalance = roundMoney(
+      (year === 0
+        ? cashflow.bankAccountMonthly[0]?.closingBalance
+        : cashflow.bankAccountYearly.find(
+            (candidate) => candidate.year === year
+          )?.closingBalance) ??
+        cashflow.bankAccountYearly.at(-1)?.closingBalance ??
+        0
+    );
+    const projectedProjectNetWorth = roundMoney(
+      projectedPropertyValue + projectedBankBalance - projectedRemainingDebt
+    );
+
+    return {
+      year,
+      cumulativeInvestedCapital,
+      cumulativeTotalPayments,
+      cumulativeNonWealthPayments: roundMoney(
+        cumulativeTotalPayments - cumulativeInvestedCapital
+      ),
+      projectedPropertyValue,
+      projectedBankBalance,
+      projectedRemainingDebt,
+      projectedProjectNetWorth,
+      projectedOwnerValue: roundMoney(
+        (companySharePct / 100) * projectedProjectNetWorth
+      )
+    };
+  });
+}
+
+function contributionForYear(
+  contributions: ContributionResult,
+  ownerId: string,
+  year: number
+) {
+  const targetMonth = (year - 1) * 12;
+  const schedule =
+    [...contributions.recurringContributions]
+      .reverse()
+      .find((candidate) => candidate.month <= targetMonth) ??
+    contributions.recurringContributions[0];
+  return schedule?.contributions.find(
+    (candidate) => candidate.ownerId === ownerId
+  );
+}
+
+function projectionPoint(
+  projection: PersonalReturnYearPoint[],
+  year: number
+): PersonalReturnYearPoint {
+  return projection.find((point) => point.year === year) ?? projection.at(-1)!;
+}
+
 function averageAnnualReturn({
   startEquity,
-  annualCapitalPayment,
+  annualCapitalPayments,
   projectedOwnerValue,
   years,
   investedCapital
 }: {
   startEquity: number;
-  annualCapitalPayment: number;
+  annualCapitalPayments: number[];
   projectedOwnerValue: number;
   years: number;
   investedCapital: number;
@@ -113,7 +199,7 @@ function averageAnnualReturn({
 
   const internalRate = solveInternalRate({
     startEquity,
-    annualCapitalPayment,
+    annualCapitalPayments,
     projectedOwnerValue,
     years
   });
@@ -129,12 +215,12 @@ function averageAnnualReturn({
 
 function solveInternalRate({
   startEquity,
-  annualCapitalPayment,
+  annualCapitalPayments,
   projectedOwnerValue,
   years
 }: {
   startEquity: number;
-  annualCapitalPayment: number;
+  annualCapitalPayments: number[];
   projectedOwnerValue: number;
   years: number;
 }): number | undefined {
@@ -142,13 +228,13 @@ function solveInternalRate({
   let high = 1;
   const lowNpv = netPresentValue(low, {
     startEquity,
-    annualCapitalPayment,
+    annualCapitalPayments,
     projectedOwnerValue,
     years
   });
   const highNpv = netPresentValue(high, {
     startEquity,
-    annualCapitalPayment,
+    annualCapitalPayments,
     projectedOwnerValue,
     years
   });
@@ -161,7 +247,7 @@ function solveInternalRate({
     const mid = (low + high) / 2;
     const midNpv = netPresentValue(mid, {
       startEquity,
-      annualCapitalPayment,
+      annualCapitalPayments,
       projectedOwnerValue,
       years
     });
@@ -182,19 +268,19 @@ function netPresentValue(
   rate: number,
   {
     startEquity,
-    annualCapitalPayment,
+    annualCapitalPayments,
     projectedOwnerValue,
     years
   }: {
     startEquity: number;
-    annualCapitalPayment: number;
+    annualCapitalPayments: number[];
     projectedOwnerValue: number;
     years: number;
   }
 ): number {
   let npv = -startEquity;
   for (let year = 1; year <= years; year += 1) {
-    npv -= annualCapitalPayment / (1 + rate) ** year;
+    npv -= (annualCapitalPayments[year - 1] ?? 0) / (1 + rate) ** year;
   }
   npv += projectedOwnerValue / (1 + rate) ** years;
   return npv;

@@ -388,6 +388,19 @@ export type PersonalReturnOwnerResult = {
   nonWealthPayments: number;
   averageAnnualReturnPct: number;
   returnMethod: "internalRate" | "fallback" | "notAvailable";
+  annualProjection: PersonalReturnYearPoint[];
+};
+
+export type PersonalReturnYearPoint = {
+  year: number;
+  cumulativeInvestedCapital: number;
+  cumulativeTotalPayments: number;
+  cumulativeNonWealthPayments: number;
+  projectedPropertyValue: number;
+  projectedBankBalance: number;
+  projectedRemainingDebt: number;
+  projectedProjectNetWorth: number;
+  projectedOwnerValue: number;
 };
 
 export type PersonalReturnResult = {

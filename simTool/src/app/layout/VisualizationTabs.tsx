@@ -13,7 +13,7 @@ import {
   XAxis,
   YAxis
 } from "recharts";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { CalculationResult } from "../../calculations/types";
@@ -23,6 +23,7 @@ import {
   type VisualizationTab
 } from "../../state/uiStore";
 import { HelpPopover } from "../../ui/HelpPopover";
+import { ownerColor } from "../../ui/ownerColors";
 import { formatMoney } from "../../utils/money";
 import { clampItems } from "../../utils/numbers";
 
@@ -167,27 +168,21 @@ function MyShareView({ result }: { result: CalculationResult }) {
     recurringContribution?.costContributionMonthly ??
     recurringContribution?.baseMonthlyObligation ??
     0;
-  const monthlyCapitalContribution =
-    recurringContribution?.capitalContributionMonthly ?? 0;
-  const monthlyUsageContribution =
-    recurringContribution?.usageContributionMonthly ?? owner?.monthlyUsageContribution ?? 0;
   const capitalShareOwner = result.capitalShares.owners.find(
     (candidate) => candidate.ownerId === owner?.ownerId
   );
   const personalReturn = result.personalReturns.owners.find(
     (candidate) => candidate.ownerId === owner?.ownerId
   );
-  const companySharePct = owner?.companySharePct ?? 0;
-  const projectedValue =
-    (companySharePct / 100) *
-    result.points.propertyValue *
-    Math.pow(1 + result.points.appreciationPercentPerYear / 100, projectionYears);
-  const cumulativeCostPayments = monthlyCostContribution * 12 * projectionYears;
-  const cumulativeCapitalPayments =
-    monthlyCapitalContribution * 12 * projectionYears;
-  const cumulativeUsagePayments = monthlyUsageContribution * 12 * projectionYears;
-  const cumulativePayments =
-    cumulativeCostPayments + cumulativeCapitalPayments + cumulativeUsagePayments;
+  const ownerIndex = result.points.owners.findIndex(
+    (candidate) => candidate.ownerId === owner?.ownerId
+  );
+  const annualProjection =
+    personalReturn?.annualProjection.filter(
+      (point) => point.year <= projectionYears
+    ) ?? [];
+  const selectedProjection =
+    annualProjection.at(-1) ?? personalReturn?.annualProjection.at(-1);
 
   if (!owner) {
     return <p className="empty-state">Keine Eigner fuer die Anteilsansicht vorhanden.</p>;
@@ -273,16 +268,74 @@ function MyShareView({ result }: { result: CalculationResult }) {
           max={30}
           onChange={setProjectionYears}
         />
+        <SectionHeading label="Persoenliche Wertentwicklung" />
+        <ChartFrame mobileMinWidth={timelineChartWidth(annualProjection.length)}>
+          <ResponsiveContainer width="100%" height="100%">
+            <ComposedChart data={annualProjection}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="year"
+                label={{
+                  value: "Jahr",
+                  position: "insideBottom",
+                  offset: -2
+                }}
+              />
+              <YAxis
+                tickFormatter={(value) => formatMoney(Number(value))}
+                width={92}
+              />
+              <Tooltip formatter={(value) => formatMoney(Number(value))} />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="cumulativeInvestedCapital"
+                name="Vermoegenswirksam eingezahlt"
+                stroke="#6f9c95"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="cumulativeTotalPayments"
+                name="Insgesamt gezahlt"
+                stroke="#d3a06b"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="projectedOwnerValue"
+                name="Eigener Nettovermoegenswert"
+                stroke={ownerColor(Math.max(0, ownerIndex))}
+                strokeWidth={3}
+                dot={false}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </ChartFrame>
         <MetricGrid
           metrics={[
-            ["Kumulierte Kostenumlage", formatMoney(cumulativeCostPayments)],
-            ["Kumulierte Kapitalzahlungen", formatMoney(cumulativeCapitalPayments)],
-            ["Kumuliertes Nutzungsentgelt", formatMoney(cumulativeUsagePayments)],
             [
-              `Vermoegensanteil (${projectionYears} J.)`,
-              formatMoney(projectedValue)
+              "Vermoegenswirksam eingezahlt",
+              formatMoney(selectedProjection?.cumulativeInvestedCapital ?? 0)
             ],
-            ["Planungssaldo", formatMoney(projectedValue - cumulativePayments)]
+            [
+              "Insgesamt gezahlt",
+              formatMoney(selectedProjection?.cumulativeTotalPayments ?? 0)
+            ],
+            [
+              "Nicht vermoegenswirksam gezahlt",
+              formatMoney(selectedProjection?.cumulativeNonWealthPayments ?? 0)
+            ],
+            [
+              `Eigener Nettovermoegenswert (${projectionYears} J.)`,
+              formatMoney(selectedProjection?.projectedOwnerValue ?? 0)
+            ],
+            [
+              "Projekt-Nettovermoegen",
+              formatMoney(selectedProjection?.projectedProjectNetWorth ?? 0)
+            ]
           ]}
         />
       </div>
@@ -479,7 +532,7 @@ function CapitalNeedView({ result }: { result: CalculationResult }) {
           ["USt-Erstattung", formatMoney(result.capitalNeed.vatRefund)]
         ]}
       />
-      <ChartFrame>
+      <ChartFrame mobileMinWidth={categoryChartWidth(chartData.length)}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -599,7 +652,7 @@ function ContributionsView({ result }: { result: CalculationResult }) {
           ]
         ]}
       />
-      <ChartFrame>
+      <ChartFrame mobileMinWidth={categoryChartWidth(chartData.length)}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -781,7 +834,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
           ]
         ]}
       />
-      <ChartFrame>
+      <ChartFrame mobileMinWidth={timelineChartWidth(chartData.length)}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -987,7 +1040,7 @@ function CashflowView({ result }: { result: CalculationResult }) {
         items={BANK_FLOW_LEGEND}
         note="Linke Achse skaliert Jahr 1, rechte Achse skaliert die Folgejahre. Der Tooltip zeigt die exakten Euro-Betraege."
       />
-      <ChartFrame>
+      <ChartFrame mobileMinWidth={timelineChartWidth(chartData.length)}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -1141,7 +1194,7 @@ function DebtView({ result }: { result: CalculationResult }) {
           ]
         ]}
       />
-      <ChartFrame>
+      <ChartFrame mobileMinWidth={timelineChartWidth(chartData.length)}>
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -1350,21 +1403,6 @@ type SharePieDatum = {
   color: string;
 };
 
-const OWNER_COLORS = [
-  "#5b8f8a",
-  "#7aa7c7",
-  "#a58ac9",
-  "#d3a06b",
-  "#d7837f",
-  "#77b7c5",
-  "#9aae73",
-  "#c884a8",
-  "#7b8794",
-  "#b79ad5",
-  "#dda37a",
-  "#7fb38b"
-];
-
 const CONTRIBUTION_COLORS = {
   startEk: "#6f9c95",
   kosten: "#d3a06b",
@@ -1404,10 +1442,6 @@ const BANK_FLOW_LEGEND = [
   { label: "Kauf/Ausbau", color: BANK_FLOW_COLORS.kauf },
   { label: "Betrieb/Bank", color: BANK_FLOW_COLORS.opex }
 ];
-
-function ownerColor(index: number): string {
-  return OWNER_COLORS[index % OWNER_COLORS.length]!;
-}
 
 function SharePieChart({
   title,
@@ -1506,8 +1540,31 @@ const HELP_TEXTS: Record<string, string> = {
     "Das Kennzahlenregister sammelt die wichtigsten Pruefwerte aus Objekt-, Rechtstraeger-, Mitglieder- und Banksicht."
 };
 
-function ChartFrame({ children }: { children: ReactNode }) {
-  return <div className="chart-frame">{children}</div>;
+function ChartFrame({
+  children,
+  mobileMinWidth = 720
+}: {
+  children: ReactNode;
+  mobileMinWidth?: number;
+}) {
+  return (
+    <div className="chart-scroll">
+      <div
+        className="chart-frame"
+        style={{ "--chart-mobile-width": `${mobileMinWidth}px` } as CSSProperties}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function timelineChartWidth(pointCount: number): number {
+  return Math.max(720, pointCount * 38 + 160);
+}
+
+function categoryChartWidth(categoryCount: number): number {
+  return Math.max(720, categoryCount * 70 + 160);
 }
 
 function CompactChartLegend({
