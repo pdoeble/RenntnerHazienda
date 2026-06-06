@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 
@@ -103,6 +103,104 @@ describe("App shell", () => {
     await screen.findByRole("table");
   });
 
+  it("switches between input, visualization and both on wide screens", () => {
+    mockMatchMedia(false);
+    render(<App />);
+
+    const inputButton = screen.getByRole("button", { name: "Eingabe" });
+    const visualizationButton = screen.getByRole("button", {
+      name: "Darstellung"
+    });
+    const bothButton = screen.getByRole("button", { name: "Beide" });
+
+    expect(bothButton).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("region", { name: "Eingaben" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Visualisierungen" })
+    ).toBeInTheDocument();
+
+    fireEvent.click(inputButton);
+    expect(inputButton).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.queryByRole("region", { name: "Visualisierungen" })
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(visualizationButton);
+    expect(visualizationButton).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.queryByRole("region", { name: "Eingaben" })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Visualisierungen" })
+    ).toBeInTheDocument();
+
+    fireEvent.click(bothButton);
+    expect(screen.getByRole("region", { name: "Eingaben" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Visualisierungen" })
+    ).toBeInTheDocument();
+  });
+
+  it("starts with input only and disables both on compact screens", () => {
+    mockMatchMedia(true);
+    render(<App />);
+
+    const inputButton = screen.getByRole("button", { name: "Eingabe" });
+    const visualizationButton = screen.getByRole("button", {
+      name: "Darstellung"
+    });
+    const bothButton = screen.getByRole("button", { name: "Beide" });
+
+    expect(inputButton).toHaveAttribute("aria-pressed", "true");
+    expect(bothButton).toBeDisabled();
+    expect(bothButton).toHaveAttribute(
+      "title",
+      "Auf schmalen Bildschirmen nicht verfügbar"
+    );
+    expect(screen.getByRole("region", { name: "Eingaben" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: "Visualisierungen" })
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(visualizationButton);
+    expect(visualizationButton).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.queryByRole("region", { name: "Eingaben" })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Visualisierungen" })
+    ).toBeInTheDocument();
+  });
+
+  it("leaves both mode when the viewport becomes compact", () => {
+    const media = mockMatchMedia(false);
+    render(<App />);
+
+    expect(screen.getByRole("button", { name: "Beide" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+
+    act(() => media.setMatches(true));
+
+    expect(screen.getByRole("button", { name: "Eingabe" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(screen.getByRole("button", { name: "Beide" })).toBeDisabled();
+    expect(
+      screen.queryByRole("region", { name: "Visualisierungen" })
+    ).not.toBeInTheDocument();
+
+    act(() => media.setMatches(false));
+
+    expect(screen.getByRole("button", { name: "Beide" })).not.toBeDisabled();
+    expect(screen.getByRole("button", { name: "Eingabe" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+  });
+
   it("updates calculations when direct numeric inputs change", () => {
     render(<App />);
 
@@ -166,6 +264,7 @@ describe("App shell", () => {
     render(<App />);
 
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
+    fireEvent.click(screen.getByRole("button", { name: "Inserat importieren" }));
     fireEvent.change(screen.getByLabelText("Inserat-Text"), {
       target: {
         value: [
@@ -207,9 +306,14 @@ describe("App shell", () => {
     render(<App />);
 
     expect(screen.getByLabelText("Projekt laden")).toBeInTheDocument();
+    expect(screen.getByText("Einzeltab exportieren")).toBeInTheDocument();
+    expect(screen.getByLabelText("Einzeltab Kapitel")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Laden" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Speichern" })).toBeInTheDocument();
+
     fireEvent.click(screen.getByRole("tab", { name: "Immobilie" }));
-    expect(screen.getAllByLabelText("Laden")[0]).toBeInTheDocument();
-    expect(screen.getAllByText("Upload...").length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByLabelText("Laden")).not.toBeInTheDocument();
+    expect(screen.queryByText("Upload...")).not.toBeInTheDocument();
     expect(
       screen.queryByText("Schema und Moduldiagnosen sind gueltig.")
     ).not.toBeInTheDocument();
@@ -217,3 +321,41 @@ describe("App shell", () => {
     expect(screen.queryByText("JSON-Fallback bereit")).not.toBeInTheDocument();
   });
 });
+
+function mockMatchMedia(initialMatches: boolean) {
+  const listeners = new Set<(event: MediaQueryListEvent) => void>();
+  let matches = initialMatches;
+  const mediaQuery = {
+    get matches() {
+      return matches;
+    },
+    media: "(max-width: 980px)",
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(
+      (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+        listeners.add(listener);
+      }
+    ),
+    removeEventListener: vi.fn(
+      (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+        listeners.delete(listener);
+      }
+    ),
+    dispatchEvent: vi.fn(() => true)
+  } as unknown as MediaQueryList;
+
+  vi.stubGlobal("matchMedia", vi.fn(() => mediaQuery));
+
+  return {
+    setMatches(nextMatches: boolean) {
+      matches = nextMatches;
+      const event = {
+        matches: nextMatches,
+        media: mediaQuery.media
+      } as MediaQueryListEvent;
+      listeners.forEach((listener) => listener(event));
+    }
+  };
+}

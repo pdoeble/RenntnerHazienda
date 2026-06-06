@@ -35,11 +35,22 @@ import { DiagnosticsPanel } from "../ui/status/DiagnosticsPanel";
 import { formatDateTime } from "../utils/dates";
 import type { TemplateKind } from "../domain/templates";
 import { InputTabs, type InputPanelTab } from "./layout/InputTabs";
-import { TwoColumnLayout } from "./layout/TwoColumnLayout";
+import {
+  TwoColumnLayout,
+  type WorkspaceMode
+} from "./layout/TwoColumnLayout";
 import { VisualizationTabs } from "./layout/VisualizationTabs";
 import "./App.css";
 
+const COMPACT_WORKSPACE_QUERY = "(max-width: 980px)";
+
 export function App() {
+  const [compactWorkspace, setCompactWorkspace] = useState(() =>
+    matchesCompactWorkspace()
+  );
+  const [workspaceMode, setWorkspaceMode] = useState<WorkspaceMode>(() =>
+    matchesCompactWorkspace() ? "input" : "both"
+  );
   const [projectState, setProjectState] = useState<ProjectState>(() =>
     structuredClone(defaultProjectState)
   );
@@ -85,6 +96,24 @@ export function App() {
         clearGithubOAuthCallbackParams();
       });
   }, [githubOAuth]);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia(COMPACT_WORKSPACE_QUERY);
+    const handleChange = (event: MediaQueryListEvent | MediaQueryList) => {
+      setCompactWorkspace(event.matches);
+      if (event.matches) {
+        setWorkspaceMode((current) => (current === "both" ? "input" : current));
+      }
+    };
+
+    handleChange(mediaQuery);
+    mediaQuery.addEventListener?.("change", handleChange);
+    return () => mediaQuery.removeEventListener?.("change", handleChange);
+  }, []);
 
   function replaceTemplate(
     kind: TemplateKind,
@@ -232,9 +261,16 @@ export function App() {
           <h1>RenntnerHazienda</h1>
           <span>Berechnet: {formatDateTime(snapshot.metadata.calculatedAt)}</span>
         </div>
+        <WorkspaceModeControl
+          mode={workspaceMode}
+          compact={compactWorkspace}
+          onChange={setWorkspaceMode}
+        />
       </header>
 
       <TwoColumnLayout
+        mode={workspaceMode}
+        compact={compactWorkspace}
         left={
           <InputTabs
             projectState={projectState}
@@ -265,7 +301,6 @@ export function App() {
             onTemplateChange={replaceTemplate}
             onLoadTemplate={(kind) => void loadTemplate(kind)}
             onSaveTemplate={saveTemplate}
-            onExportTemplate={saveTemplate}
           />
         }
         right={
@@ -280,6 +315,57 @@ export function App() {
         }
       />
     </div>
+  );
+}
+
+function WorkspaceModeControl({
+  mode,
+  compact,
+  onChange
+}: {
+  mode: WorkspaceMode;
+  compact: boolean;
+  onChange: (mode: WorkspaceMode) => void;
+}) {
+  const options: { mode: WorkspaceMode; label: string }[] = [
+    { mode: "input", label: "Eingabe" },
+    { mode: "visualization", label: "Darstellung" },
+    { mode: "both", label: "Beide" }
+  ];
+
+  return (
+    <div
+      className="workspace-mode-control"
+      role="group"
+      aria-label="Arbeitsbereich anzeigen"
+    >
+      {options.map((option) => {
+        const disabled = compact && option.mode === "both";
+        return (
+          <button
+            key={option.mode}
+            type="button"
+            aria-pressed={mode === option.mode}
+            className={mode === option.mode ? "active" : ""}
+            disabled={disabled}
+            title={
+              disabled ? "Auf schmalen Bildschirmen nicht verfügbar" : undefined
+            }
+            onClick={() => onChange(option.mode)}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function matchesCompactWorkspace(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia(COMPACT_WORKSPACE_QUERY).matches
   );
 }
 

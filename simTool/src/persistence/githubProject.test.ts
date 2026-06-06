@@ -118,6 +118,48 @@ describe("github project persistence", () => {
     expect(body.sha).toBe("sha-existing");
   });
 
+  it("retries a GitHub conflict with a refreshed sha", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          content: btoa("{}"),
+          encoding: "base64",
+          sha: "sha-old"
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 409,
+        text: async () => "conflict"
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          content: btoa("{}"),
+          encoding: "base64",
+          sha: "sha-fresh"
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        text: async () => "{}"
+      });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await saveGithubProject("{\"ok\":true}", "token", config);
+
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    const retryBody = JSON.parse(String(fetchMock.mock.calls[3]?.[1]?.body)) as {
+      sha?: string;
+    };
+    expect(retryBody.sha).toBe("sha-fresh");
+  });
+
   it("surfaces auth and conflict failures", async () => {
     await expect(saveGithubProject("{}", null, config)).rejects.toMatchObject({
       status: 401
@@ -146,6 +188,16 @@ describe("github project persistence", () => {
         ok: false,
         status: 409,
         text: async () => "conflict"
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 404,
+        text: async () => "not found"
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 409,
+        text: async () => "conflict after retry"
       });
     vi.stubGlobal("fetch", fetchMock);
 

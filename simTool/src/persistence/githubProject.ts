@@ -83,6 +83,34 @@ export async function saveGithubProject(
   }
 
   const existing = await loadGithubProject(token, config);
+  const putResponse = await putGithubProject(content, token, config, existing?.sha);
+  if (putResponse.ok) {
+    return;
+  }
+
+  if (putResponse.status === 409) {
+    const refreshed = await loadGithubProject(token, config);
+    const retryResponse = await putGithubProject(
+      content,
+      token,
+      config,
+      refreshed?.sha
+    );
+    if (retryResponse.ok) {
+      return;
+    }
+    throw new GithubProjectError(retryResponse.status, await retryResponse.text());
+  }
+
+  throw new GithubProjectError(putResponse.status, await putResponse.text());
+}
+
+async function putGithubProject(
+  content: string,
+  token: string,
+  config: GithubProjectConfig,
+  sha: string | undefined
+): Promise<Response> {
   const response = await fetch(githubContentUrl(config, false), {
     method: "PUT",
     headers: {
@@ -93,13 +121,10 @@ export async function saveGithubProject(
       message: "simTool: update current project",
       branch: config.branch,
       content: encodeBase64(content),
-      ...(existing?.sha ? { sha: existing.sha } : {})
+      ...(sha ? { sha } : {})
     })
   });
-
-  if (!response.ok) {
-    throw new GithubProjectError(response.status, await response.text());
-  }
+  return response;
 }
 
 function githubContentUrl(config: GithubProjectConfig, includeRef = true): string {

@@ -1,4 +1,4 @@
-import { Download, Plus, Save, Trash2 } from "lucide-react";
+import { Download, Plus, Save, Trash2, Upload } from "lucide-react";
 import { useState } from "react";
 import type { TemplateEnvelope, TemplateKind } from "../../domain/templates";
 import type { ExtractResult } from "../../listingAssist/extractListing";
@@ -63,7 +63,6 @@ type InputTabsProps = {
   ) => void;
   onLoadTemplate: (kind: TemplateKind) => void;
   onSaveTemplate: (kind: TemplateKind) => void;
-  onExportTemplate: (kind: TemplateKind) => void;
 };
 
 function tabLabel(kind: TemplateKind): string {
@@ -172,8 +171,7 @@ export function InputTabs({
   onSelectKind,
   onTemplateChange,
   onLoadTemplate,
-  onSaveTemplate,
-  onExportTemplate
+  onSaveTemplate
 }: InputTabsProps) {
   const visibleTabs = [
     { kind: "project" as const, label: "Projekt" },
@@ -249,24 +247,6 @@ export function InputTabs({
               : `Template: ${activeTemplate.id}`}
           </span>
         </div>
-        {selectedKind === "project" || selectedKind === "rules" ? null : (
-          <div className="button-row">
-            <TemplateLoadSelect
-              templateName={activeTemplate.name}
-              onUpload={() => onLoadTemplate(templateKind)}
-            />
-            <FileActionButton
-              label="Speichern"
-              icon={Save}
-              onClick={() => onSaveTemplate(templateKind)}
-            />
-            <FileActionButton
-              label="Export"
-              icon={Download}
-              onClick={() => onExportTemplate(templateKind)}
-            />
-          </div>
-        )}
       </div>
 
       {validationErrors.length > 0 ? (
@@ -282,43 +262,35 @@ export function InputTabs({
         projectState={projectState}
         calculationResult={calculationResult}
         projectPanel={projectPanel}
+        onLoadTemplate={onLoadTemplate}
+        onSaveTemplate={onSaveTemplate}
         onTemplateChange={onTemplateChange}
       />
     </div>
   );
 }
 
-function TemplateLoadSelect({
-  templateName,
-  onUpload
-}: {
-  templateName: string;
-  onUpload: () => void;
-}) {
-  return (
-    <label className="action-select">
-      <span>Laden</span>
-      <select
-        aria-label="Laden"
-        defaultValue=""
-        onChange={(event) => {
-          if (event.currentTarget.value === "upload") {
-            onUpload();
-          }
-          event.currentTarget.value = "";
-        }}
-      >
-        <option value="" disabled>
-          Laden
-        </option>
-        <option value="current-template">{templateName}</option>
-        <option value="upload">Upload...</option>
-      </select>
-    </label>
-  );
-}
+const SINGLE_TAB_EXPORT_OPTIONS: { kind: TemplateKind; label: string }[] = [
+  { kind: "ownership", label: "Eignerschaft" },
+  { kind: "legalForm", label: "Gesellschaftsform" },
+  { kind: "property", label: "Immobilie" },
+  { kind: "financing", label: "Finanzierung" },
+  { kind: "strategy", label: "Strategie" },
+  { kind: "opex", label: "Betriebskosten" }
+];
 
-function ProjectEditor({ projectPanel }: { projectPanel: ProjectPanelProps }) {
+function ProjectEditor({
+  projectPanel,
+  onLoadTemplate,
+  onSaveTemplate
+}: {
+  projectPanel: ProjectPanelProps;
+  onLoadTemplate: (kind: TemplateKind) => void;
+  onSaveTemplate: (kind: TemplateKind) => void;
+}) {
+  const [selectedExportKind, setSelectedExportKind] =
+    useState<TemplateKind>("property");
+
   return (
     <div className="form-grid">
       <div className="form-section">
@@ -341,6 +313,42 @@ function ProjectEditor({ projectPanel }: { projectPanel: ProjectPanelProps }) {
             label="Export"
             icon={Download}
             onClick={projectPanel.onExportProject}
+          />
+        </div>
+      </div>
+      <div className="form-section">
+        <h3>Einzeltab exportieren</h3>
+        <p className="muted">
+          Einzelne Kapitel koennen hier separat geladen oder als JSON-Datei
+          gespeichert werden. Das ersetzt die frueheren Speichern/Export-Knoepfe
+          in jedem Tab.
+        </p>
+        <div className="button-row">
+          <label className="text-field compact-field">
+            <span>Kapitel</span>
+            <select
+              aria-label="Einzeltab Kapitel"
+              value={selectedExportKind}
+              onChange={(event) =>
+                setSelectedExportKind(event.currentTarget.value as TemplateKind)
+              }
+            >
+              {SINGLE_TAB_EXPORT_OPTIONS.map((option) => (
+                <option key={option.kind} value={option.kind}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <FileActionButton
+            label="Laden"
+            icon={Upload}
+            onClick={() => onLoadTemplate(selectedExportKind)}
+          />
+          <FileActionButton
+            label="Speichern"
+            icon={Save}
+            onClick={() => onSaveTemplate(selectedExportKind)}
           />
         </div>
       </div>
@@ -493,12 +501,16 @@ function InputTabBody({
   projectState,
   calculationResult,
   projectPanel,
+  onLoadTemplate,
+  onSaveTemplate,
   onTemplateChange
 }: {
   kind: InputPanelTab;
   projectState: ProjectState;
   calculationResult: CalculationResult;
   projectPanel: ProjectPanelProps;
+  onLoadTemplate: (kind: TemplateKind) => void;
+  onSaveTemplate: (kind: TemplateKind) => void;
   onTemplateChange: (
     kind: TemplateKind,
     template: TemplateEnvelope<unknown>
@@ -506,7 +518,13 @@ function InputTabBody({
 }) {
   switch (kind) {
     case "project":
-      return <ProjectEditor projectPanel={projectPanel} />;
+      return (
+        <ProjectEditor
+          projectPanel={projectPanel}
+          onLoadTemplate={onLoadTemplate}
+          onSaveTemplate={onSaveTemplate}
+        />
+      );
     case "rules":
       return (
         <RulesEditor
@@ -1071,6 +1089,8 @@ function PropertyEditor({
     template: TemplateEnvelope<unknown>
   ) => void;
 }) {
+  const [showImportPanel, setShowImportPanel] = useState(false);
+
   function updatePropertyData(data: ProjectState["property"]["data"]) {
     onTemplateChange("property", {
       ...projectState.property,
@@ -1078,12 +1098,34 @@ function PropertyEditor({
     });
   }
 
+  function updateStrategyData(data: ProjectState["strategy"]["data"]) {
+    onTemplateChange("strategy", {
+      ...projectState.strategy,
+      data
+    });
+  }
+
   return (
     <div className="form-grid">
-      <ListingImportPanel
+      <PropertyCandidateSelector
         projectState={projectState}
         updatePropertyData={updatePropertyData}
       />
+      <div className="button-row">
+        <button
+          className="icon-button"
+          type="button"
+          onClick={() => setShowImportPanel((current) => !current)}
+        >
+          {showImportPanel ? "Inseratimport schliessen" : "Inserat importieren"}
+        </button>
+      </div>
+      {showImportPanel ? (
+        <ListingImportPanel
+          projectState={projectState}
+          updatePropertyData={updatePropertyData}
+        />
+      ) : null}
       <div className="form-section">
         <h3>Immobilie</h3>
         <label className="text-field">
@@ -1382,6 +1424,109 @@ function PropertyEditor({
         projectState={projectState}
         updatePropertyData={updatePropertyData}
       />
+      <GoNoGoChecksEditor
+        checks={projectState.strategy.data.goNoGoChecks}
+        updateChecks={(goNoGoChecks) =>
+          updateStrategyData({ ...projectState.strategy.data, goNoGoChecks })
+        }
+      />
+    </div>
+  );
+}
+
+function PropertyCandidateSelector({
+  projectState,
+  updatePropertyData
+}: {
+  projectState: ProjectState;
+  updatePropertyData: (data: ProjectState["property"]["data"]) => void;
+}) {
+  const houses = projectState.property.data.candidateHouses;
+  const activeHouseId = projectState.property.data.activeHouseId ?? houses[0]?.id ?? "";
+
+  return (
+    <div className="form-section">
+      <h3>Bestehende Immobilie</h3>
+      <label className="text-field">
+        <span>Objekt aus Hausvergleich</span>
+        <select
+          aria-label="Bestehende Immobilie"
+          value={activeHouseId}
+          onChange={(event) => {
+            const selectedHouse = houses.find(
+              (house) => house.id === event.currentTarget.value
+            );
+            if (selectedHouse) {
+              updatePropertyData(
+                applyCandidateHouseToPropertyData(
+                  selectedHouse,
+                  projectState.property.data
+                )
+              );
+            }
+          }}
+        >
+          {houses.length === 0 ? (
+            <option value="">Keine Kandidatenhaeuser vorhanden</option>
+          ) : null}
+          {houses.map((house) => (
+            <option key={house.id} value={house.id}>
+              {house.title} - {house.place}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p className="muted">
+        Die Auswahl uebernimmt die Kerndaten des Hauses in diesen Immobilien-Tab.
+        Neue Inserate werden erst nach Klick auf „Inserat importieren“
+        eingelesen.
+      </p>
+    </div>
+  );
+}
+
+function GoNoGoChecksEditor({
+  checks,
+  updateChecks
+}: {
+  checks: ProjectState["strategy"]["data"]["goNoGoChecks"];
+  updateChecks: (checks: ProjectState["strategy"]["data"]["goNoGoChecks"]) => void;
+}) {
+  return (
+    <div className="form-section">
+      <h3>Entscheidungs-Pruefpunkte</h3>
+      <p className="muted">
+        Diese Punkte beziehen sich auf das konkrete Objekt und gehoeren deshalb
+        zur Immobilienpruefung.
+      </p>
+      {checks.map((check) => (
+        <div className="nested-item" key={check.id}>
+          <label className="text-field">
+            <span>{check.label}</span>
+            <select
+              aria-label={`${check.label} Status`}
+              value={check.status}
+              onChange={(event) =>
+                updateChecks(
+                  checks.map((candidate) =>
+                    candidate.id === check.id
+                      ? {
+                          ...candidate,
+                          status: event.currentTarget.value as GoNoGoStatus
+                        }
+                      : candidate
+                  )
+                )
+              }
+            >
+              <option value="open">Offen</option>
+              <option value="clarified">Schriftlich geklaert</option>
+              <option value="notApplicable">Nicht anwendbar</option>
+              <option value="critical">Kritisch</option>
+            </select>
+          </label>
+        </div>
+      ))}
     </div>
   );
 }
@@ -2050,39 +2195,6 @@ function StrategyEditor({
           />
           <span>Mieteinnahmen reduzieren Eignerbeitraege</span>
         </label>
-      </div>
-      <div className="form-section">
-        <h3>Entscheidungs-Pruefpunkte</h3>
-        {projectState.strategy.data.goNoGoChecks.map((check) => (
-          <div className="nested-item" key={check.id}>
-            <label className="text-field">
-              <span>{check.label}</span>
-              <select
-                aria-label={`${check.label} Status`}
-                value={check.status}
-                onChange={(event) =>
-                  updateStrategyData({
-                    ...projectState.strategy.data,
-                    goNoGoChecks: projectState.strategy.data.goNoGoChecks.map(
-                      (candidate) =>
-                        candidate.id === check.id
-                          ? {
-                              ...candidate,
-                              status: event.currentTarget.value as GoNoGoStatus
-                            }
-                          : candidate
-                    )
-                  })
-                }
-              >
-                <option value="open">Offen</option>
-                <option value="clarified">Schriftlich geklaert</option>
-                <option value="notApplicable">Nicht anwendbar</option>
-                <option value="critical">Kritisch</option>
-              </select>
-            </label>
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -3158,6 +3270,54 @@ function candidateFromPropertyData(
     tourismStatus: "Importiert; Nutzung rechtlich pruefen",
     highlights: data.features.join(", "),
     risks: "Nach Import pruefen: Widmung, Freizeitwohnsitz, Skigebiet, Fahrzeiten."
+  };
+}
+
+function applyCandidateHouseToPropertyData(
+  house: CandidateHouse,
+  currentData: ProjectState["property"]["data"]
+): ProjectState["property"]["data"] {
+  return {
+    ...currentData,
+    activeHouseId: house.id,
+    title: house.title,
+    sourceUrl: house.sourceUrl,
+    commissionFree: house.brokerPct === 0,
+    pricePerM2Eur: house.pricePerSqm,
+    purchasePrice: house.purchasePrice,
+    federalState: house.federalState === "Tirol" ? "T" : currentData.federalState,
+    municipality: house.place,
+    addressData: {
+      postalCode: house.postalCode,
+      place: house.place,
+      region: house.federalState,
+      country: "AT"
+    },
+    rentableAreaSqm: house.rentableAreaSqm,
+    plotAreaSqm: house.plotAreaSqm,
+    rooms: house.rooms,
+    bedrooms: house.bedrooms,
+    beds: house.beds ?? (house.bedrooms ? house.bedrooms * 2 : undefined),
+    bathrooms: house.bathrooms,
+    toilets: house.toilets,
+    yearBuilt: house.yearBuilt,
+    condition: house.condition,
+    heating: house.heating ? [house.heating] : [],
+    features: [house.highlights, house.unitsAndUse].filter(
+      (value): value is string => Boolean(value)
+    ),
+    guestNightsPerYear: house.guestNightsPerYear,
+    closingCosts: {
+      ...currentData.closingCosts,
+      brokerPct: house.brokerPct
+    },
+    mapEnrichment: {
+      provider: hasGoogleMapsKey() ? "googleMaps" : "excel",
+      status: hasGoogleMapsKey() ? "key-configured" : "fallback",
+      message: hasGoogleMapsKey()
+        ? "Google Maps Key erkannt; Werte koennen aktualisiert werden."
+        : "Excel-Fallbackwerte aktiv."
+    }
   };
 }
 

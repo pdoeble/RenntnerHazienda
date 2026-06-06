@@ -45,8 +45,40 @@ button:disabled {
   border-radius: 8px;
   display: grid;
   gap: 16px;
-  grid-template-columns: minmax(220px, 1fr) auto auto;
+  grid-template-columns: minmax(220px, 1fr) auto;
   padding: 16px 18px;
+}
+
+.workspace-mode-control {
+  background: #eef2f5;
+  border: 1px solid #d1d8df;
+  border-radius: 7px;
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-self: end;
+  padding: 3px;
+}
+
+.workspace-mode-control button {
+  background: transparent;
+  border: 0;
+  border-radius: 5px;
+  color: #44515f;
+  min-height: 34px;
+  padding: 7px 12px;
+  white-space: nowrap;
+}
+
+.workspace-mode-control button.active {
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 14%);
+  color: #183247;
+  font-weight: 700;
+}
+
+.workspace-mode-control button:disabled {
+  color: #8a96a3;
+  cursor: not-allowed;
 }
 
 .github-row {
@@ -188,9 +220,18 @@ button:disabled {
   margin-top: 14px;
 }
 
+.workspace-input,
+.workspace-visualization {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .workspace-column {
   align-self: start;
   min-width: 0;
+}
+
+.workspace-column[hidden] {
+  display: none;
 }
 
 .panel,
@@ -198,6 +239,7 @@ button:disabled {
   background: #ffffff;
   border: 1px solid #d8dee4;
   border-radius: 8px;
+  min-width: 0;
   padding: 14px;
 }
 
@@ -290,6 +332,7 @@ button:disabled {
 .form-grid {
   display: grid;
   gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .form-section {
@@ -297,6 +340,8 @@ button:disabled {
   border-radius: 6px;
   display: grid;
   gap: 10px;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   padding: 12px;
 }
 
@@ -351,8 +396,11 @@ button:disabled {
 .text-field textarea {
   border: 1px solid #c9d2dc;
   border-radius: 6px;
+  max-width: 100%;
   min-height: 34px;
+  min-width: 0;
   padding: 6px 8px;
+  width: 100%;
 }
 
 .compact-number {
@@ -382,27 +430,43 @@ button:disabled {
   stroke-width: 1;
 }
 
-.plot-point circle,
-.plot-point path,
-.plot-point rect {
-  fill: #0f766e;
+.plot-point circle {
   opacity: 0.78;
   stroke: #ffffff;
   stroke-width: 1.5;
 }
 
-.plot-point.active circle,
-.plot-point.active path,
-.plot-point.active rect {
-  fill: #b45309;
+.plot-point.active circle {
   opacity: 0.95;
   stroke: #243447;
+  stroke-width: 2.5;
 }
 
 .plot-point text {
   fill: #334155;
   font-size: 10px;
   pointer-events: none;
+}
+
+.plot-axis,
+.plot-tick line {
+  stroke: #94a3b8;
+  stroke-width: 1;
+}
+
+.plot-tick text,
+.plot-axis-label,
+.plot-color-legend text {
+  fill: #44515f;
+  font-size: 10px;
+}
+
+.plot-axis-label {
+  font-weight: 700;
+}
+
+.plot-color-legend rect {
+  fill: url(#plot-color-gradient);
 }
 
 .schematic-map-card {
@@ -667,8 +731,16 @@ button:disabled {
   border: 1px solid #dbe2e8;
   border-radius: 6px;
   height: 310px;
+  max-width: 100%;
   min-width: 0;
   padding: 12px 10px 8px;
+}
+
+.chart-frame svg,
+.pie-chart-card svg,
+.schematic-map,
+.scatter-plot {
+  max-width: 100%;
 }
 
 .pie-chart-grid {
@@ -801,7 +873,13 @@ th {
   border: 1px solid #dbe2e8;
   border-radius: 6px;
   margin: 0;
+  overflow-wrap: anywhere;
   padding: 14px;
+}
+
+.form-section > .muted,
+.github-oauth-box .muted {
+  overflow-wrap: anywhere;
 }
 
 .wiki-document {
@@ -854,6 +932,15 @@ th {
     grid-template-columns: 1fr;
   }
 
+  .workspace-mode-control {
+    justify-self: stretch;
+    width: 100%;
+  }
+
+  .workspace-mode-control button {
+    width: 100%;
+  }
+
   .metric-grid {
     grid-template-columns: 1fr;
   }
@@ -865,11 +952,69 @@ th {
 
 @media (max-width: 640px) {
   .app-shell {
-    padding: 10px;
+    padding: 8px;
+  }
+
+  .topbar,
+  .panel,
+  .diagnostics {
+    padding: 12px;
+  }
+
+  .project-title h1 {
+    font-size: 1.25rem;
+  }
+
+  .workspace-mode-control button {
+    min-width: 0;
+    padding-inline: 7px;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    margin-inline: -2px;
+    overflow-x: auto;
+    padding: 0 2px 6px;
+    scrollbar-width: thin;
+  }
+
+  .tabs button {
+    flex: 0 0 auto;
+  }
+
+  .status-row {
+    align-items: stretch;
+  }
+
+  .status-pill {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .button-row {
+    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .button-row > *,
+  .button-row .action-select,
+  .button-row .icon-button {
+    justify-content: center;
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .action-select select {
+    max-width: 100%;
+    min-width: 0;
   }
 
   .tab-header,
-  .section-heading {
+  .section-heading,
+  .subsection-header {
     display: grid;
   }
 
@@ -878,5 +1023,62 @@ th {
   .slider-control,
   .plot-controls {
     grid-template-columns: 1fr;
+  }
+
+  .text-field,
+  .number-slider-field,
+  .form-section,
+  .nested-item,
+  .number-input-wrap,
+  .summary-line {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .summary-line {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .compact-number {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .help-popover-panel {
+    left: 16px;
+    max-height: calc(100vh - 120px);
+    max-width: none;
+    min-width: 0;
+    overflow: auto;
+    position: fixed;
+    right: 16px;
+    top: 96px;
+    width: auto;
+  }
+
+  .scatter-plot {
+    height: 290px;
+    overflow: hidden;
+  }
+
+  .schematic-map {
+    height: 300px;
+  }
+
+  .chart-frame {
+    height: 280px;
+    padding-inline: 4px;
+  }
+
+  .long-cell {
+    max-width: 260px;
+    min-width: 220px;
+  }
+
+  .wiki-document {
+    max-height: none;
+    padding: 10px;
   }
 }
